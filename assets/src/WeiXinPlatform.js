@@ -10,17 +10,18 @@ cc.Class({
         _ShareGroupArray: [],
         _LastShareDate: 0
     },
+
     onLoad: function() {
         cc.log("WeiXinPlatform onLoad----------------------")
     },
-    onEnable: function() {},
-    onDisable: function() {},
+
     getWXOpenID: function() {
         return this._WXOpenID
     },
+
     start: function() {
         if (cc.log("WeiXinPlatform start enter-----------------------------"), this.clear(), cc.sys.platform === cc.sys.WECHAT_GAME) {
-            if (void 0 == window.wx) return;
+            if (window.wx == null) return;
             wx.onShow(this.onWeiXinShow);
             var e = wx.getStorageSync("openid");
             e && (this._WXOpenID = e);
@@ -39,12 +40,15 @@ cc.Class({
         }
         cc.log("WeiXinPlatform start leave-----------------------------")
     },
+
     clear: function() {},
+
     wxLogin: function() {
-        if (console.log("wxLogin enter--------"), void 0 != window.wx) {
+        console.log("wxLogin enter--------")
+        if (window.wx) {
             var e = cc.sys.localStorage.getItem("usernickname1");
             if (!(this._SessionID.length > 0)) {
-                if ("" != e && null != e && void 0 != e) return window.playname = cc.sys.localStorage.getItem("usernickname1"), window.playimg = cc.sys.localStorage.getItem("usernickimg"), GameGlobal.DataManager._MyNickName = window.playname, GameGlobal.DataManager._MyAvatarURL = window.playimg, window.mainhall.updateMyInfo(), void console.log("已经登录过了 ： " + window.playname + " : " + window.playimg);
+                if (e) return window.playname = cc.sys.localStorage.getItem("usernickname1"), window.playimg = cc.sys.localStorage.getItem("usernickimg"), GameGlobal.DataManager._MyNickName = window.playname, GameGlobal.DataManager._MyAvatarURL = window.playimg, window.mainhall.updateMyInfo(), void console.log("已经登录过了 ： " + window.playname + " : " + window.playimg);
                 console.log("will call wx login------------------------");
                 GameGlobal.UIManager.showMask(true);
                 wx.getSystemInfoSync().screenWidth, wx.getSystemInfoSync().screenHeight;
@@ -91,6 +95,7 @@ cc.Class({
             }
         }
     },
+
     qqLogin: function() {
         cc.log("qqLogin enter ------------------------------");
         var e = this;
@@ -108,8 +113,10 @@ cc.Class({
             }
         }), cc.log("qqLogin leave ------------------------------")
     },
+
     wxLoginForShare: function(e) {
-        if (console.log("wxLogin enter--------"), void 0 != window.wx) {
+        console.log("wxLogin enter--------")
+        if (window.wx) {
             console.log("will call wx login------------------------");
             var t = this;
             wx.login({
@@ -155,9 +162,10 @@ cc.Class({
             })
         }
     },
+
     onWXShare: function() {
-        if (void 0 != window.wx)
-            if (void 0 != this._WXOpenID && 0 != this._WXOpenID.length) {
+        if (window.wx)
+            if (this._WXOpenID) {
                 var e = "srcOpenID=" + this._WXOpenID,
                     t = GameGlobal.DataManager;
                 wx.onShareAppMessage(function() {
@@ -169,11 +177,15 @@ cc.Class({
                 })
             } else console.log("onWXShare invalid openID")
     },
+
     checkInviteAndRequest: function(e) {
-        console.log("-----------------------------checkInviteAndRequest----------------------------- ", e), e && e.srcOpenID && GameGlobal.Net.requestInviteCome(e.srcOpenID)
+        console.log("-----------------------------checkInviteAndRequest----------------------------- ", e)
+        e && e.srcOpenID && GameGlobal.Net.requestInviteCome(e.srcOpenID)
     },
+
     checkQQIsInviteReq: function() {
-        if (console.log("-----------------------------checkQQIsInviteReq----------------------------- "), cc.sys.platform === cc.sys.QQ_PLAY && GameStatusInfo.gameParam && GameStatusInfo.gameParam.length > 0) {
+        console.log("-----------------------------checkQQIsInviteReq----------------------------- ")
+        if (cc.sys.platform === cc.sys.QQ_PLAY && GameStatusInfo.gameParam && GameStatusInfo.gameParam.length > 0) {
             console.log("-----------------------------checkQQIsInviteReq---------------- " + GameStatusInfo.gameParam);
             var e = GameStatusInfo.gameParam.split("=");
             if (e && e.length >= 2) {
@@ -182,11 +194,13 @@ cc.Class({
             }
         }
     },
+
     onWeiXinShow: function(e) {
         console.log("---------------------------------onWeiXinShow---------------------------------"), console.log(e);
         var t = GameGlobal.WeiXinPlatform;
         e.query && t.checkInviteAndRequest(e.query)
     },
+
     showShare: function(e, t) {
         GameGlobal.DataManager;
         return cc.sys.platform === cc.sys.WECHAT_GAME && wx.shareAppMessage({
@@ -206,9 +220,10 @@ cc.Class({
             }
         }), true
     },
+    
     postScoreToPlatform: function(e, t) {
         if (cc.sys.platform === cc.sys.WECHAT_GAME) {
-            if (void 0 == window.wx) return;
+            if (window.wx == null) return;
             wx.postMessage({
                 msgType: 1,
                 bestScore: e

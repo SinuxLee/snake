@@ -112,14 +112,16 @@ cc.Class({
         cc.log("UIHall onLoad----------------------------"), window.mainhall = this, this._Texture = new cc.Texture2D, this._GameClubBtn = null
     },
     onEnable: function() {
-        cc.log("UIHall onEnable  enter------------------------"), void 0 != window.wx && wx.postMessage({
+        cc.log("UIHall onEnable  enter------------------------")
+        void 0 != window.wx && wx.postMessage({
             msgType: 4
         }), this.VersionLabel && (this.VersionLabel.string = GameGlobal.GameVersion), this.SubContentSprite.node.active = false, this._SoundMgr = GameGlobal.SoundManager, this._SoundMgr.stopAll(), this._SoundMgr.playSound(r.SoundType_Bg), this.SubMaskSprite.node.active = false, this.RankCloseBtn.node.active = false, void 0 != window.wx && wx.postMessage({
             msgType: 2
         }), window.wx, this.updateMyInfo(), cc.sys.platform === cc.sys.QQ_PLAY && (this._IsAdPause = false, this.refreshAd(), this.schedule(this.refreshAd, 20)), cc.log("UIHall onEnable  leave------------------------")
     },
     onDisable: function() {
-        cc.log("UIHall onDisable enter ----------------------------"), void 0 != window.wx && null != this._GameClubBtn && this._GameClubBtn.hide(), cc.sys.platform === cc.sys.QQ_PLAY && (this._QQAd && this._QQAd.destory(), this._QQAd = null, this.unscheduleAllCallbacks()), cc.log("UIHall onDisable leave ----------------------------")
+        cc.log("UIHall onDisable enter ----------------------------")
+        void 0 != window.wx && null != this._GameClubBtn && this._GameClubBtn.hide(), cc.sys.platform === cc.sys.QQ_PLAY && (this._QQAd && this._QQAd.destory(), this._QQAd = null, this.unscheduleAllCallbacks()), cc.log("UIHall onDisable leave ----------------------------")
     },
     refreshAd: function() {
         if (1 != this._IsAdPause && cc.sys.platform === cc.sys.QQ_PLAY) {

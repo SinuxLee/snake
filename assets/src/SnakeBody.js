@@ -21,35 +21,44 @@ cc.Class({
         this._IsFirstUpdate = true
     },
 
-    setType: function(e) {
-        (e < 1 || e > 16) && (e = 1);
-        var t = this.node.getComponent(cc.Sprite),
-            i = "body_" + e,
-            n = this.Atlas.getSpriteFrame(i);
-        n && (t.spriteFrame = n)
+    setType: function(type) {
+        if(type < 1 || type > 16) (type = 1);
+
+        const sprite = this.node.getComponent(cc.Sprite);
+        const name = "body_" + type;
+        const frame = this.Atlas.getSpriteFrame(name);
+        frame && (sprite.spriteFrame = frame)
     },
+
     setSnake: function(e) {
         this._Snake = e
     },
+
     setInitMoveDir: function(e) {
         this._lastMoveVec = e, this._moveVec = e
     },
+
     setMoveDir: function(e) {},
     getMoveDir: function() {
         return this._moveVec
     },
+
     getLastMoveDir: function() {
         return this._lastMoveVec
     },
+
     setMoveSpeed: function(e) {
         this._moveSpeed = e
     },
+
     setBodyIndex: function(e) {
         this._CurBodyIndex = e
     },
+
     reset: function() {
         this._IsFirstUpdate = true, this.node.width = 30, this.node.height = 30
     },
+
     getBodyPrePos1: function(e, t, i, n, r, a) {
         if (0 == this._CurBodyIndex) {
             var o = this.node.width / 3;
@@ -61,6 +70,7 @@ cc.Class({
         var c = s.getComponent("SnakeBody");
         return c._lastPos.add(c._lastMoveVec.mul(o))
     },
+
     getBodyPrePos: function(e, t, i, n, r, a) {
         if (0 == this._CurBodyIndex) {
             var o = this.node.width / 3;
@@ -72,6 +82,7 @@ cc.Class({
         var c = s.getComponent("SnakeBody");
         return c._lastPos.add(c._lastMoveVec.mul(o))
     },
+
     getBodyPreDir: function(e, t, i, n, r) {
         if (0 == this._CurBodyIndex) return i;
         var a = t[this._CurBodyIndex - 1];
@@ -79,6 +90,7 @@ cc.Class({
         this.node.width;
         return a.getComponent("SnakeBody")._lastMoveVec
     },
+
     updateBody: function(e, t, i, n, r, a) {
         this._lastMoveVec = this._moveVec, this._lastPos = this.node.position;
         var o = this.getBodyPrePos(e, t, i, n, this._IsFirstUpdate, r);

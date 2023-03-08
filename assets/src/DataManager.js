@@ -9,33 +9,35 @@ function r(e, t, i) {
         writable: true
     }) : e[t] = i, e
 }
-var a = require('UIType'),
-    o = cc.Class({
-        properties: {
-            signDay: 0,
-            signReward: 0,
-            signRewardNum: 0,
-            signStatus: 0
-        }
-    }),
-    s = cc.Class({
-        properties: {
-            HeadUrl: "",
-            IsCanTake: false,
-            Reward: 0,
-            ID: 0,
-            OpenID: ""
-        }
-    }),
-    c = cc.Class({
-        properties: {
-            ID: 0,
-            Price: 5,
-            Type: 0,
-            IsOwn: false,
-            IsUse: false
-        }
-    });
+
+const UIType = require('UIType')
+const o = cc.Class({
+    properties: {
+        signDay: 0,
+        signReward: 0,
+        signRewardNum: 0,
+        signStatus: 0
+    }
+})
+const s = cc.Class({
+    properties: {
+        HeadUrl: "",
+        IsCanTake: false,
+        Reward: 0,
+        ID: 0,
+        OpenID: ""
+    }
+})
+const c = cc.Class({
+    properties: {
+        ID: 0,
+        Price: 5,
+        Type: 0,
+        IsOwn: false,
+        IsUse: false
+    }
+});
+
 cc.Class({
     extends: cc.Component,
     properties: (n = {
@@ -59,6 +61,7 @@ cc.Class({
             default: false,
             // type: cc.Boolean
         },
+
         VideoAdid: "adunit-bf61185a259df4c2",
         BannerAdid1: "adunit-84752a29a640a476",
         BannerAdid2: "adunit-cb8e21a61e779439",
@@ -90,83 +93,108 @@ cc.Class({
         r(n, "_SKinDataArray", []),
         r(n, "_CurMySKinIndex", 0),
         r(n, "_CurRecord", 0),
-        r(n, "_GameStartTime", 0), n),
+        r(n, "_GameStartTime", 0),
+        n
+    ),
+
     onLoad: function () {
         cc.log("DataManager onLoad----------------------------")
     },
+
     onEnable: function () {
-        var e = this;
-        void 0 != window.wx && wx.getStorage({
+        if(window.wx == null) return
+
+        wx.getStorage({
             key: "wxData",
-            success: function (t) {
-                console.log("getStorage user success ", t), e._MyAvatarURL = t.data.avaUrl, e._MyNickName = t.data.nick, GameGlobal.UIManager.getUI(a.UIType_Hall).updateMyInfo()
+            success: (t) =>{
+                console.log("getStorage user success ", t)
+                this._MyAvatarURL = t.data.avaUrl
+                this._MyNickName = t.data.nick
+                GameGlobal.UIManager.getUI(UIType.UIType_Hall).updateMyInfo()
             },
-            fail: function () {
+            fail: () => {
                 console.log("getStorage wxData fail ")
             }
         })
     },
+
     start: function () {
-        cc.log("DataManager start"), this._CurSelectMode = 0
+        cc.log("DataManager start")
+        this._CurSelectMode = 0
     },
+
     getCurScore: function () {
         return this.CurScore
     },
+
     setCurScore: function (e) {
         this.CurScore = e
     },
+
     getCurGold: function () {
         return this.CurGold
     },
+
     setCurGold: function (e) {
-        void 0 != e && (this.CurGold = e)
+        e && (this.CurGold = e)
     },
+
     getCurFlower: function () {
         return this.CurFlower
     },
+
     setCurFlower: function (e) {
         e < 0 && (e = 0), this.CurFlower = e
     },
+
     setDiamond: function (e) {
-        void 0 != e && (e < 0 && (e = 0), this.CurDiamond = e)
+        e && (e < 0 && (e = 0), this.CurDiamond = e)
     },
+
     getCurDiamond: function () {
         return this.CurDiamond
     },
+
     getFuHuoGold: function () {
         return this._FuHuoCostGold
     },
     setShareRelive: function (e) {
-        void 0 != e && (this.IsShareRelive = e)
+        e && (this.IsShareRelive = e)
     },
+
     getShareRelive: function () {
         return this.IsShareRelive
     },
     setShareTitle: function (e) {
         this._ShareTitle = e
     },
+
     getShareTitle: function () {
         return this._ShareTitle
     },
+
     setShareImage: function (e) {
         this._ShareImageUrl = e
     },
+
     getShareImage: function () {
         return this._ShareImageUrl
     },
+
     setShareReliveCount: function (e) {
         this._ShareReliveCount = e
     },
+
     getShareReliveCount: function () {
         return this._ShareReliveCount
     }
-}),
+})
 
-    module.exports = {
-        FriendInviteData: s,
-        SignInitData: o,
-        SkinData: c,
-    }
+module.exports = {
+    FriendInviteData: s,
+    SignInitData: o,
+    SkinData: c,
+}
 
 window.GameRewardType = {
     RT_GOLD: 0,
