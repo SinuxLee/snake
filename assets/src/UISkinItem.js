@@ -18,7 +18,7 @@ cc.Class({
         var e = this.node.taggame,
             t = "xingxiang_" + (e + 1),
             i = this.ResAtlas.getSpriteFrame(t);
-        i && (this.SkinSprite.spriteFrame = i), t = "xingxiangwenzi_" + (e + 1), (i = this.ResAtlas.getSpriteFrame(t)) && (this.SkinText.spriteFrame = i), this.LockSprite.node.active = !1, this.UseSprite.node.active = !1
+        i && (this.SkinSprite.spriteFrame = i), t = "xingxiangwenzi_" + (e + 1), (i = this.ResAtlas.getSpriteFrame(t)) && (this.SkinText.spriteFrame = i), this.LockSprite.node.active = false, this.UseSprite.node.active = false
     },
     setCostType: function(e) {
         e == GameRewardType.RT_GOLD ? this.CostIcon.spriteFrame = this.ResAtlas.getSpriteFrame("jinbi") : e == GameRewardType.RT_DIAMOND ? this.CostIcon.spriteFrame = this.ResAtlas.getSpriteFrame("zuan") : e == GameRewardType.RT_FLOWER && (this.CostIcon.spriteFrame = this.ResAtlas.getSpriteFrame("hua"))

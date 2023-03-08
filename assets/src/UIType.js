@@ -1,4 +1,3 @@
-
 module.exports = {
     UIType_Hall: 0,
     UIType_Game: 1,
@@ -9,7 +8,7 @@ module.exports = {
     UIType_ShowMessage: 6,
     UIType_KeFu: 7,
     UIType_InviteFriend: 8,
-    UIType_QianDao: 9,
+    UIType_QianDao: 9,      // 签到
     UIType_Skin: 10,
     UIType_Setting: 11,
     UIType_ZSAd: 12,

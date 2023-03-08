@@ -37,11 +37,11 @@ cc.Class({
                         var e = new cc.Texture2D;
                         e.initWithElement(i), e.handleLoadedTexture(), t.HeadImageSprite.spriteFrame = new cc.SpriteFrame(e)
                     } catch (e) {
-                        console.log(e), t.HeadImageSprite.node.active = !1
+                        console.log(e), t.HeadImageSprite.node.active = false
                     }
                 }, i.src = e
             } catch (e) {
-                console.log(e), this.HeadImageSprite.node.active = !1
+                console.log(e), this.HeadImageSprite.node.active = false
             }
         } else if (cc.sys.platform === cc.sys.QQ_PLAY) try {
             var n = new Image;
@@ -50,11 +50,11 @@ cc.Class({
                     var e = new cc.Texture2D;
                     e.initWithElement(n), e.handleLoadedTexture(), t.HeadImageSprite.spriteFrame = new cc.SpriteFrame(e)
                 } catch (e) {
-                    console.log(e), t.HeadImageSprite.node.active = !1
+                    console.log(e), t.HeadImageSprite.node.active = false
                 }
             }, n.src = e
         } catch (e) {
-            console.log(e), this.HeadImageSprite.node.active = !1
+            console.log(e), this.HeadImageSprite.node.active = false
         }
     }
 })

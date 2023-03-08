@@ -65,7 +65,7 @@ cc.Class((a(n = {
             a = require('md5'),
             s = "",
             c = this.getUrlParam(t, "sign");
-        if (c || i && i.sign) return !1;
+        if (c || i && i.sign) return false;
         if (t && (s = this.getQuery(t)), i) {
             var f = [];
             for (var h in i) h && i[h] && (f = f.concat({
@@ -87,7 +87,7 @@ cc.Class((a(n = {
         a = e("md5"),
         s = "",
         c = this.getUrlParam(t, "sign");
-    if (c || i && i.sign) return !1;
+    if (c || i && i.sign) return false;
     if (t && (s = this.getQuery(t)), i) {
         var f = [];
         for (var h in i) h && i[h] && (f = f.concat({
@@ -108,7 +108,7 @@ cc.Class((a(n = {
         a = e("md5"),
         s = "",
         c = this.getUrlParam_qq(t, "sign");
-    if (c || i && i.sign) return !1;
+    if (c || i && i.sign) return false;
     if (t && (s = this.getQuery(t)), i) {
         var f = [];
         for (var h in i) h && i[h] && (f = f.concat({
@@ -190,7 +190,7 @@ cc.Class((a(n = {
     var n = GameGlobal.localStorage.getItem("tcs_skinIndex");
     null != n && void 0 != n && (t._CurMySKinIndex = parseInt(n)), t._SKinDataArray = [];
     for (var r = 0; r < 16; ++r) {
-        (f = new h).ID = r + 1, f.IsOwn = !1, f.IsUse = !1, f.Price = d[r], f.Type = u[r], t._SKinDataArray.push(f)
+        (f = new h).ID = r + 1, f.IsOwn = false, f.IsUse = false, f.Price = d[r], f.Type = u[r], t._SKinDataArray.push(f)
     }
     n && n < t._SKinDataArray.length && ((f = t._SKinDataArray[n]).IsUse = true);
     var a, o = GameGlobal.localStorage.getItem("tcs_skinlist");

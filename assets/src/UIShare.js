@@ -22,7 +22,7 @@ cc.Class({
     },
     onEnable: function() {},
     onDisable: function() {
-        this._needUpdate = !1, void 0 != window.wx && this._MatchAd && this._MatchAd.hide()
+        this._needUpdate = false, void 0 != window.wx && this._MatchAd && this._MatchAd.hide()
     },
     onPanelClick: function(e) {
         e.stopPropagation()

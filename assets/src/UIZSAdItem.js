@@ -3,16 +3,16 @@ cc.Class({
     properties: {
         AdSprite: cc.Sprite,
         _Index: 0,
-        _IsBorderAd: !1
+        _IsBorderAd: false
     },
     start: function() {
         this.AdSprite.node.on(cc.Node.EventType.TOUCH_END, this.onAdItemClick, this)
     },
     initAd: function(e) {
-        this._Index = e, this._IsBorderAd = !1;
+        this._Index = e, this._IsBorderAd = false;
         var t = GameGlobal.DataManager._CurZSAdData,
             i = this;
-        this._Index < t.app_link_list.length && (this.node.active = true, this.AdSprite.node.active = !1, (t = t.app_link_list[this._Index]).app_icon && cc.loader.load({
+        this._Index < t.app_link_list.length && (this.node.active = true, this.AdSprite.node.active = false, (t = t.app_link_list[this._Index]).app_icon && cc.loader.load({
             url: t.app_icon,
             type: "png"
         }, function(e, t) {
@@ -27,7 +27,7 @@ cc.Class({
         this._IsBorderAd = true, this._Index = e;
         var t = GameGlobal.DataManager._CurZSAdData,
             i = this;
-        this._Index < t.app_cb_list.length && (this.node.active = true, this.AdSprite.node.active = !1, (t = t.app_cb_list[this._Index]).app_icon && cc.loader.load({
+        this._Index < t.app_cb_list.length && (this.node.active = true, this.AdSprite.node.active = false, (t = t.app_cb_list[this._Index]).app_icon && cc.loader.load({
             url: t.app_icon,
             type: "png"
         }, function(e, t) {

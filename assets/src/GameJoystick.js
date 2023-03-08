@@ -68,7 +68,7 @@ cc.Class({
         this.ring.node.setPosition(t), this.dot.setPosition(t), this._stickPos = t
     },
     _touchMoveEvent: function(e) {
-        if (this._touchLocation.x == e.getLocation().x && this._touchLocation.y == e.getLocation().y) return !1;
+        if (this._touchLocation.x == e.getLocation().x && this._touchLocation.y == e.getLocation().y) return false;
         var t = this.ring.node.convertToNodeSpaceAR(e.getLocation()),
             i = this.ring._getDistance(t, cc.Vec2(0, 0)),
             n = this.ring.node.width / 2,

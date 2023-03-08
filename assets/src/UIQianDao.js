@@ -19,7 +19,7 @@ cc.Class({
         for (var e = GameGlobal.DataManager, t = 0; t < this.QianDaoItem.length; ++t)
             if (t < e._SignInitList.length) {
                 var i = e._SignInitList[t];
-                this.QianDaoItem[t].setParam(i.signDay, i.signReward, i.signRewardNum), this.QianDaoItem[t].setMask(!1)
+                this.QianDaoItem[t].setParam(i.signDay, i.signReward, i.signRewardNum), this.QianDaoItem[t].setMask(false)
             } this.refreshUI()
     },
     onDisable: function() {},
@@ -32,7 +32,7 @@ cc.Class({
         for (var t = 0; t < this.QianDaoItem.length - 1; ++t)
             if (t + 1 < e._SignInitList.length) {
                 var i = e._SignInitList[t];
-                1 == i.signStatus ? this.QianDaoItem[t].setMask(true) : (this.QianDaoItem[t].setMask(!1), 2 == i.signStatus && (e._MyQianDaoCount = i.signDay))
+                1 == i.signStatus ? this.QianDaoItem[t].setMask(true) : (this.QianDaoItem[t].setMask(false), 2 == i.signStatus && (e._MyQianDaoCount = i.signDay))
             } this.TakeBtn.interactable = !e._MyQianDaoTake
     },
     onClose: function(e) {

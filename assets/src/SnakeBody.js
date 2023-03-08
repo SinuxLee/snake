@@ -82,7 +82,7 @@ cc.Class({
     updateBody: function(e, t, i, n, r, a) {
         this._lastMoveVec = this._moveVec, this._lastPos = this.node.position;
         var o = this.getBodyPrePos(e, t, i, n, this._IsFirstUpdate, r);
-        this._IsFirstUpdate = !1;
+        this._IsFirstUpdate = false;
         var s = o.sub(this.node.position),
             c = s.mag();
         c < 1 && (s = this._moveVec, c = this.node.width / 2), this._CurMoveDistance = c, this._MoveStartPos = this._lastPos, this._moveVec = s.normalize(), cc.pDistance(this.node.position, this._MoveStartPos) > this._CurMoveDistance && console.log("invalid distance------------------"), this.node.position = this.node.position.add(this._moveVec.mul(this._moveSpeed * e))

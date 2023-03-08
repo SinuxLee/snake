@@ -14,7 +14,7 @@ cc.Class({
         this.IndexLabel.string = "", this._Index = e
     },
     resetShow: function() {
-        this.TakeBtn.interactable = !1, this.GoldSprite.node.active = true, this.HeadSprite.node.active = !1;
+        this.TakeBtn.interactable = false, this.GoldSprite.node.active = true, this.HeadSprite.node.active = false;
         var e = GameGlobal.DataManager;
         this.IndexLabel.string = e._ShareReward * Math.pow(2, this._Index)
     },
@@ -29,7 +29,7 @@ cc.Class({
                 type: "png"
             }, function(e, t) {
                 if (t instanceof cc.Texture2D) {
-                    i.GoldSprite.node.active = !1, i.HeadSprite.node.active = true;
+                    i.GoldSprite.node.active = false, i.HeadSprite.node.active = true;
                     var n = new cc.SpriteFrame(t);
                     i.HeadSprite.spriteFrame = n
                 }

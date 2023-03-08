@@ -32,7 +32,7 @@ cc.Class({
         }
     },
     onEnable: function() {
-        this.BackBtn.node.active = !1, this.AgainBtn.node.active = !1;
+        this.BackBtn.node.active = false, this.AgainBtn.node.active = false;
         var e = GameGlobal.UIManager.getUI(n.UIType_Game);
         this.RewardGoldLabel.string = "", this.LenLabel.string = "" + e.getMySnakeLen(), this.KillLabel.string = "" + e.getMySnakeKill()
     },

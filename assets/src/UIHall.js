@@ -106,7 +106,7 @@ cc.Class({
         _ShowSnake: null,
         _CurShowLinkIndex: 0,
         _QQAd: null,
-        _IsAdPause: !1
+        _IsAdPause: false
     },
     onLoad: function() {
         cc.log("UIHall onLoad----------------------------"), window.mainhall = this, this._Texture = new cc.Texture2D, this._GameClubBtn = null
@@ -114,9 +114,9 @@ cc.Class({
     onEnable: function() {
         cc.log("UIHall onEnable  enter------------------------"), void 0 != window.wx && wx.postMessage({
             msgType: 4
-        }), this.VersionLabel && (this.VersionLabel.string = GameGlobal.GameVersion), this.SubContentSprite.node.active = !1, this._SoundMgr = GameGlobal.SoundManager, this._SoundMgr.stopAll(), this._SoundMgr.playSound(r.SoundType_Bg), this.SubMaskSprite.node.active = !1, this.RankCloseBtn.node.active = !1, void 0 != window.wx && wx.postMessage({
+        }), this.VersionLabel && (this.VersionLabel.string = GameGlobal.GameVersion), this.SubContentSprite.node.active = false, this._SoundMgr = GameGlobal.SoundManager, this._SoundMgr.stopAll(), this._SoundMgr.playSound(r.SoundType_Bg), this.SubMaskSprite.node.active = false, this.RankCloseBtn.node.active = false, void 0 != window.wx && wx.postMessage({
             msgType: 2
-        }), window.wx, this.updateMyInfo(), cc.sys.platform === cc.sys.QQ_PLAY && (this._IsAdPause = !1, this.refreshAd(), this.schedule(this.refreshAd, 20)), cc.log("UIHall onEnable  leave------------------------")
+        }), window.wx, this.updateMyInfo(), cc.sys.platform === cc.sys.QQ_PLAY && (this._IsAdPause = false, this.refreshAd(), this.schedule(this.refreshAd, 20)), cc.log("UIHall onEnable  leave------------------------")
     },
     onDisable: function() {
         cc.log("UIHall onDisable enter ----------------------------"), void 0 != window.wx && null != this._GameClubBtn && this._GameClubBtn.hide(), cc.sys.platform === cc.sys.QQ_PLAY && (this._QQAd && this._QQAd.destory(), this._QQAd = null, this.unscheduleAllCallbacks()), cc.log("UIHall onDisable leave ----------------------------")
@@ -136,7 +136,7 @@ cc.Class({
         cc.sys.platform === cc.sys.QQ_PLAY && (cc.log("UIHall pauseAdShow enter --------------------------------"), this._QQAd && this._QQAd.destory(), this._QQAd = null, this._IsAdPause = true, cc.log("UIHall pauseAdShow leave --------------------------------"))
     },
     resumeAdShow: function() {
-        this._IsAdPause = !1
+        this._IsAdPause = false
     },
     start: function() {
         cc.log("UIHall   start enter ------------------------"), this.TimeModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onTimeModeBtn, this), this.WuXianModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onWuXianModeBtn, this), this.TuanZhanModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onTuanZhanBtn, this), this.DuiZhanModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onDuiZhanModeBtn, this), this.LinkBtn.node.on(cc.Node.EventType.TOUCH_END, this.onLinkBtn, this), this.SubMaskSprite.node.on(cc.Node.EventType.TOUCH_END, this.onRankMask, this), this.RankBtn.node.on(cc.Node.EventType.TOUCH_END, this.onRankBtn, this), this.RankCloseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onRankCloseBtn, this), this.ShareBtn.node.on(cc.Node.EventType.TOUCH_END, this.onShareBtn, this), this.HuoDongBtn.node.on(cc.Node.EventType.TOUCH_END, this.onHuoDongBtn, this), this.SettingBtn.node.on(cc.Node.EventType.TOUCH_END, this.onSettingBtn, this), this.BaoXiangBtn.node.on(cc.Node.EventType.TOUCH_END, this.onBaoXiangBtn, this), this.ChengJiuBtn.node.on(cc.Node.EventType.TOUCH_END, this.onChengJiuBtn, this), this.KeFuBtn.node.on(cc.Node.EventType.TOUCH_END, this.onKeFuBtn, this), this.QianDaoBtn.node.on(cc.Node.EventType.TOUCH_END, this.onQianDaoBtn, this);
@@ -223,9 +223,9 @@ cc.Class({
         e.stopPropagation(), GameGlobal.UIManager.openUI(n.UIType_RankQQ), cc.sys.platform === cc.sys.WECHAT_GAME ? (this.SubContentSprite.node.active = true, this.SubMaskSprite.node.active = true, this.RankCloseBtn.node.active = true) : cc.sys.platform === cc.sys.QQ_PLAY && GameGlobal.UIManager.openUI(n.UIType_RankQQ)
     },
     onRankCloseBtn: function(e) {
-        e.stopPropagation(), this.SubContentSprite.node.active = !1, this.SubMaskSprite.node.active = !1, this.RankCloseBtn.node.active = !1, void 0 != window.wx && wx.postMessage({
+        e.stopPropagation(), this.SubContentSprite.node.active = false, this.SubMaskSprite.node.active = false, this.RankCloseBtn.node.active = false, void 0 != window.wx && wx.postMessage({
             msgType: 7,
-            isShow: !1
+            isShow: false
         })
     },
     onRankMask: function(e) {

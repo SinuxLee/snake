@@ -42,13 +42,13 @@ cc.Class({
         cc.log("UILoading onEnable leave--------------------------------------")
     },
     onDisable: function() {
-        this._needUpdate = !1, cc.sys.platform === cc.sys.WECHAT_GAME ? void 0 != window.wx && this._MatchAd && this._MatchAd.hide() : cc.sys.platform === cc.sys.QQ_PLAY && this._MatchAd && this._MatchAd.destory(), this._MatchAd = null
+        this._needUpdate = false, cc.sys.platform === cc.sys.WECHAT_GAME ? void 0 != window.wx && this._MatchAd && this._MatchAd.hide() : cc.sys.platform === cc.sys.QQ_PLAY && this._MatchAd && this._MatchAd.destory(), this._MatchAd = null
     },
     
     update: function(e) {
         if (0 != this._needUpdate) {
             var t = .25 * e;
-            this.LoadingProgress.progress = this.LoadingProgress.progress + t, this.LoadingProgress.progress >= 1 && (this.LoadingProgress.progress = 1, this._needUpdate = !1, GameGlobal.UIManager.closeUI(n.UIType_GameLoading), GameGlobal.UIManager.openUI(n.UIType_Game)), this.GuangSprite && (this.GuangSprite.node.x = this.LoadingProgress.barSprite.node.x + this.LoadingProgress.progress * this.LoadingProgress.totalLength)
+            this.LoadingProgress.progress = this.LoadingProgress.progress + t, this.LoadingProgress.progress >= 1 && (this.LoadingProgress.progress = 1, this._needUpdate = false, GameGlobal.UIManager.closeUI(n.UIType_GameLoading), GameGlobal.UIManager.openUI(n.UIType_Game)), this.GuangSprite && (this.GuangSprite.node.x = this.LoadingProgress.barSprite.node.x + this.LoadingProgress.progress * this.LoadingProgress.totalLength)
         }
     }
 })

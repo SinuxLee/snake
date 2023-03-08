@@ -10,10 +10,10 @@ module.exports = {
     },
     SoundType_GetGold: {
         ID: 2,
-        IsLoop: !1
+        IsLoop: false
     },
     SoundType_Fall: {
         ID: 3,
-        IsLoop: !1
+        IsLoop: false
     }
 }

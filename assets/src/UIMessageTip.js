@@ -25,6 +25,6 @@ cc.Class({
         }
     },
     actionFinish: function(e) {
-        this.node.active = !1, e.active = !1
+        this.node.active = false, e.active = false
     }
 })

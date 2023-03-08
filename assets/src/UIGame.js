@@ -90,7 +90,7 @@ var n = require('Snake'),
             _MapSizeHeight: 0,
             _Game: null,
             _GameState: 0,
-            _IsSpeedDown: !1,
+            _IsSpeedDown: false,
             _DataMgr: null,
             _CurTime: 120,
             _RankUpdateTimer: 0,
@@ -100,7 +100,7 @@ var n = require('Snake'),
             _HeadList: [],
             _KillShowTimer: 0,
             _SoundMgr: null,
-            _IsFirstPause: !1
+            _IsFirstPause: false
         },
         onLoad: function() {
             this._Game = GameGlobal.Game, this._DataMgr = GameGlobal.DataManager, this._MapSizeWidth = this.BgSprite.node.width, this._MapSizeHeight = this.BgSprite.node.height;
@@ -111,8 +111,8 @@ var n = require('Snake'),
             }
         },
         onEnable: function() {
-            (this.NewerSprite.node.active = !1, this._DataMgr._GameStartTime = (new Date).getTime(), this._DataMgr._CurShareReliveCount = 0, window.wx) && (console.log("uigame onEnable------------------"), wx.getStorageSync("isPlay") || (wx.setStorageSync("isPlay", true), this._IsFirstPause = true, this.NewerSprite.node.active = true));
-            this._SoundMgr = GameGlobal.SoundManager, this._SoundMgr.stopAll(), this._SoundMgr.playSound(s.SoundType_GameBg), this.KillSprite.node.active = !1, cc.director.getCollisionManager().enabled = true, this._KillShowTimer = 0, this._CurTime = 120, 0 == this._DataMgr._CurSelectMode ? (this.TimerLabel.node.active = true, this.TimerSprite.active = true) : (this.TimerLabel.node.active = !1, this.TimerSprite.active = !1), this._NameList = [], GameGlobal.getRandomNameList(9, this._NameList), this._BodyList = [], this._HeadList = [];
+            (this.NewerSprite.node.active = false, this._DataMgr._GameStartTime = (new Date).getTime(), this._DataMgr._CurShareReliveCount = 0, window.wx) && (console.log("uigame onEnable------------------"), wx.getStorageSync("isPlay") || (wx.setStorageSync("isPlay", true), this._IsFirstPause = true, this.NewerSprite.node.active = true));
+            this._SoundMgr = GameGlobal.SoundManager, this._SoundMgr.stopAll(), this._SoundMgr.playSound(s.SoundType_GameBg), this.KillSprite.node.active = false, cc.director.getCollisionManager().enabled = true, this._KillShowTimer = 0, this._CurTime = 120, 0 == this._DataMgr._CurSelectMode ? (this.TimerLabel.node.active = true, this.TimerSprite.active = true) : (this.TimerLabel.node.active = false, this.TimerSprite.active = false), this._NameList = [], GameGlobal.getRandomNameList(9, this._NameList), this._BodyList = [], this._HeadList = [];
             for (var e = 0; e < 10; ++e)
                 if (0 == e) {
                     var t = new n,
@@ -126,14 +126,14 @@ var n = require('Snake'),
                     this._HeadList.push(a);
                     Math.floor(16 * Math.random());
                     var o = [a, a];
-                    this._BodyList.push(o), t.init(a, o, this.AllObjNode, c[e - 1], this.Camera, !1, this._MapSizeWidth, this._MapSizeHeight, e);
+                    this._BodyList.push(o), t.init(a, o, this.AllObjNode, c[e - 1], this.Camera, false, this._MapSizeWidth, this._MapSizeHeight, e);
                     var h = cc.v2(1, 0);
                     h.rotateSelf(3.14 * Math.random()), t.initMoveDir(h), t.setName(this._NameList[e - 1], this.NameBaseNode), t.setMoveSpeed(300), this._SnakeList.push(t)
                 } for (e = 0; e < 80; ++e) this.addFood();
             this.setGameState(f)
         },
         onDisable: function() {
-            cc.director.getCollisionManager().enabled = !1;
+            cc.director.getCollisionManager().enabled = false;
             for (var e = 0; e < 10; ++e) this._SnakeList[e].deadReset();
             this._SnakeList = [], this._Game.DelAllFood()
         },
@@ -177,7 +177,7 @@ var n = require('Snake'),
                     var r = this._DataMgr._MyNickName;
                     0 == r.length && (r = "Me"), t.initMoveDir(cc.v2(1, 0)), t.setName(r, this.NameBaseNode), t.setMoveSpeed(300), t.changeSnakeSize(), this._SnakeList.push(t)
                 } else {
-                    (t = new n).init(this._HeadList[e - 1], this._BodyList[e - 1], this.AllObjNode, c[e - 1], this.Camera, !1, this._MapSizeWidth, this._MapSizeHeight, e);
+                    (t = new n).init(this._HeadList[e - 1], this._BodyList[e - 1], this.AllObjNode, c[e - 1], this.Camera, false, this._MapSizeWidth, this._MapSizeHeight, e);
                     var a = cc.v2(1, 0);
                     a.rotateSelf(3.14 * Math.random()), t.initMoveDir(a), t.setName(this._NameList[e - 1], this.NameBaseNode), t.setMoveSpeed(300), t.changeSnakeSize(), this._SnakeList.push(t)
                 } for (e = 0; e < 80; ++e) this.addFood();
@@ -198,7 +198,7 @@ var n = require('Snake'),
             e.stopPropagation(), this._IsSpeedDown = true
         },
         onSpeedBtnUp: function(e) {
-            e.stopPropagation(), this._IsSpeedDown = !1
+            e.stopPropagation(), this._IsSpeedDown = false
         },
         onSelfBeKilled: function(e) {
             e.stopPropagation(), this.setGameState(h)
@@ -216,7 +216,7 @@ var n = require('Snake'),
         onOtherRelive: function(e, t, i) {
             var r = new n,
                 a = Math.floor(9 * Math.random());
-            r.init(e, t, this.AllObjNode, c[a], this.Camera, !1, this._MapSizeWidth, this._MapSizeHeight, this._SnakeList.length);
+            r.init(e, t, this.AllObjNode, c[a], this.Camera, false, this._MapSizeWidth, this._MapSizeHeight, this._SnakeList.length);
             var o = cc.v2(1, 0);
             o.rotateSelf(3.14 * Math.random()), r.initMoveDir(o), r.setName(i, this.NameBaseNode), r.setMoveSpeed(300), this._SnakeList.push(r), r.setState(1)
         },
@@ -227,7 +227,7 @@ var n = require('Snake'),
             e === this._SnakeList[0] && this.updateSelfSnakeInfo()
         },
         onTouchNewer: function(e) {
-            e.stopPropagation(), this.NewerSprite.node.active = !1, this._IsFirstPause = !1
+            e.stopPropagation(), this.NewerSprite.node.active = false, this._IsFirstPause = false
         },
         setGameState: function(e) {
             if (this._GameState != e)
@@ -249,7 +249,7 @@ var n = require('Snake'),
             e && (this.KillLabel.string = e._KillCount, this.LenLabel.string = e.getSnakeLength())
         },
         onHideKillSprite: function() {
-            this.KillSprite.node.active = !1
+            this.KillSprite.node.active = false
         },
         update: function(e) {
             if (!this._IsFirstPause && (this._KillShowTimer -= e, this._KillShowTimer < 0 && this.KillSprite.node.active && this.onHideKillSprite(), this._GameState != h && this._GameState != d)) {

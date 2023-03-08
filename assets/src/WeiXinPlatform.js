@@ -68,7 +68,7 @@ cc.Class({
                     }
                 });
                 window.wxbutton = n, n.onTap(function(e) {
-                    n.hide(), GameGlobal.UIManager.showMask(!1), wx.login({
+                    n.hide(), GameGlobal.UIManager.showMask(false), wx.login({
                         success: function(e) {
                             console.log("weixin name :", e.code);
                             var t = [];

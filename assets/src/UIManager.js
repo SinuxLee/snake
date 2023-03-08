@@ -13,7 +13,7 @@ cc.Class({
         camera: cc.Camera
     },
     onEnable: function() {
-        this.BgMaskSprite.node.active = !1
+        this.BgMaskSprite.node.active = false
     },
     
     getUIScriptName: function(e) {
@@ -41,13 +41,13 @@ cc.Class({
     },
     closeUI: function(e) {
         if (e >= this.UIList.length) cc.log("closeUI invalid uiType, please check UIList");
-        else if (this.isPopUI(e) ? (this.BgMaskSprite.node.active = !1, this.UIList[e].active = !1) : this.UIList[e].active = !1, this.isPopUI(e) || e == n.UIType_Skin) {
+        else if (this.isPopUI(e) ? (this.BgMaskSprite.node.active = false, this.UIList[e].active = false) : this.UIList[e].active = false, this.isPopUI(e) || e == n.UIType_Skin) {
             var t = this.getUI(n.UIType_Hall);
             null != t && t.node.active && t.resumeAdShow()
         }
     },
     onCloseUI: function(e, t) {
-        this.UIList[t].active = !1
+        this.UIList[t].active = false
     },
     getUI: function(e) {
         if (!(e >= this.UIList.length)) return this.UIList[e].getComponent(this.getUIScriptName(e));

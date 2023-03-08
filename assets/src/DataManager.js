@@ -21,7 +21,7 @@ var a = require('UIType'),
     s = cc.Class({
         properties: {
             HeadUrl: "",
-            IsCanTake: !1,
+            IsCanTake: false,
             Reward: 0,
             ID: 0,
             OpenID: ""
@@ -32,8 +32,8 @@ var a = require('UIType'),
             ID: 0,
             Price: 5,
             Type: 0,
-            IsOwn: !1,
-            IsUse: !1
+            IsOwn: false,
+            IsUse: false
         }
     });
 cc.Class({
@@ -56,7 +56,7 @@ cc.Class({
             type: cc.Integer
         },
         IsShareRelive: {
-            default: !1,
+            default: false,
             // type: cc.Boolean
         },
         VideoAdid: "adunit-bf61185a259df4c2",
@@ -71,7 +71,7 @@ cc.Class({
         _CurSelectMode: 0,
         _FriendDataList: [],
         _MyQianDaoCount: 0,
-        _MyQianDaoTake: !1,
+        _MyQianDaoTake: false,
         _SignInitList: [],
         _FuHuoCostGold: 0,
         _LinkIconURL: "",

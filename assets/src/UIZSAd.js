@@ -7,7 +7,7 @@ cc.Class({
         AdItemRight: n
     },
     onEnable: function() {
-        for (var e = this, t = 0; t < this.AdItemArray.length; ++t) this.AdItemArray[t].node.active = !1;
+        for (var e = this, t = 0; t < this.AdItemArray.length; ++t) this.AdItemArray[t].node.active = false;
         this.AdItemLeft.node.stopAllActions(), this.AdItemRight.node.stopAllActions(), this.AdItemLeft.node.angle = -45, this.AdItemRight.node.angle = -45;
         var i = cc.rotateBy(.8, 90),
             n = cc.rotateBy(.8, -90),
