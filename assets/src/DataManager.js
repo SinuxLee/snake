@@ -4,9 +4,9 @@ var n;
 function r(e, t, i) {
     return t in e ? Object.defineProperty(e, t, {
         value: i,
-        enumerable: !0,
-        configurable: !0,
-        writable: !0
+        enumerable: true,
+        configurable: true,
+        writable: true
     }) : e[t] = i, e
 }
 var a = require('UIType'),
@@ -82,91 +82,91 @@ cc.Class({
         _ShareImageUrl: "",
         _ShareContent: "",
         _ShareReward: 5,
-        _IsShareRelive: !0
-    }, 
-    r(n, "_ShareReliveCount", 0), 
-    r(n, "_CurShareReliveCount", 0), 
-    r(n, "_CurZSAdData", null), 
-    r(n, "_SKinDataArray", []), 
-    r(n, "_CurMySKinIndex", 0), 
-    r(n, "_CurRecord", 0), 
-    r(n, "_GameStartTime", 0), n),
-    onLoad: function() {
+        _IsShareRelive: true
+    },
+        r(n, "_ShareReliveCount", 0),
+        r(n, "_CurShareReliveCount", 0),
+        r(n, "_CurZSAdData", null),
+        r(n, "_SKinDataArray", []),
+        r(n, "_CurMySKinIndex", 0),
+        r(n, "_CurRecord", 0),
+        r(n, "_GameStartTime", 0), n),
+    onLoad: function () {
         cc.log("DataManager onLoad----------------------------")
     },
-    onEnable: function() {
+    onEnable: function () {
         var e = this;
         void 0 != window.wx && wx.getStorage({
             key: "wxData",
-            success: function(t) {
+            success: function (t) {
                 console.log("getStorage user success ", t), e._MyAvatarURL = t.data.avaUrl, e._MyNickName = t.data.nick, GameGlobal.UIManager.getUI(a.UIType_Hall).updateMyInfo()
             },
-            fail: function() {
+            fail: function () {
                 console.log("getStorage wxData fail ")
             }
         })
     },
-    start: function() {
+    start: function () {
         cc.log("DataManager start"), this._CurSelectMode = 0
     },
-    getCurScore: function() {
+    getCurScore: function () {
         return this.CurScore
     },
-    setCurScore: function(e) {
+    setCurScore: function (e) {
         this.CurScore = e
     },
-    getCurGold: function() {
+    getCurGold: function () {
         return this.CurGold
     },
-    setCurGold: function(e) {
+    setCurGold: function (e) {
         void 0 != e && (this.CurGold = e)
     },
-    getCurFlower: function() {
+    getCurFlower: function () {
         return this.CurFlower
     },
-    setCurFlower: function(e) {
+    setCurFlower: function (e) {
         e < 0 && (e = 0), this.CurFlower = e
     },
-    setDiamond: function(e) {
+    setDiamond: function (e) {
         void 0 != e && (e < 0 && (e = 0), this.CurDiamond = e)
     },
-    getCurDiamond: function() {
+    getCurDiamond: function () {
         return this.CurDiamond
     },
-    getFuHuoGold: function() {
+    getFuHuoGold: function () {
         return this._FuHuoCostGold
     },
-    setShareRelive: function(e) {
+    setShareRelive: function (e) {
         void 0 != e && (this.IsShareRelive = e)
     },
-    getShareRelive: function() {
+    getShareRelive: function () {
         return this.IsShareRelive
     },
-    setShareTitle: function(e) {
+    setShareTitle: function (e) {
         this._ShareTitle = e
     },
-    getShareTitle: function() {
+    getShareTitle: function () {
         return this._ShareTitle
     },
-    setShareImage: function(e) {
+    setShareImage: function (e) {
         this._ShareImageUrl = e
     },
-    getShareImage: function() {
+    getShareImage: function () {
         return this._ShareImageUrl
     },
-    setShareReliveCount: function(e) {
+    setShareReliveCount: function (e) {
         this._ShareReliveCount = e
     },
-    getShareReliveCount: function() {
+    getShareReliveCount: function () {
         return this._ShareReliveCount
     }
-}), 
+}),
 
-module.exports = {
-    FriendInviteData: s, 
-    SignInitData: o,
-    SkinData: c,
-}
+    module.exports = {
+        FriendInviteData: s,
+        SignInitData: o,
+        SkinData: c,
+    }
 
 window.GameRewardType = {
     RT_GOLD: 0,

@@ -9,16 +9,18 @@ cc.Class({
         _lastMoveVec: cc.v2(1, 0),
         _moveVec: cc.v2(1, 0),
         _moveSpeed: 0,
-        _IsFirstUpdate: !0,
+        _IsFirstUpdate: true,
         _CurStartPos: cc.v2(0, 0),
         _CurMoveDistance: 0,
         _CurBodyIndex: -1,
         _MoveStartPos: cc.v2(0, 0),
         _lastPos: cc.v2(0, 0)
     },
+
     start: function() {
-        this._IsFirstUpdate = !0
+        this._IsFirstUpdate = true
     },
+
     setType: function(e) {
         (e < 1 || e > 16) && (e = 1);
         var t = this.node.getComponent(cc.Sprite),
@@ -46,7 +48,7 @@ cc.Class({
         this._CurBodyIndex = e
     },
     reset: function() {
-        this._IsFirstUpdate = !0, this.node.width = 30, this.node.height = 30
+        this._IsFirstUpdate = true, this.node.width = 30, this.node.height = 30
     },
     getBodyPrePos1: function(e, t, i, n, r, a) {
         if (0 == this._CurBodyIndex) {

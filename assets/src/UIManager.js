@@ -15,7 +15,7 @@ cc.Class({
     onEnable: function() {
         this.BgMaskSprite.node.active = !1
     },
-    start: function() {},
+    
     getUIScriptName: function(e) {
         return ["UIHall", "UIGame", "UIGameOver", "UILoading", "UIGameEnd", "UIShare", "UIMessageTip", "UIKeFu", "UIInviteFriend", "UIQianDao", "UISkin", "UISetting", "UIZSAd"][e]
     },
@@ -28,8 +28,8 @@ cc.Class({
     openUI: function(e) {
         if (e == n.UIType_Hall && (this.camera.node.x = 0, this.camera.node.y = 0, console.log("back --------------")), e >= this.UIList.length) cc.log("openUI invalid uiType, please check UIList");
         else if (null != this.UIList[e] && void 0 != this.UIList[e]) {
-            if (this.UIList[e].active = !0, this.isPopUI(e)) {
-                this.BgMaskSprite.node.active = !0;
+            if (this.UIList[e].active = true, this.isPopUI(e)) {
+                this.BgMaskSprite.node.active = true;
                 var t = this.UIList[e];
                 t.scale = 0, t.runAction(cc.scaleTo(.1, 1).easing(cc.easeSineIn()))
             }

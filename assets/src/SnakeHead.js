@@ -1,5 +1,5 @@
-var n = require('SnakeBody'),
-    r = require('Food'),
+var SnakeBody = require('SnakeBody'),
+    Food = require('Food'),
     a = require('UIType');
 cc.Class({
     extends: cc.Component,
@@ -29,21 +29,21 @@ cc.Class({
         if (null != this._Game)
             if (0 == i) {
                 if ("body" == (h = e.node.group)) {
-                    var o = e.node.getComponent(n);
+                    var o = e.node.getComponent(SnakeBody);
                     if (this._Snake === o._Snake) return;
                     if (1 == this._Snake._State || 1 == o._Snake._State) return;
                     if (this._Snake._PlayerSelf) {
                         if (0 == this._Snake._State) {
-                            var s = new cc.Event.EventCustom("meKill", !0);
+                            var s = new cc.Event.EventCustom("meKill", true);
                             this.node.dispatchEvent(s)
                         }
-                    } else(s = new cc.Event.EventCustom("otherKill", !0)).detail = {
+                    } else(s = new cc.Event.EventCustom("otherKill", true)).detail = {
                         killed: o._Snake,
                         beKilled: this._Snake
                     }, this.node.dispatchEvent(s)
                 } else if ("food" == h) {
                     if (this._Game.DelUseFood(e.node)) {
-                        var c = e.node.getComponent(r).getAddWeight();
+                        var c = e.node.getComponent(Food).getAddWeight();
                         this._Snake.addWeight(c)
                     }
                     var f = GameGlobal.UIManager.getUI(a.UIType_Game);
@@ -52,7 +52,7 @@ cc.Class({
             } else if (1e3 == i) {
             var h;
             if ("body" == (h = e.node.group)) {
-                o = e.node.getComponent(n);
+                o = e.node.getComponent(SnakeBody);
                 if (this._Snake === o._Snake) return;
                 if (0 == this._Snake._PlayerSelf) {
                     if (100 * Math.random() > 85) return;

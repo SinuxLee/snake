@@ -5,7 +5,5 @@ cc.Class({
             default: null,
             type: cc.Button
         }
-    },
-    start: function() {},
-    update: function(e) {}
+    }
 })

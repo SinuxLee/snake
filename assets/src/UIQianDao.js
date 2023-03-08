@@ -32,7 +32,7 @@ cc.Class({
         for (var t = 0; t < this.QianDaoItem.length - 1; ++t)
             if (t + 1 < e._SignInitList.length) {
                 var i = e._SignInitList[t];
-                1 == i.signStatus ? this.QianDaoItem[t].setMask(!0) : (this.QianDaoItem[t].setMask(!1), 2 == i.signStatus && (e._MyQianDaoCount = i.signDay))
+                1 == i.signStatus ? this.QianDaoItem[t].setMask(true) : (this.QianDaoItem[t].setMask(!1), 2 == i.signStatus && (e._MyQianDaoCount = i.signDay))
             } this.TakeBtn.interactable = !e._MyQianDaoTake
     },
     onClose: function(e) {

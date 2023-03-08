@@ -10,11 +10,11 @@ cc.Class({
             default: null,
             type: cc.Sprite
         },
-        _needUpdate: !0,
+        _needUpdate: true,
         _MatchAd: null
     },
     onEnable: function() {
-        if (cc.log("UILoading onEnable enter--------------------------------------"), this.LoadingProgress.progress = 0, this.GuangSprite && (this.GuangSprite.node.x = this.LoadingProgress.barSprite.node.x), this._needUpdate = !0, cc.sys.platform === cc.sys.WECHAT_GAME) {
+        if (cc.log("UILoading onEnable enter--------------------------------------"), this.LoadingProgress.progress = 0, this.GuangSprite && (this.GuangSprite.node.x = this.LoadingProgress.barSprite.node.x), this._needUpdate = true, cc.sys.platform === cc.sys.WECHAT_GAME) {
             if (void 0 != window.wx) {
                 null != this._MatchAd && (this._MatchAd.destroy(), this._MatchAd = null), this._MatchAd = wx.createBannerAd({
                     adUnitId: GameGlobal.DataManager.BannerAdid1,
@@ -44,7 +44,7 @@ cc.Class({
     onDisable: function() {
         this._needUpdate = !1, cc.sys.platform === cc.sys.WECHAT_GAME ? void 0 != window.wx && this._MatchAd && this._MatchAd.hide() : cc.sys.platform === cc.sys.QQ_PLAY && this._MatchAd && this._MatchAd.destory(), this._MatchAd = null
     },
-    start: function() {},
+    
     update: function(e) {
         if (0 != this._needUpdate) {
             var t = .25 * e;

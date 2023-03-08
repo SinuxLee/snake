@@ -71,7 +71,7 @@ cc.Class({
         this._stickPos = t;
         var r = this.node.getPosition().x + t.x,
             a = this.node.getPosition().y + t.y;
-        return n > i && (this.dot.setPosition(cc.Vec2(r, a)), !0)
+        return n > i && (this.dot.setPosition(cc.Vec2(r, a)), true)
     },
     _touchMoveEvent: function(e) {
         var t = this.node.convertToNodeSpaceAR(e.getLocation()),

@@ -6,7 +6,7 @@ cc.Class({
             default: [],
             type: [cc.AudioClip]
         },
-        _EnableMusic: !0,
+        _EnableMusic: true,
         _OldVolume: 1,
         _BgVolume: 1,
         _OldSoundVolume: 1,

@@ -9,7 +9,7 @@ function a(e) {
 function o(e) {
     e && (r ? r.replace(e) : r = new n({
         phrases: e,
-        allowMissing: !0
+        allowMissing: true
     }))
 }
 window.i18n || (window.i18n = {

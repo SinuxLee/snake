@@ -21,91 +21,101 @@ cc.Class({
             default: null,
             type: cc.Prefab
         },
-        _SnakeHeadUseList: {
-            default: []
-        },
-        _SnakeHeadFreeList: {
-            default: []
-        },
-        _SnakeBodyUseList: {
-            default: []
-        },
-        _SnakeBodyFreeList: {
-            default: []
-        },
-        _SnakeFoodUseList: {
-            default: []
-        },
-        _SnakeFoodFreeList: {
-            default: []
-        },
+        
+        _SnakeHeadUseList: [],
+        _SnakeHeadFreeList: [],
+        _SnakeBodyUseList: [],
+        _SnakeBodyFreeList: [],
+        _SnakeFoodUseList: [],
+        _SnakeFoodFreeList: [],
         _SnakeNameFreeList: [],
         _SnakeNameUseList: [],
         _SnakeGodSpriteList: [],
         _SnakeGoldUseList: []
     },
+
     onLoad: function() {
-        cc.log("Game onLoad start ------------------------------------");
-        for (var e = 0; e < 11; ++e) this._SnakeHeadFreeList.push(cc.instantiate(this.SnakeHeadPrefab));
-        for (e = 0; e < 10; ++e) this._SnakeNameFreeList.push(cc.instantiate(this.SnakeNamePrefab));
-        for (e = 0; e < 300; ++e) this._SnakeBodyFreeList.push(cc.instantiate(this.SnakeBodyPrefab));
-        for (e = 0; e < 300; ++e) this._SnakeFoodFreeList.push(cc.instantiate(this.SnakeFoodPrefab));
-        for (e = 0; e < 10; ++e) this._SnakeGodSpriteList.push(cc.instantiate(this.GodSpritePrefab));
-        cc.log("Game onLoad end ------------------------------------")
         cc.game.setFrameRate(60)
-    },
-    start: function() {
-        if (void 0 != window.wx) {
-            var e = wx.getOpenDataContext().canvas;
-            e && (e.width = 2 * cc.game.canvas.width, e.height = 2 * cc.game.canvas.height)
+
+        for (let i = 0; i < 10; i++) {
+            this._SnakeHeadFreeList.push(cc.instantiate(this.SnakeHeadPrefab));
+            this._SnakeNameFreeList.push(cc.instantiate(this.SnakeNamePrefab));
+            this._SnakeGodSpriteList.push(cc.instantiate(this.GodSpritePrefab));
+        }
+
+        for (let i = 0; i < 300; i++) {
+            this._SnakeBodyFreeList.push(cc.instantiate(this.SnakeBodyPrefab));
+            this._SnakeFoodFreeList.push(cc.instantiate(this.SnakeFoodPrefab));
         }
     },
+
+    start: function() {
+        if (!window.wx) return
+        const cvs = wx.getOpenDataContext().canvas;
+        cvs && (cvs.width = 2 * cc.game.canvas.width, cvs.height = 2 * cc.game.canvas.height)
+    },
+
     GetFreeHead: function() {
         return this.GetFree(this._SnakeHeadFreeList, this._SnakeHeadUseList, this.SnakeHeadPrefab)
     },
+
     DelUseHead: function(e) {
         this.DelUse(this._SnakeHeadFreeList, this._SnakeHeadUseList, e)
     },
+
     GetFreeNameLabel: function() {
         return this.GetFree(this._SnakeNameFreeList, this._SnakeNameUseList, this.SnakeNamePrefab)
     },
+
     DelUseNameLabel: function(e) {
         this.DelUse(this._SnakeNameFreeList, this._SnakeNameUseList, e)
     },
+
     GetFreeBody: function() {
         return this.GetFree(this._SnakeBodyFreeList, this._SnakeBodyUseList, this.SnakeBodyPrefab)
     },
+
     DelUseBody: function(e) {
         this.DelUse(this._SnakeBodyFreeList, this._SnakeBodyUseList, e)
     },
+
     GetFreeFood: function() {
         return this.GetFree(this._SnakeFoodFreeList, this._SnakeFoodUseList, this.SnakeFoodPrefab)
     },
+
     DelUseFood: function(e) {
         return this.DelUse(this._SnakeFoodFreeList, this._SnakeFoodUseList, e)
     },
+
     GetFreeGodSprite: function() {
         return this.GetFree(this._SnakeGodSpriteList, this._SnakeGoldUseList, this.GodSpritePrefab)
     },
+
     DelGodSprite: function(e) {
         return this.DelUse(this._SnakeGodSpriteList, this._SnakeGoldUseList, e)
     },
+
     DelAllFood: function() {
-        for (var e = 0; e < this._SnakeFoodUseList.length; ++e) this._SnakeFoodFreeList.push(this._SnakeFoodUseList[e]), this._SnakeFoodUseList[e].parent = null;
+        for (var e = 0; e < this._SnakeFoodUseList.length; ++e) {
+            this._SnakeFoodFreeList.push(this._SnakeFoodUseList[e])
+            this._SnakeFoodUseList[e].parent = null;
+        }
         this._SnakeFoodUseList.splice(0, this._SnakeFoodUseList.length)
     },
-    GetFree: function(e, t, i) {
-        if (0 == e.length) {
-            cc.log("GetFree new ");
-            var n = cc.instantiate(i);
-            return e.push(n), this.GetFree(e, t, i)
-        }
-        var r = e.pop();
-        return t.push(r), r
+
+    GetFree: function(freeList, usedList, prefab) {
+        let item = freeList.pop();
+        if (item == null) item = cc.instantiate(prefab);
+        return usedList.push(item), item
     },
-    DelUse: function(e, t, i) {
-        i.parent = null;
-        var n = t.indexOf(i);
-        return !(n < 0 || n >= t.length) && (t.splice(n, 1), e.push(i), !0)
+
+    DelUse: function(freeList, usedList, node) {
+        node.parent = null;
+        const idx = usedList.indexOf(node);
+        if(idx < 0 || idx >= usedList.length) return false;
+
+        usedList.splice(idx, 1)
+        freeList.push(node)
+        return true
     }
 })

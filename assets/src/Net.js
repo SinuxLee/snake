@@ -8,9 +8,9 @@ var r = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? func
 function a(e, t, i) {
     return t in e ? Object.defineProperty(e, t, {
         value: i,
-        enumerable: !0,
-        configurable: !0,
-        writable: !0
+        enumerable: true,
+        configurable: true,
+        writable: true
     }) : e[t] = i, e
 }
 var o = require('siteinfo'),
@@ -33,7 +33,7 @@ cc.Class((a(n = {
     onEnable: function() {
         this.requestUserInfo()
     },
-    start: function() {},
+    
     getURL: function(e, t) {
         var i = o.siteroot + "?i=" + o.uniacid + "&t=" + o.multiid + "&v=" + o.version + "&from=wxapp&";
         if (e && ((e = e.split("/"))[0] && (i += "c=" + e[0] + "&"), e[1] && (i += "a=" + e[1] + "&"), e[2] && (i += "do=" + e[2] + "&")), t && "object" === (void 0 === t ? "undefined" : r(t)))
@@ -74,7 +74,7 @@ cc.Class((a(n = {
             }));
             s = s.concat(f)
         }
-        s = r.sortBy(s, "name"), s = r.uniq(s, !0, "name");
+        s = r.sortBy(s, "name"), s = r.uniq(s, true, "name");
         for (var d = "", u = 0; u < s.length; u++) s[u] && s[u].name && s[u].value && (d += s[u].name + "=" + s[u].value, u < s.length - 1 && (d += "&"));
         return n = n || o.token, console.log("危情生成的" + d + "---------" + n), c = a(d + n)
     }
@@ -96,7 +96,7 @@ cc.Class((a(n = {
         }));
         s = s.concat(f)
     }
-    s = r.sortBy(s, "name"), s = r.uniq(s, !0, "name");
+    s = r.sortBy(s, "name"), s = r.uniq(s, true, "name");
     for (var d = "", u = 0; u < s.length; u++) s[u] && s[u].name && s[u].value && (d += s[u].name + "=" + s[u].value, u < s.length - 1 && (d += "&"));
     return n = n || o.token, console.log("危情生成的" + d + "---------" + n), c = a(d + n)
 }), a(n, "getUrlParam_qq", function(e, t) {
@@ -117,7 +117,7 @@ cc.Class((a(n = {
         }));
         s = s.concat(f)
     }
-    s = r.sortBy(s, "name"), s = r.uniq(s, !0, "name");
+    s = r.sortBy(s, "name"), s = r.uniq(s, true, "name");
     for (var d = "", u = 0; u < s.length; u++) s[u] && s[u].name && s[u].value && (d += s[u].name + "=" + s[u].value, u < s.length - 1 && (d += "&"));
     return n = n || o.token, console.log("QQ生成的" + d + "---------" + n), d + "&sign=" + (c = a(d + n))
 }), a(n, "request", function(e, t, i, n) {
@@ -177,7 +177,7 @@ cc.Class((a(n = {
         session3rd: GameGlobal.WeiXinPlatform._SessionID,
         id: e
     }, function(e, i) {
-        console.log("requestSignReward callback----------", i), GameGlobal.UIManager.showMessage("领取成功"), GameGlobal.DataManager.setCurGold(e.gold), GameGlobal.DataManager.setDiamond(e.diamond), GameGlobal.DataManager._MyQianDaoTake = !0, GameGlobal.UIManager.RefreshCoin();
+        console.log("requestSignReward callback----------", i), GameGlobal.UIManager.showMessage("领取成功"), GameGlobal.DataManager.setCurGold(e.gold), GameGlobal.DataManager.setDiamond(e.diamond), GameGlobal.DataManager._MyQianDaoTake = true, GameGlobal.UIManager.RefreshCoin();
         var n = GameGlobal.UIManager.getUI(s.UIType_QianDao);
         n && n.refreshUI(), t.requestSign(GameGlobal.WeiXinPlatform._SessionID)
     })
@@ -192,12 +192,12 @@ cc.Class((a(n = {
     for (var r = 0; r < 16; ++r) {
         (f = new h).ID = r + 1, f.IsOwn = !1, f.IsUse = !1, f.Price = d[r], f.Type = u[r], t._SKinDataArray.push(f)
     }
-    n && n < t._SKinDataArray.length && ((f = t._SKinDataArray[n]).IsUse = !0);
+    n && n < t._SKinDataArray.length && ((f = t._SKinDataArray[n]).IsUse = true);
     var a, o = GameGlobal.localStorage.getItem("tcs_skinlist");
     if (o || (o = '{"skin_list":[1]}'), (a = JSON.parse(o).skin_list) && a.length > 0)
         for (var c = 0; c < a.length; ++c) {
             var f, l = a[c];
-            if (l && l - 1 < t._SKinDataArray.length)(f = t._SKinDataArray[l - 1]).IsOwn = !0
+            if (l && l - 1 < t._SKinDataArray.length)(f = t._SKinDataArray[l - 1]).IsOwn = true
         }
     GameGlobal.UIManager.getUI(s.UIType_Skin).updateSkin()
 }), a(n, "requestInviteCome", function(e) {
@@ -283,7 +283,7 @@ cc.Class((a(n = {
         }));
         a = a.concat(o)
     }
-    a = n.sortBy(a, "name"), a = n.uniq(a, !0, "name");
+    a = n.sortBy(a, "name"), a = n.uniq(a, true, "name");
     for (var c = "", f = 0; f < a.length; f++) a[f] && a[f].name && a[f].value && (c += a[f].name + ":" + a[f].value);
     c += "u9GUhTZ8DzV2f5ko", console.log("getZSSign before ", c);
     var h = r(c).toLowerCase();

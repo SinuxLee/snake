@@ -133,7 +133,7 @@ cc.Class({
         }
     },
     pauseAdShow: function() {
-        cc.sys.platform === cc.sys.QQ_PLAY && (cc.log("UIHall pauseAdShow enter --------------------------------"), this._QQAd && this._QQAd.destory(), this._QQAd = null, this._IsAdPause = !0, cc.log("UIHall pauseAdShow leave --------------------------------"))
+        cc.sys.platform === cc.sys.QQ_PLAY && (cc.log("UIHall pauseAdShow enter --------------------------------"), this._QQAd && this._QQAd.destory(), this._QQAd = null, this._IsAdPause = true, cc.log("UIHall pauseAdShow leave --------------------------------"))
     },
     resumeAdShow: function() {
         this._IsAdPause = !1
@@ -147,7 +147,7 @@ cc.Class({
         }, null, function(i, n) {
             console.log("SysInfo ------------"), i.sysInfo && (i = i.sysInfo, t._FuHuoCostGold = i.revive, t._LinkIconURL = i.jump_img, t._LinkAppID = i.appid, t._LinkPath = i.path, t._LinkExtra = i.extra, t._ShareReward = i.reward, t._ShareReliveCount = i.revive_type), e.updateLinkBtn()
         }), cc.sys.platform === cc.sys.WECHAT_GAME && void 0 != window.wx && (console.log("showShareMenu call "), wx.showShareMenu({
-            withShareTicket: !0,
+            withShareTicket: true,
             success: function() {},
             fail: function() {}
         }), wx.postMessage({
@@ -220,7 +220,7 @@ cc.Class({
         })
     },
     onRankBtn: function(e) {
-        e.stopPropagation(), GameGlobal.UIManager.openUI(n.UIType_RankQQ), cc.sys.platform === cc.sys.WECHAT_GAME ? (this.SubContentSprite.node.active = !0, this.SubMaskSprite.node.active = !0, this.RankCloseBtn.node.active = !0) : cc.sys.platform === cc.sys.QQ_PLAY && GameGlobal.UIManager.openUI(n.UIType_RankQQ)
+        e.stopPropagation(), GameGlobal.UIManager.openUI(n.UIType_RankQQ), cc.sys.platform === cc.sys.WECHAT_GAME ? (this.SubContentSprite.node.active = true, this.SubMaskSprite.node.active = true, this.RankCloseBtn.node.active = true) : cc.sys.platform === cc.sys.QQ_PLAY && GameGlobal.UIManager.openUI(n.UIType_RankQQ)
     },
     onRankCloseBtn: function(e) {
         e.stopPropagation(), this.SubContentSprite.node.active = !1, this.SubMaskSprite.node.active = !1, this.RankCloseBtn.node.active = !1, void 0 != window.wx && wx.postMessage({

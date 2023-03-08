@@ -12,27 +12,27 @@ cc.Class({
         this._Index = e, this._IsBorderAd = !1;
         var t = GameGlobal.DataManager._CurZSAdData,
             i = this;
-        this._Index < t.app_link_list.length && (this.node.active = !0, this.AdSprite.node.active = !1, (t = t.app_link_list[this._Index]).app_icon && cc.loader.load({
+        this._Index < t.app_link_list.length && (this.node.active = true, this.AdSprite.node.active = !1, (t = t.app_link_list[this._Index]).app_icon && cc.loader.load({
             url: t.app_icon,
             type: "png"
         }, function(e, t) {
             if (t instanceof cc.Texture2D) {
-                i.AdSprite.node.active = !0;
+                i.AdSprite.node.active = true;
                 var n = new cc.SpriteFrame(t);
                 i.AdSprite.spriteFrame = n
             }
         }))
     },
     initBorderAd: function(e) {
-        this._IsBorderAd = !0, this._Index = e;
+        this._IsBorderAd = true, this._Index = e;
         var t = GameGlobal.DataManager._CurZSAdData,
             i = this;
-        this._Index < t.app_cb_list.length && (this.node.active = !0, this.AdSprite.node.active = !1, (t = t.app_cb_list[this._Index]).app_icon && cc.loader.load({
+        this._Index < t.app_cb_list.length && (this.node.active = true, this.AdSprite.node.active = !1, (t = t.app_cb_list[this._Index]).app_icon && cc.loader.load({
             url: t.app_icon,
             type: "png"
         }, function(e, t) {
             if (t instanceof cc.Texture2D) {
-                i.AdSprite.node.active = !0;
+                i.AdSprite.node.active = true;
                 var n = new cc.SpriteFrame(t);
                 i.AdSprite.spriteFrame = n
             }

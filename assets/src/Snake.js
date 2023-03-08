@@ -3,9 +3,9 @@ var n;
 function r(e, t, i) {
     return t in e ? Object.defineProperty(e, t, {
         value: i,
-        enumerable: !0,
-        configurable: !0,
-        writable: !0
+        enumerable: true,
+        configurable: true,
+        writable: true
     }) : e[t] = i, e
 }
 var a = require('SnakeBody'),
@@ -185,19 +185,19 @@ cc.Class({
         if (0 == e && (e = .017), null == this._SnakeHead) return !1;
         if (this._StateTimer -= e, 1 == this._State && this._StateTimer < 0 && (this._StateTimer = 0, this._State = 0), this._PlayerSelf) {
             if (Math.abs(this._SnakeHead.x) > this._MapWidth / 2 || Math.abs(this._SnakeHead.y) > this._MapHeight / 2) {
-                var t = new cc.Event.EventCustom("meBound", !0);
+                var t = new cc.Event.EventCustom("meBound", true);
                 return this._SnakeHead.dispatchEvent(t), !1
             }
         } else Math.abs(this._SnakeHead.x) > this._MapWidth / 2 - 200 ? Math.abs(this._SnakeHead.y) > this._MapHeight / 2 - 200 ? this.changeAI(10, cc.v2(-this._MoveVec.x, -this._MoveVec.y)) : this.changeAI(10, cc.v2(-this._MoveVec.x, this._MoveVec.y)) : Math.abs(this._SnakeHead.y) > this._MapHeight / 2 - 200 && this.changeAI(10, cc.v2(this._MoveVec.x, -this._MoveVec.y)), this.aiUpdate(e);
         this._PosUpdateTime -= e;
         var i = !1;
-        this._PosUpdateTime <= 0 && (this._LastMoveVec = this._MoveVec, this._HeadPrePositon = this._SnakeHead.position, i = !0);
+        this._PosUpdateTime <= 0 && (this._LastMoveVec = this._MoveVec, this._HeadPrePositon = this._SnakeHead.position, i = true);
         var n = this._MoveVec.mul(this._MoveSpeed * e);
         this._SnakeHead.position = this._SnakeHead.position.addSelf(n), this._AttachLabel.x = this._SnakeHead.x, this._AttachLabel.y = this._SnakeHead.y + 80;
         for (var r = this._HeadBodyList.length, o = 0; o < r; ++o) {
             this._HeadBodyList[o].getComponent(a).updateBody(e, this._SnakeHead, this._HeadBodyList, this._LastMoveVec, this._SnakeHead.position, i)
         }
-        return !0
+        return true
     },
     updateGodSpritePos: function() {
         for (var e = this._SnakeHead.x, t = this._SnakeHead.y, i = this._SnakeHead.x, n = this._SnakeHead.y, r = this._HeadBodyList.length, a = 0; a < r; ++a) {
@@ -214,7 +214,7 @@ cc.Class({
         if (0 == e && (e = .017), null == this._SnakeHead) return !1;
         if (this._PlayerSelf) {
             if (Math.abs(this._SnakeHead.x) > this._MapWidth / 2 || Math.abs(this._SnakeHead.y) > this._MapHeight / 2) {
-                var t = new cc.Event.EventCustom("meBound", !0);
+                var t = new cc.Event.EventCustom("meBound", true);
                 return this._SnakeHead.dispatchEvent(t), !1
             }
         } else(Math.abs(this._SnakeHead.x) > this._MapWidth / 2 - 200 || Math.abs(this._SnakeHead.y) > this._MapHeight / 2 - 200) && (this._SnakeHead.x > this._MapWidth / 2 - 200 ? this._SnakeHead.x = this._MapWidth / 2 - 200 - 10 : this._SnakeHead.x < -(this._MapWidth / 2 - 200) && (this._SnakeHead.x = 10 - (this._MapWidth / 2 - 200)), this._SnakeHead.y > this._MapHeight / 2 - 200 ? this._SnakeHead.y = this._MapHeight / 2 - 200 - 10 : this._SnakeHead.y < -(this._MapHeight / 2 - 200) && (this._SnakeHead.y = 10 - (this._MapHeight / 2 - 200)), this.changeAI(10, cc.v2(-this._MoveVec.x, -this._MoveVec.y))), this.aiUpdate(e);
@@ -229,13 +229,13 @@ cc.Class({
             var h = this._HeadBodyList[f].getComponent(a);
             (f + 1) * this._BodySpace < this._MovePath.length && (h.node.position = this._MovePath[(f + 1) * this._BodySpace]), this._MovePath.length > c * (1 + this._BodySpace) && this._MovePath.pop()
         }
-        return this._StateTimer -= e, 1 == this._State && (this.updateGodSpritePos(), 0 == this._GodSprite.active && (this._GodSprite.active = !0), this._StateTimer < 0 && (this._StateTimer = 0, this.setState(0))), !0
+        return this._StateTimer -= e, 1 == this._State && (this.updateGodSpritePos(), 0 == this._GodSprite.active && (this._GodSprite.active = true), this._StateTimer < 0 && (this._StateTimer = 0, this.setState(0))), true
     },
     updateShow: function(e) {
         if (0 == e && (e = .017), null == this._SnakeHead) return !1;
         this._StateTimer -= e, 1 == this._State && this._StateTimer < 0 && (this._StateTimer = 0, this._State = 0), this._PosUpdateTime -= e;
         var t = !1;
-        if (this._PosUpdateTime <= 0 && (this._LastMoveVec = this._MoveVec, this._HeadPrePositon = this._SnakeHead.position, t = !0), this._SnakeHead.position.sub(this._CurShowMoveStartPos).magSqr() > this._CurShowMoveDistance * this._CurShowMoveDistance) {
+        if (this._PosUpdateTime <= 0 && (this._LastMoveVec = this._MoveVec, this._HeadPrePositon = this._SnakeHead.position, t = true), this._SnakeHead.position.sub(this._CurShowMoveStartPos).magSqr() > this._CurShowMoveDistance * this._CurShowMoveDistance) {
             var i;
             this._CurMoveIndex >= this._ShowMovePosList.length && (this._CurMoveIndex = 0), i = this._ShowMovePosList[this._CurMoveIndex], this._CurMoveIndex++, this._CurShowMoveStartPos = this._SnakeHead.position;
             var n = i.sub(this._CurShowMoveStartPos);
@@ -246,6 +246,6 @@ cc.Class({
         for (var o = this._HeadBodyList.length, s = 0; s < o; ++s) {
             this._HeadBodyList[s].getComponent(a).updateBody(e, this._SnakeHead, this._HeadBodyList, this._LastMoveVec, this._HeadPrePositon, t)
         }
-        return !0
+        return true
     }
 })

@@ -22,7 +22,7 @@ cc.Class({
             type: cc.Sprite
         }
     },
-    start: function() {},
+    
     init: function(e, t) {
         this.IndexLabel.string = (e + 1).toString(), this.createImage(t.url), this.NickNameLabel.string = t.nick, this.ScoreLabel.string = "" + t.score, this.IndexSprite.node.active = e <= 2
     },

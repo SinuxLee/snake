@@ -8,7 +8,7 @@ cc.Class({
         MaskSprite: cc.Sprite,
         ReWardAtlas: cc.SpriteAtlas
     },
-    start: function() {},
+    
     setParam: function(e, t, i) {
         this.DayLabel.string = "第" + e + "天";
         var n = "";

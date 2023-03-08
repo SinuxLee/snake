@@ -75,7 +75,7 @@ cc.Class({
         var r = GameGlobal.DataManager;
         if (!(e >= r._SKinDataArray.length)) {
             var a = r._SKinDataArray[e];
-            a && (a.IsOwn ? (this.BuyBtn.node.active = !1, this.UseBtn.node.active = !a.IsUse) : (this.BuyBtn.node.active = !0, this.UseBtn.node.active = !1))
+            a && (a.IsOwn ? (this.BuyBtn.node.active = !1, this.UseBtn.node.active = !a.IsUse) : (this.BuyBtn.node.active = true, this.UseBtn.node.active = !1))
         }
     },
     onBlock: function(e) {

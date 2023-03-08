@@ -2,7 +2,7 @@ var n = require('LanguageData');
 cc.Class({
     extends: cc.Component,
     editor: {
-        executeInEditMode: !0,
+        executeInEditMode: true,
         menu: "i18n/LocalizedLabel"
     },
     properties: {

@@ -40,7 +40,7 @@ cc.Class({
             adUnitId: GameGlobal.DataManager.VideoAdid
         })), this.AgainBtn.node.active = !1, this.BackBtn.node.active = !1;
         var e = GameGlobal.DataManager;
-        e._CurShareReliveCount >= e._ShareReliveCount ? (this.VideoReliveBtn.node.active = !0, this.ReliveBtn.node.active = !1) : (this.VideoReliveBtn.node.active = !1, this.ReliveBtn.node.active = !0), this._IsPause = !1, this.refreshAd(), cc.log("UIGameOver onEnable leave-----------------------------")
+        e._CurShareReliveCount >= e._ShareReliveCount ? (this.VideoReliveBtn.node.active = true, this.ReliveBtn.node.active = !1) : (this.VideoReliveBtn.node.active = !1, this.ReliveBtn.node.active = true), this._IsPause = !1, this.refreshAd(), cc.log("UIGameOver onEnable leave-----------------------------")
     },
     onDisable: function() {
         cc.sys.platform === cc.sys.QQ_PLAY && (this._QQAd && this._QQAd.destory(), this._QQAd = null, this._CurVideoAd && (this._CurVideoAd.offPlayFinish(), this._CurVideoAd.offClose())), this.unscheduleAllCallbacks()
@@ -66,7 +66,7 @@ cc.Class({
         }
     },
     onShareRelieve: function(e) {
-        this._IsPause = !0;
+        this._IsPause = true;
         var t = this;
         GameGlobal.WeiXinPlatform.showShare(function(e) {
             t._ShareCount++, t._IsPause = !1;
@@ -77,7 +77,7 @@ cc.Class({
         })
     },
     onVideoRelive: function(e) {
-        e && e.stopPropagation(), this._IsPause = !0;
+        e && e.stopPropagation(), this._IsPause = true;
         var t = this;
         cc.sys.platform === cc.sys.WECHAT_GAME ? null != this._CurVideoAd && (this._CurVideoAd.onLoad(function() {
             console.log("激励视频 广告加载成功")
