@@ -1,15 +1,3 @@
-
-var n;
-
-function r(e, t, i) {
-    return t in e ? Object.defineProperty(e, t, {
-        value: i,
-        enumerable: true,
-        configurable: true,
-        writable: true
-    }) : e[t] = i, e
-}
-
 const UIType = require('UIType')
 const SignInitData = cc.Class({
     properties: {
@@ -42,7 +30,7 @@ const SkinData = cc.Class({
 
 cc.Class({
     extends: cc.Component,
-    properties: (n = {
+    properties: {
         CurScore: {
             default: 0,
             type: cc.Integer
@@ -86,17 +74,14 @@ cc.Class({
         _ShareImageUrl: "",
         _ShareContent: "",
         _ShareReward: 5,
-        _IsShareRelive: true
+        _IsShareRelive: true,
+        _CurShareReliveCount: 0,
+        _CurZSAdData: null,
+        _SKinDataArray: [],
+        _CurMySKinIndex: 0,
+        _CurRecord: 0,
+        _GameStartTime: 0,
     },
-        r(n, "_ShareReliveCount", 0),
-        r(n, "_CurShareReliveCount", 0),
-        r(n, "_CurZSAdData", null),
-        r(n, "_SKinDataArray", []),
-        r(n, "_CurMySKinIndex", 0),
-        r(n, "_CurRecord", 0),
-        r(n, "_GameStartTime", 0),
-        n
-    ),
 
     onEnable: function () {
         if (window.wx == null) return
