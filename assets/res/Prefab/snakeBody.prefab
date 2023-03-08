@@ -1,0 +1,73 @@
+[
+  {
+    "__type__": "cc.Prefab",
+    "_name": "snakeBody",
+    "data": {
+      "__id__": 1
+    }
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "snakeBody",
+    "_components": [
+      {
+        "__type__": "cc.Sprite",
+        "node": {
+          "__id__": 1
+        },
+        "_spriteFrame": {
+          "__uuid__": "160cb60a-2eab-4bc5-95b3-76ee2ffef9ac"
+        },
+        "_sizeMode": 0
+      },
+      {
+        "__type__": "ba379El6XZFL4kfr5fcTAZW",
+        "node": {
+          "__id__": 1
+        },
+        "Atlas": {
+          "__uuid__": "792b95a6-f3d8-4c02-a5dd-a993cab1c4d3"
+        }
+      },
+      {
+        "__type__": "cc.CircleCollider",
+        "node": {
+          "__id__": 1
+        },
+        "_radius": 15
+      }
+    ],
+    "_prefab": {
+      "__type__": "cc.PrefabInfo",
+      "root": {
+        "__id__": 1
+      },
+      "asset": {
+        "__id__": 0
+      },
+      "fileId": "9dpiQlT7ZAXpLGduUeffR0"
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 30,
+      "height": 30
+    },
+    "groupIndex": 1,
+    "_trs": {
+      "__type__": "TypedArray",
+      "ctor": "Float64Array",
+      "array": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  }
+]

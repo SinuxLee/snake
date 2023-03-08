@@ -1,0 +1,87 @@
+[
+  {
+    "__type__": "cc.Prefab",
+    "_name": "snakeHead",
+    "data": {
+      "__id__": 1
+    }
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "snakeHead",
+    "_level": 1,
+    "_components": [
+      {
+        "__type__": "cc.Sprite",
+        "node": {
+          "__id__": 1
+        },
+        "_materials": [
+          {
+            "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
+          }
+        ],
+        "_spriteFrame": {
+          "__uuid__": "6ae0d177-2151-4c1f-b766-fe3e4dd33954"
+        },
+        "_sizeMode": 0
+      },
+      {
+        "__type__": "e5f3cZTJU5BY6dlv+T5DkL6",
+        "node": {
+          "__id__": 1
+        },
+        "Atlas": {
+          "__uuid__": "49a3d1f5-6272-4b11-94c9-2004a52e4f22"
+        }
+      },
+      {
+        "__type__": "cc.CircleCollider",
+        "node": {
+          "__id__": 1
+        },
+        "_radius": 27
+      },
+      {
+        "__type__": "cc.CircleCollider",
+        "node": {
+          "__id__": 1
+        },
+        "tag": 1000,
+        "_radius": 200
+      }
+    ],
+    "_prefab": {
+      "__type__": "cc.PrefabInfo",
+      "root": {
+        "__id__": 1
+      },
+      "asset": {
+        "__uuid__": "42371b8a-ea7b-47e1-9ce7-6facb5c717cd"
+      },
+      "fileId": "2fuWQSB1FOWLfx1eIxKnJQ"
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 55,
+      "height": 55
+    },
+    "groupIndex": 2,
+    "_trs": {
+      "__type__": "TypedArray",
+      "ctor": "Float64Array",
+      "array": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  }
+]
