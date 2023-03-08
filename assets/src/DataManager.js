@@ -11,7 +11,7 @@ function r(e, t, i) {
 }
 
 const UIType = require('UIType')
-const o = cc.Class({
+const SignInitData = cc.Class({
     properties: {
         signDay: 0,
         signReward: 0,
@@ -19,7 +19,8 @@ const o = cc.Class({
         signStatus: 0
     }
 })
-const s = cc.Class({
+
+const FriendInviteData = cc.Class({
     properties: {
         HeadUrl: "",
         IsCanTake: false,
@@ -28,7 +29,8 @@ const s = cc.Class({
         OpenID: ""
     }
 })
-const c = cc.Class({
+
+const SkinData = cc.Class({
     properties: {
         ID: 0,
         Price: 5,
@@ -59,7 +61,6 @@ cc.Class({
         },
         IsShareRelive: {
             default: false,
-            // type: cc.Boolean
         },
 
         VideoAdid: "adunit-bf61185a259df4c2",
@@ -97,16 +98,12 @@ cc.Class({
         n
     ),
 
-    onLoad: function () {
-        cc.log("DataManager onLoad----------------------------")
-    },
-
     onEnable: function () {
-        if(window.wx == null) return
+        if (window.wx == null) return
 
         wx.getStorage({
             key: "wxData",
-            success: (t) =>{
+            success: (t) => {
                 console.log("getStorage user success ", t)
                 this._MyAvatarURL = t.data.avaUrl
                 this._MyNickName = t.data.nick
@@ -158,6 +155,7 @@ cc.Class({
     getFuHuoGold: function () {
         return this._FuHuoCostGold
     },
+
     setShareRelive: function (e) {
         e && (this.IsShareRelive = e)
     },
@@ -165,6 +163,7 @@ cc.Class({
     getShareRelive: function () {
         return this.IsShareRelive
     },
+
     setShareTitle: function (e) {
         this._ShareTitle = e
     },
@@ -191,9 +190,9 @@ cc.Class({
 })
 
 module.exports = {
-    FriendInviteData: s,
-    SignInitData: o,
-    SkinData: c,
+    FriendInviteData,
+    SignInitData,
+    SkinData
 }
 
 window.GameRewardType = {

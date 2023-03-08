@@ -1,4 +1,5 @@
-var n = require('UIType');
+const UIType = require('UIType');
+
 cc.Class({
     extends: cc.Component,
     properties: {
@@ -13,8 +14,11 @@ cc.Class({
         _needUpdate: true,
         _MatchAd: null
     },
-    onEnable: function() {
-        if (cc.log("UILoading onEnable enter--------------------------------------"), this.LoadingProgress.progress = 0, this.GuangSprite && (this.GuangSprite.node.x = this.LoadingProgress.barSprite.node.x), this._needUpdate = true, cc.sys.platform === cc.sys.WECHAT_GAME) {
+
+    onEnable: function () {
+        cc.log("UILoading onEnable enter--------------------------------------")
+        this.LoadingProgress.progress = 0
+        if (this.GuangSprite && (this.GuangSprite.node.x = this.LoadingProgress.barSprite.node.x), this._needUpdate = true, cc.sys.platform === cc.sys.WECHAT_GAME) {
             if (void 0 != window.wx) {
                 null != this._MatchAd && (this._MatchAd.destroy(), this._MatchAd = null), this._MatchAd = wx.createBannerAd({
                     adUnitId: GameGlobal.DataManager.BannerAdid1,
@@ -25,7 +29,7 @@ cc.Class({
                     }
                 }), this._MatchAd.show();
                 var e = this;
-                this._MatchAd.onResize(function(t) {
+                this._MatchAd.onResize(function (t) {
                     console.log(t.width, t.height), console.log(e._MatchAd.style.realWidth, e._MatchAd.style.realHeight);
                     var i = wx.getSystemInfoSync();
                     e._MatchAd.style.left = i.screenWidth - e._MatchAd.style.realWidth, e._MatchAd.style.top = i.screenHeight - e._MatchAd.style.realHeight
@@ -35,20 +39,21 @@ cc.Class({
             e = this;
             this._MatchAd = null, this._MatchAd = BK.Advertisement.createBannerAd({
                 viewId: 1001
-            }), this._MatchAd.onError(function(e) {
+            }), this._MatchAd.onError(function (e) {
                 e.msg, e.code
             }), this._MatchAd.show()
         }
         cc.log("UILoading onEnable leave--------------------------------------")
     },
-    onDisable: function() {
-        this._needUpdate = false, cc.sys.platform === cc.sys.WECHAT_GAME ? void 0 != window.wx && this._MatchAd && this._MatchAd.hide() : cc.sys.platform === cc.sys.QQ_PLAY && this._MatchAd && this._MatchAd.destory(), this._MatchAd = null
+    onDisable: function () {
+        this._needUpdate = false
+        cc.sys.platform === cc.sys.WECHAT_GAME ? void 0 != window.wx && this._MatchAd && this._MatchAd.hide() : cc.sys.platform === cc.sys.QQ_PLAY && this._MatchAd && this._MatchAd.destory(), this._MatchAd = null
     },
-    
-    update: function(e) {
+
+    update: function (e) {
         if (0 != this._needUpdate) {
             var t = .25 * e;
-            this.LoadingProgress.progress = this.LoadingProgress.progress + t, this.LoadingProgress.progress >= 1 && (this.LoadingProgress.progress = 1, this._needUpdate = false, GameGlobal.UIManager.closeUI(n.UIType_GameLoading), GameGlobal.UIManager.openUI(n.UIType_Game)), this.GuangSprite && (this.GuangSprite.node.x = this.LoadingProgress.barSprite.node.x + this.LoadingProgress.progress * this.LoadingProgress.totalLength)
+            this.LoadingProgress.progress = this.LoadingProgress.progress + t, this.LoadingProgress.progress >= 1 && (this.LoadingProgress.progress = 1, this._needUpdate = false, GameGlobal.UIManager.closeUI(UIType.UIType_GameLoading), GameGlobal.UIManager.openUI(UIType.UIType_Game)), this.GuangSprite && (this.GuangSprite.node.x = this.LoadingProgress.barSprite.node.x + this.LoadingProgress.progress * this.LoadingProgress.totalLength)
         }
     }
 })

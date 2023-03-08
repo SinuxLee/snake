@@ -1,6 +1,7 @@
-var n = require('UIType'),
-    r = require('UIInviteFriendItem');
+const UIType = require('UIType');
+const UIInviteFriendItem = require('UIInviteFriendItem');
 require('DataManager').FriendInviteData;
+
 cc.Class({
     extends: cc.Component,
     properties: {
@@ -12,34 +13,43 @@ cc.Class({
             default: null,
             type: cc.Button
         },
-        FriendCtrlArray: [r]
+        FriendCtrlArray: [UIInviteFriendItem]
     },
-    onLoad: function() {
+
+    onLoad: function () {
         for (var e = 0; e < 5; ++e) this.FriendCtrlArray[e].initIndex(e)
     },
-    onEnable: function() {
+
+    onEnable: function () {
         for (var e = 0; e < 5; ++e) this.FriendCtrlArray[e].resetShow();
         GameGlobal.Net.requestFriendList()
     },
-    onDisable: function() {},
-    start: function() {
-        this.InviteBtn.node.on(cc.Node.EventType.TOUCH_END, this.onFriendInvite, this), this.CloseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onClose, this), this.node.on(cc.Node.EventType.TOUCH_END, this.onBlock, this)
+
+    start: function () {
+        this.InviteBtn.node.on(cc.Node.EventType.TOUCH_END, this.onFriendInvite, this)
+        this.CloseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onClose, this)
+        this.node.on(cc.Node.EventType.TOUCH_END, this.onBlock, this)
     },
-    refreshList: function() {
+
+    refreshList: function () {
         for (var e = 0; e < 5; ++e) this.FriendCtrlArray[e].refreshUI()
     },
-    onFriendInvite: function(e) {
+
+    onFriendInvite: function (e) {
         e.stopPropagation();
         var t = GameGlobal.WeiXinPlatform;
         if (void 0 != t._WXOpenID && 0 != t._WXOpenID.length) {
             t._WXOpenID, GameGlobal.DataManager;
-            GameGlobal.WeiXinPlatform.showShare(function() {}, function() {})
+            GameGlobal.WeiXinPlatform.showShare(function () { }, function () { })
         } else console.log("onFriendInvite invalid openID")
     },
-    onClose: function(e) {
-        e.stopPropagation(), GameGlobal.UIManager.closeUI(n.UIType_InviteFriend)
+
+    onClose: function (e) {
+        e.stopPropagation()
+        GameGlobal.UIManager.closeUI(UIType.UIType_InviteFriend)
     },
-    onBlock: function(e) {
+
+    onBlock: function (e) {
         e.stopPropagation()
     }
 })

@@ -1,5 +1,6 @@
-var n = require('JoystickCommon'),
-    r = require('JoystickBG');
+const JoystickCommon = require('JoystickCommon');
+const JoystickBG = require('JoystickBG');
+
 cc.Class({
     extends: cc.Component,
     properties: {
@@ -10,7 +11,7 @@ cc.Class({
         },
         ring: {
             default: null,
-            type: r,
+            type: JoystickBG,
             displayName: "摇杆背景节点"
         },
         stickX: {
@@ -22,13 +23,13 @@ cc.Class({
             displayName: "摇杆Y位置"
         },
         touchType: {
-            default: n.TouchType.DEFAULT,
-            type: n.TouchType,
+            default: JoystickCommon.TouchType.DEFAULT,
+            type: JoystickCommon.TouchType,
             displayName: "触摸类型"
         },
         directionType: {
-            default: n.DirectionType.ALL,
-            type: n.DirectionType,
+            default: JoystickCommon.DirectionType.ALL,
+            type: JoystickCommon.DirectionType,
             displayName: "方向类型"
         },
         sprite: {
@@ -47,27 +48,42 @@ cc.Class({
             displayName: "摇杆当前位置"
         }
     },
-    onLoad: function() {
-        this._createStickSprite(), this.touchType == n.TouchType.FOLLOW && this._initTouchEvent()
+
+    onLoad: function () {
+        this._createStickSprite()
+        this.touchType == JoystickCommon.TouchType.FOLLOW && this._initTouchEvent()
     },
-    _createStickSprite: function() {
-        this.ring.node.setPosition(this.stickX, this.stickY), this.dot.setPosition(this.stickX, this.stickY)
+
+    _createStickSprite: function () {
+        this.ring.node.setPosition(this.stickX, this.stickY)
+        this.dot.setPosition(this.stickX, this.stickY)
     },
-    _initTouchEvent: function() {
-        this.node.on(cc.Node.EventType.TOUCH_START, this._touchStartEvent, this), this.node.on(cc.Node.EventType.TOUCH_MOVE, this._touchMoveEvent, this), this.node.on(cc.Node.EventType.TOUCH_END, this._touchEndEvent, this), this.node.on(cc.Node.EventType.TOUCH_CANCEL, this._touchEndEvent, this)
+
+    _initTouchEvent: function () {
+        this.node.on(cc.Node.EventType.TOUCH_START, this._touchStartEvent, this)
+        this.node.on(cc.Node.EventType.TOUCH_MOVE, this._touchMoveEvent, this)
+        this.node.on(cc.Node.EventType.TOUCH_END, this._touchEndEvent, this)
+        this.node.on(cc.Node.EventType.TOUCH_CANCEL, this._touchEndEvent, this)
     },
-    setOPTarget: function(e) {
-        this.sprite = e, this.ring._playerNode = e
+
+    setOPTarget: function (e) {
+        this.sprite = e
+        this.ring._playerNode = e
     },
-    setCallback: function(e, t) {
+
+    setCallback: function (e, t) {
         this.ring.callBackObj = e
     },
-    _touchStartEvent: function(e) {
+
+    _touchStartEvent: function (e) {
         this._touchLocation = e.getLocation();
         var t = this.node.convertToNodeSpaceAR(e.getLocation());
-        this.ring.node.setPosition(t), this.dot.setPosition(t), this._stickPos = t
+        this.ring.node.setPosition(t)
+        this.dot.setPosition(t)
+        this._stickPos = t
     },
-    _touchMoveEvent: function(e) {
+
+    _touchMoveEvent: function (e) {
         if (this._touchLocation.x == e.getLocation().x && this._touchLocation.y == e.getLocation().y) return false;
         var t = this.ring.node.convertToNodeSpaceAR(e.getLocation()),
             i = this.ring._getDistance(t, cc.Vec2(0, 0)),
@@ -82,7 +98,8 @@ cc.Class({
         }
         this.ring._getAngle(cc.Vec2(r, a)), this.ring._setSpeed(cc.Vec2(r, a))
     },
-    _touchEndEvent: function() {
+
+    _touchEndEvent: function () {
         this.dot.setPosition(this.ring.node.getPosition()), this.ring._speed = 0
     }
 })

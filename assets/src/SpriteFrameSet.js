@@ -1,4 +1,3 @@
-
 module.exports = cc.Class({
     name: "SpriteFrameSet",
     properties: {

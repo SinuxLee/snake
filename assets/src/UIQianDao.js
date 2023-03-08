@@ -1,5 +1,6 @@
-var n = require('UIType'),
-    r = require('UIQianDaoItem');
+const UIType = require('UIType');
+const UIQianDaoItem = require('UIQianDaoItem');
+
 cc.Class({
     extends: cc.Component,
     properties: {
@@ -11,22 +12,25 @@ cc.Class({
             default: null,
             type: cc.Button
         },
-        QianDaoItem: [r],
+        QianDaoItem: [UIQianDaoItem],
         _InitData: []
     },
-    onLoad: function() {},
-    onEnable: function() {
+
+    onEnable: function () {
         for (var e = GameGlobal.DataManager, t = 0; t < this.QianDaoItem.length; ++t)
             if (t < e._SignInitList.length) {
                 var i = e._SignInitList[t];
                 this.QianDaoItem[t].setParam(i.signDay, i.signReward, i.signRewardNum), this.QianDaoItem[t].setMask(false)
             } this.refreshUI()
     },
-    onDisable: function() {},
-    start: function() {
-        this.CloseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onClose, this), this.node.on(cc.Node.EventType.TOUCH_END, this.onBlock, this), this.TakeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onTake, this)
+
+    start: function () {
+        this.CloseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onClose, this)
+        this.node.on(cc.Node.EventType.TOUCH_END, this.onBlock, this)
+        this.TakeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onTake, this)
     },
-    refreshUI: function() {
+
+    refreshUI: function () {
         var e = GameGlobal.DataManager;
         cc.log("DataManager._SignInitList ", e._SignInitList.length);
         for (var t = 0; t < this.QianDaoItem.length - 1; ++t)
@@ -35,13 +39,17 @@ cc.Class({
                 1 == i.signStatus ? this.QianDaoItem[t].setMask(true) : (this.QianDaoItem[t].setMask(false), 2 == i.signStatus && (e._MyQianDaoCount = i.signDay))
             } this.TakeBtn.interactable = !e._MyQianDaoTake
     },
-    onClose: function(e) {
-        e.stopPropagation(), GameGlobal.UIManager.closeUI(n.UIType_QianDao)
+
+    onClose: function (e) {
+        e.stopPropagation()
+        GameGlobal.UIManager.closeUI(UIType.UIType_QianDao)
     },
-    onBlock: function(e) {
+
+    onBlock: function (e) {
         e.stopPropagation()
     },
-    onTake: function(e) {
+
+    onTake: function (e) {
         e.stopPropagation();
         var t = e.target.getComponent(cc.Button);
         t && 0 == t.interactable || GameGlobal.Net.requestSignReward(GameGlobal.DataManager._MyQianDaoCount)

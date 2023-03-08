@@ -21,7 +21,7 @@ cc.Class({
             default: null,
             type: cc.Prefab
         },
-        
+
         _SnakeHeadUseList: [],
         _SnakeHeadFreeList: [],
         _SnakeBodyUseList: [],
@@ -34,7 +34,7 @@ cc.Class({
         _SnakeGoldUseList: []
     },
 
-    onLoad: function() {
+    onLoad: function () {
         cc.game.setFrameRate(60)
 
         for (let i = 0; i < 10; i++) {
@@ -49,53 +49,53 @@ cc.Class({
         }
     },
 
-    start: function() {
+    start: function () {
         if (!window.wx) return
         const cvs = wx.getOpenDataContext().canvas;
         cvs && (cvs.width = 2 * cc.game.canvas.width, cvs.height = 2 * cc.game.canvas.height)
     },
 
-    GetFreeHead: function() {
+    GetFreeHead: function () {
         return this.GetFree(this._SnakeHeadFreeList, this._SnakeHeadUseList, this.SnakeHeadPrefab)
     },
 
-    DelUseHead: function(e) {
+    DelUseHead: function (e) {
         this.DelUse(this._SnakeHeadFreeList, this._SnakeHeadUseList, e)
     },
 
-    GetFreeNameLabel: function() {
+    GetFreeNameLabel: function () {
         return this.GetFree(this._SnakeNameFreeList, this._SnakeNameUseList, this.SnakeNamePrefab)
     },
 
-    DelUseNameLabel: function(e) {
+    DelUseNameLabel: function (e) {
         this.DelUse(this._SnakeNameFreeList, this._SnakeNameUseList, e)
     },
 
-    GetFreeBody: function() {
+    GetFreeBody: function () {
         return this.GetFree(this._SnakeBodyFreeList, this._SnakeBodyUseList, this.SnakeBodyPrefab)
     },
 
-    DelUseBody: function(e) {
+    DelUseBody: function (e) {
         this.DelUse(this._SnakeBodyFreeList, this._SnakeBodyUseList, e)
     },
 
-    GetFreeFood: function() {
+    GetFreeFood: function () {
         return this.GetFree(this._SnakeFoodFreeList, this._SnakeFoodUseList, this.SnakeFoodPrefab)
     },
 
-    DelUseFood: function(e) {
+    DelUseFood: function (e) {
         return this.DelUse(this._SnakeFoodFreeList, this._SnakeFoodUseList, e)
     },
 
-    GetFreeGodSprite: function() {
+    GetFreeGodSprite: function () {
         return this.GetFree(this._SnakeGodSpriteList, this._SnakeGoldUseList, this.GodSpritePrefab)
     },
 
-    DelGodSprite: function(e) {
+    DelGodSprite: function (e) {
         return this.DelUse(this._SnakeGodSpriteList, this._SnakeGoldUseList, e)
     },
 
-    DelAllFood: function() {
+    DelAllFood: function () {
         for (var e = 0; e < this._SnakeFoodUseList.length; ++e) {
             this._SnakeFoodFreeList.push(this._SnakeFoodUseList[e])
             this._SnakeFoodUseList[e].parent = null;
@@ -103,16 +103,16 @@ cc.Class({
         this._SnakeFoodUseList.splice(0, this._SnakeFoodUseList.length)
     },
 
-    GetFree: function(freeList, usedList, prefab) {
+    GetFree: function (freeList, usedList, prefab) {
         let item = freeList.pop();
         if (item == null) item = cc.instantiate(prefab);
         return usedList.push(item), item
     },
 
-    DelUse: function(freeList, usedList, node) {
+    DelUse: function (freeList, usedList, node) {
         node.parent = null;
         const idx = usedList.indexOf(node);
-        if(idx < 0 || idx >= usedList.length) return false;
+        if (idx < 0 || idx >= usedList.length) return false;
 
         usedList.splice(idx, 1)
         freeList.push(node)

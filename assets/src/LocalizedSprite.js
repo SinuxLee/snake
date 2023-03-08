@@ -1,4 +1,5 @@
-var n = require('SpriteFrameSet');
+const SpriteFrameSet = require('SpriteFrameSet');
+
 cc.Class({
     extends: cc.Component,
     editor: {
@@ -9,21 +10,25 @@ cc.Class({
     properties: {
         spriteFrameSet: {
             default: [],
-            type: n
+            type: SpriteFrameSet
         }
     },
-    onLoad: function() {
+
+    onLoad: function () {
         this.fetchRender()
     },
-    fetchRender: function() {
+
+    fetchRender: function () {
         var e = this.getComponent(cc.Sprite);
         if (e) return this.sprite = e, void this.updateSprite(window.i18n.curLang)
     },
-    getSpriteFrameByLang: function(e) {
+
+    getSpriteFrameByLang: function (e) {
         for (var t = 0; t < this.spriteFrameSet.length; ++t)
             if (this.spriteFrameSet[t].language === e) return this.spriteFrameSet[t].spriteFrame
     },
-    updateSprite: function(e) {
+
+    updateSprite: function (e) {
         if (this.sprite) {
             var t = this.getSpriteFrameByLang(e);
             !t && this.spriteFrameSet[0] && (t = this.spriteFrameSet[0].spriteFrame), this.sprite.spriteFrame = t

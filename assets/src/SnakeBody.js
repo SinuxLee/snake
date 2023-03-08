@@ -17,12 +17,12 @@ cc.Class({
         _lastPos: cc.v2(0, 0)
     },
 
-    start: function() {
+    start: function () {
         this._IsFirstUpdate = true
     },
 
-    setType: function(type) {
-        if(type < 1 || type > 16) (type = 1);
+    setType: function (type) {
+        if (type < 1 || type > 16) (type = 1);
 
         const sprite = this.node.getComponent(cc.Sprite);
         const name = "body_" + type;
@@ -30,36 +30,36 @@ cc.Class({
         frame && (sprite.spriteFrame = frame)
     },
 
-    setSnake: function(e) {
+    setSnake: function (e) {
         this._Snake = e
     },
 
-    setInitMoveDir: function(e) {
+    setInitMoveDir: function (e) {
         this._lastMoveVec = e, this._moveVec = e
     },
 
-    setMoveDir: function(e) {},
-    getMoveDir: function() {
+    setMoveDir: function (e) { },
+    getMoveDir: function () {
         return this._moveVec
     },
 
-    getLastMoveDir: function() {
+    getLastMoveDir: function () {
         return this._lastMoveVec
     },
 
-    setMoveSpeed: function(e) {
+    setMoveSpeed: function (e) {
         this._moveSpeed = e
     },
 
-    setBodyIndex: function(e) {
+    setBodyIndex: function (e) {
         this._CurBodyIndex = e
     },
 
-    reset: function() {
+    reset: function () {
         this._IsFirstUpdate = true, this.node.width = 30, this.node.height = 30
     },
 
-    getBodyPrePos1: function(e, t, i, n, r, a) {
+    getBodyPrePos: function (e, t, i, n, r, a) {
         if (0 == this._CurBodyIndex) {
             var o = this.node.width / 3;
             return a.add(n.mul(o))
@@ -71,27 +71,7 @@ cc.Class({
         return c._lastPos.add(c._lastMoveVec.mul(o))
     },
 
-    getBodyPrePos: function(e, t, i, n, r, a) {
-        if (0 == this._CurBodyIndex) {
-            var o = this.node.width / 3;
-            return a.add(n.mul(o))
-        }
-        var s = i[this._CurBodyIndex - 1];
-        void 0 == s && cc.log("lastBody == undefined");
-        o = -this.node.width / 2;
-        var c = s.getComponent("SnakeBody");
-        return c._lastPos.add(c._lastMoveVec.mul(o))
-    },
-
-    getBodyPreDir: function(e, t, i, n, r) {
-        if (0 == this._CurBodyIndex) return i;
-        var a = t[this._CurBodyIndex - 1];
-        void 0 == a && cc.log("lastBody == undefined");
-        this.node.width;
-        return a.getComponent("SnakeBody")._lastMoveVec
-    },
-
-    updateBody: function(e, t, i, n, r, a) {
+    updateBody: function (e, t, i, n, r, a) {
         this._lastMoveVec = this._moveVec, this._lastPos = this.node.position;
         var o = this.getBodyPrePos(e, t, i, n, this._IsFirstUpdate, r);
         this._IsFirstUpdate = false;

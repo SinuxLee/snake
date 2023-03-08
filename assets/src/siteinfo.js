@@ -1,4 +1,3 @@
-
 module.exports = {
     name: "aishan_txtcs",
     uniacid: "60",

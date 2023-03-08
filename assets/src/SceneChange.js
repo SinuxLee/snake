@@ -3,14 +3,15 @@ cc.Class({
     properties: {
         jindu: cc.Label
     },
-    start: function() {
-        window.infos = this.jindu;
+
+    start: function () {
         var e = "SCS";
-        cc.director.preloadScene(e, this.onProgress, function(t) {
+        cc.director.preloadScene(e, this.onProgress, function (t) {
             t ? console.log(" preloadScene er:" + t) : cc.director.loadScene(e)
         })
     },
-    onProgress: function(e, t, i) {
-        window.infos.string = "进度:" + parseInt(e / t * 100) + "%"
+
+    onProgress: function (e, t, i) {
+        this.jindu.string = "进度:" + parseInt(e / t * 100) + "%"
     }
 })

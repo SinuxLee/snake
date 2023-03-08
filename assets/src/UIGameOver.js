@@ -33,7 +33,7 @@ cc.Class({
         _QQAd: null
     },
 
-    start: function() {
+    start: function () {
         this.ReliveBtn.node.on(cc.Node.EventType.TOUCH_END, this.onShareRelieve, this)
         this.VideoReliveBtn.node.on(cc.Node.EventType.TOUCH_END, this.onVideoRelive, this)
         this.BackBtn.node.on(cc.Node.EventType.TOUCH_END, this.onBack, this)
@@ -41,19 +41,23 @@ cc.Class({
         this.CloseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onBack, this)
     },
 
-    onEnable: function() {
-        cc.log("UIGameOver onEnable enter-----------------------------"), this._CurTimeCount = 10, this.TimerLabel.string = this._CurTimeCount + "", this.schedule(this.onTimer, 1), null == this._CurVideoAd && void 0 != window.wx && (this._CurVideoAd = wx.createRewardedVideoAd({
+    onEnable: function () {
+        cc.log("UIGameOver onEnable enter-----------------------------"),
+            this._CurTimeCount = 10
+        this.TimerLabel.string = this._CurTimeCount + ""
+        this.schedule(this.onTimer, 1)
+        null == this._CurVideoAd && void 0 != window.wx && (this._CurVideoAd = wx.createRewardedVideoAd({
             adUnitId: GameGlobal.DataManager.VideoAdid
         })), this.AgainBtn.node.active = false, this.BackBtn.node.active = false;
         var e = GameGlobal.DataManager;
         e._CurShareReliveCount >= e._ShareReliveCount ? (this.VideoReliveBtn.node.active = true, this.ReliveBtn.node.active = false) : (this.VideoReliveBtn.node.active = false, this.ReliveBtn.node.active = true), this._IsPause = false, this.refreshAd(), cc.log("UIGameOver onEnable leave-----------------------------")
     },
 
-    onDisable: function() {
+    onDisable: function () {
         cc.sys.platform === cc.sys.QQ_PLAY && (this._QQAd && this._QQAd.destory(), this._QQAd = null, this._CurVideoAd && (this._CurVideoAd.offPlayFinish(), this._CurVideoAd.offClose())), this.unscheduleAllCallbacks()
     },
 
-    onRelive: function(e) {
+    onRelive: function (e) {
         e.stopPropagation();
         var t = GameGlobal.DataManager.getCurGold(),
             i = GameGlobal.DataManager.getFuHuoGold();
@@ -66,7 +70,7 @@ cc.Class({
                     m: a.COMMON_M
                 }, {
                     session3rd: r._SessionID
-                }, function(e, t) {
+                }, function (e, t) {
                     var i = GameGlobal.UIManager;
                     i.closeUI(n.UIType_GameOver), i.getUI(n.UIType_Game).reliveResetGame(), window.wx, a.requestUserInfo()
                 })
@@ -74,61 +78,61 @@ cc.Class({
         }
     },
 
-    onShareRelieve: function(e) {
+    onShareRelieve: function (e) {
         this._IsPause = true;
         var t = this;
-        GameGlobal.WeiXinPlatform.showShare(function(e) {
+        GameGlobal.WeiXinPlatform.showShare(function (e) {
             t._ShareCount++, t._IsPause = false;
             var i = GameGlobal.UIManager;
             i.closeUI(n.UIType_GameOver), i.getUI(n.UIType_Game).reliveResetGame(), void 0 != window.wx && wx.triggerGC()
-        }, function() {
+        }, function () {
             t._IsPause = false
         })
     },
 
-    onVideoRelive: function(e) {
+    onVideoRelive: function (e) {
         e && e.stopPropagation(), this._IsPause = true;
         var t = this;
-        cc.sys.platform === cc.sys.WECHAT_GAME ? null != this._CurVideoAd && (this._CurVideoAd.onLoad(function() {
+        cc.sys.platform === cc.sys.WECHAT_GAME ? null != this._CurVideoAd && (this._CurVideoAd.onLoad(function () {
             console.log("激励视频 广告加载成功")
-        }), this._CurVideoAd.show().catch(function(e) {
-            t._CurVideoAd.load().then(function() {
+        }), this._CurVideoAd.show().catch(function (e) {
+            t._CurVideoAd.load().then(function () {
                 return t._CurVideoAd.show()
             })
-        }), this._CurVideoAd.onClose(function(e) {
+        }), this._CurVideoAd.onClose(function (e) {
             if (e && e.isEnded || void 0 === e) {
                 var i = GameGlobal.UIManager;
                 i.closeUI(n.UIType_GameOver), i.getUI(n.UIType_Game).reliveResetGame(), window.wx
             }
             t._IsPause = false
-        })) : cc.sys.platform === cc.sys.QQ_PLAY && (this._CurVideoAd = BK.Advertisement.createVideoAd(), this._CurVideoAd.onLoad(function() {
+        })) : cc.sys.platform === cc.sys.QQ_PLAY && (this._CurVideoAd = BK.Advertisement.createVideoAd(), this._CurVideoAd.onLoad(function () {
             BK.Script.log(1, 1, "onLoad")
-        }), this._CurVideoAd.onPlayStart(function() {
+        }), this._CurVideoAd.onPlayStart(function () {
             BK.Script.log(1, 1, "onPlayStart")
-        }), this._CurVideoAd.onPlayFinish(function() {
+        }), this._CurVideoAd.onPlayFinish(function () {
             BK.Script.log(1, 1, "onPlayFinish"), t._IsPause = false;
             var e = GameGlobal.UIManager;
             e.closeUI(n.UIType_GameOver), e.getUI(n.UIType_Game).reliveResetGame()
-        }), this._CurVideoAd.onError(function(e) {
+        }), this._CurVideoAd.onError(function (e) {
             BK.Script.log(1, 1, "onError code:" + e.code + " msg:" + e.msg), t._IsPause = false
-        }), this._CurVideoAd.onClose(function() {
+        }), this._CurVideoAd.onClose(function () {
             t._IsPause = false
         }), this._CurVideoAd.show())
     },
 
-    onShareRelive: function() {},
+    onShareRelive: function () { },
 
-    onBack: function(e) {
+    onBack: function (e) {
         e.stopPropagation();
         var t = GameGlobal.UIManager;
         t.closeUI(n.UIType_GameOver), t.getUI(n.UIType_Game).setGameState(4)
     },
 
-    onAgain: function(e) {
+    onAgain: function (e) {
         e && e.stopPropagation()
     },
 
-    onTimer: function() {
+    onTimer: function () {
         if (1 != this._IsPause && (this._CurTimeCount -= 1, this.TimerLabel.string = this._CurTimeCount + "", 0 == this._CurTimeCount)) {
             this.unscheduleAllCallbacks();
             var e = GameGlobal.UIManager;
@@ -136,13 +140,13 @@ cc.Class({
         }
     },
 
-    refreshAd: function() {
+    refreshAd: function () {
         cc.log("UIGameOver refreshAd enter ----------------------------------------")
         if (cc.sys.platform === cc.sys.QQ_PLAY) {
             this._QQAd && this._QQAd.destory();
             this._QQAd = null, this._QQAd = BK.Advertisement.createBannerAd({
                 viewId: 1002
-            }), this._QQAd.onLoad(function() {}), this._QQAd.onError(function(e) {
+            }), this._QQAd.onLoad(function () { }), this._QQAd.onError(function (e) {
                 e.msg, e.code
             }), this._QQAd.show()
         }

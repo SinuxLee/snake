@@ -33,7 +33,7 @@ cc.Class({
         }
     },
 
-    onEnable: function() {
+    onEnable: function () {
         this.BackBtn.node.active = false
         this.AgainBtn.node.active = false;
 
@@ -43,18 +43,18 @@ cc.Class({
         this.KillLabel.string = "" + e.getMySnakeKill()
     },
 
-    start: function() {
+    start: function () {
         this.BackBtn.node.on(cc.Node.EventType.TOUCH_END, this.onBack, this)
         this.AgainBtn.node.on(cc.Node.EventType.TOUCH_END, this.onAgain, this)
         this.ShareBtn.node.on(cc.Node.EventType.TOUCH_END, this.onShareBtn, this)
         this.CloseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onBack, this)
     },
 
-    refreshRewardGold: function(e) {
+    refreshRewardGold: function (e) {
         this.RewardGoldLabel && (this.RewardGoldLabel.string = e)
     },
 
-    onBack: function(e) {
+    onBack: function (e) {
         e && e.stopPropagation();
         var t = GameGlobal.UIManager;
         t.closeUI(UIType.UIType_GameEnd)
@@ -63,14 +63,14 @@ cc.Class({
         window.wx && wx.triggerGC()
     },
 
-    onAgain: function(e) {
+    onAgain: function (e) {
         e && e.stopPropagation();
         var t = GameGlobal.UIManager;
         t.closeUI(UIType.UIType_GameEnd)
         t.getUI(UIType.UIType_Game).resetGameEnd()
     },
 
-    onShareBtn: function(e) {
+    onShareBtn: function (e) {
         GameGlobal.DataManager;
         GameGlobal.WeiXinPlatform.showShare()
     }

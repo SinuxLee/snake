@@ -35,7 +35,7 @@ cc.Class({
 
     onCollisionEnter: function (other, self) {
         if (this._Game == null) return
-        
+
         const tag = self.tag;
         if (0 == tag) {
             if ("body" == (h = other.node.group)) {

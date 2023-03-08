@@ -1,4 +1,5 @@
-var n = require('UIType');
+const UIType = require('UIType');
+
 cc.Class({
     extends: cc.Component,
     properties: {
@@ -14,21 +15,27 @@ cc.Class({
         _SkinSpritePrefabCache: [],
         _CurSlectSkinIndex: 0
     },
-    onLoad: function() {
-        for (var e = 0; e < 16; ++e) this._SkinSpritePrefabCache[e] = cc.instantiate(this.SkinPrefab), this._SkinSpritePrefabCache[e].parent = this.ViewContent
+
+    onLoad: function () {
+        for (var e = 0; e < 16; ++e) {
+            this._SkinSpritePrefabCache[e] = cc.instantiate(this.SkinPrefab)
+            this._SkinSpritePrefabCache[e].parent = this.ViewContent
+        }
     },
-    onEnable: function() {
+
+    onEnable: function () {
         this.updateSkin()
     },
-    onDisable: function() {},
-    start: function() {
+
+    start: function () {
         this.node.on(cc.Node.EventType.TOUCH_END, this.onBlock, this), this.CloseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onCloseBtn, this), this.UseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onUseBtn, this), this.BuyBtn.node.on(cc.Node.EventType.TOUCH_END, this.onBuyBtn, this);
         for (var e = 0; e < 16; ++e) {
             this._SkinSpritePrefabCache[e].taggame = e, this._SkinSpritePrefabCache[e].getComponent("UISkinItem").initSkin()
         }
         this.updateSkin()
     },
-    updateSkin: function() {
+
+    updateSkin: function () {
         if (0 != this._SkinSpritePrefabCache.length) {
             for (var e = GameGlobal.DataManager, t = 0; t < 16; ++t) {
                 var i = e._SKinDataArray[t],
@@ -38,12 +45,14 @@ cc.Class({
             this.updatePreview(this._CurSlectSkinIndex)
         }
     },
-    onUseBtn: function(e) {
+
+    onUseBtn: function (e) {
         e.stopPropagation();
         var t, i = GameGlobal.DataManager;
-        if (!(this._CurSlectSkinIndex >= i._SKinDataArray.length) && (t = i._SKinDataArray[this._CurSlectSkinIndex]).IsOwn) return GameGlobal.localStorage.setItem("tcs_skinIndex", t.ID - 1), GameGlobal.Net.requestUserInfo(), GameGlobal.DataManager._CurSelectMode = 0, GameGlobal.UIManager.closeUI(n.UIType_Skin), void GameGlobal.UIManager.openUI(n.UIType_GameLoading)
+        if (!(this._CurSlectSkinIndex >= i._SKinDataArray.length) && (t = i._SKinDataArray[this._CurSlectSkinIndex]).IsOwn) return GameGlobal.localStorage.setItem("tcs_skinIndex", t.ID - 1), GameGlobal.Net.requestUserInfo(), GameGlobal.DataManager._CurSelectMode = 0, GameGlobal.UIManager.closeUI(UIType.UIType_Skin), void GameGlobal.UIManager.openUI(UIType.UIType_GameLoading)
     },
-    onBuyBtn: function(e) {
+
+    onBuyBtn: function (e) {
         e.stopPropagation();
         var t = GameGlobal.DataManager;
         if (!(this._CurSlectSkinIndex >= t._SKinDataArray.length)) {
@@ -64,10 +73,12 @@ cc.Class({
             return GameGlobal.localStorage.setItem("tcs_skinlist", o), void GameGlobal.Net.requestUserInfo()
         }
     },
-    setCurSelectSkin: function(e) {
+
+    setCurSelectSkin: function (e) {
         this._CurSlectSkinIndex = e, this.updatePreview(e)
     },
-    updatePreview: function(e) {
+
+    updatePreview: function (e) {
         var t = "biaoqing_" + (e + 1),
             i = this.HeadAtlas.getSpriteFrame(t);
         if (i && (this.PreviewHead.spriteFrame = i), t = "body_" + (e + 1), i = this.BodyAtlas.getSpriteFrame(t))
@@ -78,10 +89,13 @@ cc.Class({
             a && (a.IsOwn ? (this.BuyBtn.node.active = false, this.UseBtn.node.active = !a.IsUse) : (this.BuyBtn.node.active = true, this.UseBtn.node.active = false))
         }
     },
-    onBlock: function(e) {
+
+    onBlock: function (e) {
         e.stopPropagation()
     },
-    onCloseBtn: function(e) {
-        e.stopPropagation(), GameGlobal.UIManager.closeUI(n.UIType_Skin)
+
+    onCloseBtn: function (e) {
+        e.stopPropagation()
+        GameGlobal.UIManager.closeUI(UIType.UIType_Skin)
     }
 })
