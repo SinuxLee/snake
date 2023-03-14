@@ -96,7 +96,7 @@ cc.Class({
     },
 
     DelAllFood: function () {
-        for (var e = 0; e < this._SnakeFoodUseList.length; ++e) {
+        for (let e = 0; e < this._SnakeFoodUseList.length; ++e) {
             this._SnakeFoodFreeList.push(this._SnakeFoodUseList[e])
             this._SnakeFoodUseList[e].parent = null;
         }

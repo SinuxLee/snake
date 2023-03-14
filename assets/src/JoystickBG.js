@@ -77,8 +77,9 @@ cc.Class({
     },
 
     _getAngle: function (e) {
-        var t = this.node.getPosition();
-        return this._angle = Math.atan2(e.y - t.y, e.x - t.x) * (180 / Math.PI), this._angle
+        const pos = this.node.getPosition();
+        this._angle = Math.atan2(e.y - pos.y, e.x - pos.x) * (180 / Math.PI);
+        return this._angle
     },
 
     _setSpeed: function (e) {
@@ -86,28 +87,31 @@ cc.Class({
     },
 
     _touchStartEvent: function (e) {
-        var t = this.node.convertToNodeSpaceAR(e.getLocation()),
-            i = this._getDistance(t, cc.Vec2(0, 0)),
-            n = this.node.width / 2;
-        this._stickPos = t;
-        var r = this.node.getPosition().x + t.x,
-            a = this.node.getPosition().y + t.y;
-        return n > i && (this.dot.setPosition(cc.Vec2(r, a)), true)
+        const pos = this.node.convertToNodeSpaceAR(e.getLocation());
+        const distance = this._getDistance(pos, cc.Vec2(0, 0));
+        const halfWidth = this.node.width / 2;
+        this._stickPos = pos;
+
+        const newPos = cc.Vec2(this.node.getPosition().x + pos.x, this.node.getPosition().y + pos.y)
+        return halfWidth > distance && (this.dot.setPosition(newPos), true)
     },
 
     _touchMoveEvent: function (e) {
-        var t = this.node.convertToNodeSpaceAR(e.getLocation()),
-            i = this._getDistance(t, cc.Vec2(0, 0)),
-            n = this.node.width / 2,
-            r = this.node.getPosition().x + t.x,
-            a = this.node.getPosition().y + t.y;
-        if (n > i) this.dot.setPosition(cc.Vec2(r, a));
+        const nodePos = this.node.getPosition()
+        const pos = this.node.convertToNodeSpaceAR(e.getLocation());
+        const distance = this._getDistance(pos, cc.Vec2(0, 0));
+        const halfWidth = this.node.width / 2;
+        const newPos = cc.Vec2(nodePos.x + pos.x, nodePos.y + pos.y);
+
+        if (halfWidth > distance) this.dot.setPosition(newPos);
         else {
-            var o = this.node.getPosition().x + Math.cos(this._getRadian(cc.Vec2(r, a))) * n,
-                s = this.node.getPosition().y + Math.sin(this._getRadian(cc.Vec2(r, a))) * n;
-            this.dot.setPosition(cc.Vec2(o, s))
+            const radian = this._getRadian(newPos)
+            const x = nodePos.x + Math.cos(radian) * halfWidth;
+            const y = nodePos.y + Math.sin(radian) * halfWidth;
+            this.dot.setPosition(cc.Vec2(x, y))
         }
-        this._getAngle(cc.Vec2(r, a)), this._setSpeed(cc.Vec2(r, a))
+        this._getAngle(newPos)
+        this._setSpeed(newPos)
     },
 
     _touchEndEvent: function () {

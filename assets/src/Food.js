@@ -5,7 +5,7 @@ cc.Class({
             default: null,
             type: cc.SpriteAtlas
         },
-        _Type: 1
+        _type: 1
     },
 
     setType: function (type) {

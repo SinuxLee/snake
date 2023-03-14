@@ -1,46 +1,44 @@
 const SnakeBody = require('SnakeBody');
 const SnakeHead = require('SnakeHead');
 
-cc.Class({
-    properties: {
-        _SnakeIndex: 0,
-        _HeadType: -1,
-        _BodyTypeList: [],
-        _SnakeHead: cc.Node,
-        _HeadBodyList: [], // []cc.Node
-        _Game: null,
-        _LastMoveVec: cc.v2(1, 0),
-        _MoveVec: cc.v2(1, 0),
-        _MoveSpeed: 0,
-        _BodyWidth: 0,
-        _GrowingWeight: 0,
-        _Camera: null,
-        _PlayerSelf: false,
-        _PlayerName: "",
-        _MapWidth: 0,
-        _MapHeight: 0,
-        _KillCount: 0,
-        _PosUpdateTime: 0,
-        _HeadPrePositon: cc.v2(1, 0),
-        _CurAIType: 1,
-        _CurAITimer: 2,
-        _CurAIMoveCount: 0,
-        _CurTargetDestDir: cc.v2(1, 0),
-        _CurTargetChangeDir: cc.v2(0, 0),
-        _CurAITurnSpeed: 3.14,
-        _State: 0,
-        _StateTimer: 3,
-        _AttachLabel: null,
-        _CurShowMoveDistance: 0,
-        _CurShowMoveStartPos: cc.v2(0, 0),
-        _ShowMovePosList: [],
-        _CurMoveIndex: 0,
-        _MovePath: [],
-        _BodySpace: 30,
-        _GodSprite: null,
-    },
+export default class Snake {
+    _SnakeIndex = 0;
+    _HeadType = -1;
+    _BodyTypeList = [];
+    _SnakeHead = cc.Node;
+    _HeadBodyList = []; // []cc.Node
+    _Game = null;
+    _LastMoveVec = cc.v2(1, 0);
+    _MoveVec = cc.v2(1, 0);
+    _MoveSpeed = 0;
+    _BodyWidth = 0;
+    _GrowingWeight = 0;
+    _Camera = null;
+    _PlayerSelf = false;
+    _PlayerName = "";
+    _MapWidth = 0;
+    _MapHeight = 0;
+    _KillCount = 0;
+    _PosUpdateTime = 0;
+    _HeadPrePositon = cc.v2(1, 0);
+    _CurAIType = 1;
+    _CurAITimer = 2;
+    _CurAIMoveCount = 0;
+    _CurTargetDestDir = cc.v2(1, 0);
+    _CurTargetChangeDir = cc.v2(0, 0);
+    _CurAITurnSpeed = 3.14;
+    _State = 0;
+    _StateTimer = 3;
+    _AttachLabel = null;
+    _CurShowMoveDistance = 0;
+    _CurShowMoveStartPos = cc.v2(0, 0);
+    _ShowMovePosList = [];
+    _CurMoveIndex = 0;
+    _MovePath = [];
+    _BodySpace = 30;
+    _GodSprite = null;
 
-    init: function (headType, bodyType, parent, pos, camera, self, width, height, idx) {
+    init(headType, bodyType, parent, pos, camera, self, width, height, idx) {
         this._SnakeIndex = idx
         this._State = 0
         this._KillCount = 0
@@ -78,33 +76,33 @@ cc.Class({
             this._BodyWidth = body.width
         }
 
-        if(idx >= 10) return
+        if (idx >= 10) return
 
         this._GodSprite = GameGlobal.Game.GetFreeGodSprite()
         this._GodSprite.parent = parent
         this._GodSprite.active = false
         this._GodSprite.group = "food"
-    },
+    }
 
-    setName: function (name, t) {
+    setName(name, t) {
         this._PlayerName = name
         this._AttachLabel = this._Game.GetFreeNameLabel()
         this._AttachLabel.getComponent(cc.Label).string = name
         this._AttachLabel.parent = t
         this._AttachLabel.position = this._SnakeHead.position
         this._Camera && (this._AttachLabel.group = "cameragr")
-    },
+    }
 
-    addKillCount: function () {
+    addKillCount() {
         this._KillCount += 1
-    },
+    }
 
-    getSnakeLength: function () {
+    getSnakeLength() {
         const len = this._HeadBodyList.length;
         return 5 * len + (len - 5) * (len - 5) * 5
-    },
+    }
 
-    deadFood: function (e) {
+    deadFood(e) {
         for (var t = this._HeadBodyList.length, i = 0; i < t; ++i) {
             var n = this._Game.GetFreeFood();
             n.parent = e
@@ -112,14 +110,14 @@ cc.Class({
             n.y = this._HeadBodyList[i].position.y
             n.group = "food"
         }
-    },
+    }
 
-    setState: function (e) {
+    setState(e) {
         this._State = e
         1 == e ? (this._StateTimer = 3, this.updateGodSpritePos()) : this._GodSprite.active = false
-    },
+    }
 
-    deadReset: function () {
+    deadReset() {
         this._Game.DelUseHead(this._SnakeHead);
         this._Game.DelGodSprite(this._GodSprite);
         for (var e = this._HeadBodyList.length, t = 0; t < e; ++t) this._Game.DelUseBody(this._HeadBodyList[t]);
@@ -127,13 +125,13 @@ cc.Class({
         this._HeadBodyList.splice(0, e)
         this._SnakeHead = null
         this._Game.DelUseNameLabel(this._AttachLabel)
-    },
+    }
 
-    resetPos: function (e) {
+    resetPos(e) {
         this._SnakeHead.position = e
-    },
+    }
 
-    initMoveDir: function (e) {
+    initMoveDir(e) {
         e.normalizeSelf();
         for (var t, i = this._HeadBodyList.length, n = 0; n < i; ++n) {
             (t = this._HeadBodyList[n]).getContentSize().width;
@@ -145,9 +143,9 @@ cc.Class({
         var o = this._SnakeHead.position;
         this._MovePath = [];
         for (var s = 0; s < i * this._BodySpace; ++s) this._MovePath.push(o.add(e.mul(15 - (s + 1))))
-    },
+    }
 
-    initMoveDest: function (e) {
+    initMoveDest(e) {
         this._CurMoveIndex = 0
         this._CurShowMoveStartPos = this._SnakeHead.position;
         var t = e[0].sub(this._CurShowMoveStartPos);
@@ -155,28 +153,28 @@ cc.Class({
         this.initMoveDir(t)
         this._ShowMovePosList = e
         this._CurMoveIndex += 1
-    },
+    }
 
-    setMoveSpeed: function (e) {
+    setMoveSpeed(e) {
         var t = Math.floor(e);
         if (t != this._MoveSpeed) {
             this._PosUpdateTime = 0
             this._MoveSpeed = t;
             for (var i = this._HeadBodyList.length, n = 0; n < i; ++n) this._HeadBodyList[n].getComponent(SnakeBody).setMoveSpeed(t)
         }
-    },
+    }
 
-    setMoveDir: function (e, t, i, n) {
+    setMoveDir(e, t, i, n) {
         0 == e && 0 == t || (this._MoveVec.x = e, this._MoveVec.y = t, this._SnakeHead.angle = -n - 90)
-    },
+    }
 
-    setOtherMoveDir: function (e, t) {
+    setOtherMoveDir(e, t) {
         0 == e && 0 == t && (e = 1), this._MoveVec.x = e, this._MoveVec.y = t, this._MoveVec.normalizeSelf();
         var i = Math.atan2(t, e) * (180 / Math.PI);
         this._SnakeHead.angle = -i - 90
-    },
+    }
 
-    addWeight: function (e) {
+    addWeight(e) {
         this._GrowingWeight += e;
         var t = this._GrowingWeight / 20;
         if (t <= 1) return
@@ -185,7 +183,7 @@ cc.Class({
         this._GrowingWeight = this._GrowingWeight % 20;
         for (var i = 0; i < t; ++i) {
             const freeBody = this._Game.GetFreeBody();
-            if (!freeBody)continue
+            if (!freeBody) continue
 
             const len = this._HeadBodyList.length;
             freeBody.parent = this._SnakeHead.parent;
@@ -203,11 +201,11 @@ cc.Class({
                 h = c.position.sub(f.position);
             c && f && (freeBody.position = c.position.add(h)), this._HeadBodyList.push(freeBody);
             for (var d = 0; d < this._BodySpace; ++d) this._MovePath.push(c.position.add(h.normalize().mul(d + 1)))
-        
-        }
-    },
 
-    aiUpdate: function (e) {
+        }
+    }
+
+    aiUpdate(e) {
         if (this._CurAITimer -= e, 0 == this._CurAIType) {
             if (this._CurAITimer < 0) {
                 var t = Math.floor(3 * Math.random());
@@ -241,9 +239,9 @@ cc.Class({
                 this.changeAI(t)
             }
         }
-    },
+    }
 
-    changeAI: function (e, t) {
+    changeAI(e, t) {
         if (this._CurAIType !== e || 6 != e && 7 != e)
             if (this._CurAIType = e, 0 == this._CurAIType) this._CurAITimer = 2.5 + 2 * Math.random();
             else if (1 == this._CurAIType) this._CurAITimer = 3 + 2 * Math.random(), this._CurAITurnSpeed = 1 + 1.14 * Math.random();
@@ -254,13 +252,13 @@ cc.Class({
                 var i = t.sub(this._SnakeHead.position);
                 this.setOtherMoveDir(i.x, i.y)
             } else 10 == this._CurAIType && (this._CurAITimer = 3 + 2 * Math.random(), this._CurTargetDestDir = t, this._CurTargetChangeDir = this.FixDir(this._CurTargetDestDir.sub(this._MoveVec)).normalize(), this._CurAITimer = 3 + 2 * Math.random())
-    },
+    }
 
-    FixDir: function (e) {
+    FixDir(e) {
         return 0 == e.x && 0 == e.y && (e.x = .001), e
-    },
+    }
 
-    updateGodSpritePos: function () {
+    updateGodSpritePos() {
         for (var e = this._SnakeHead.x, t = this._SnakeHead.y, i = this._SnakeHead.x, n = this._SnakeHead.y, r = this._HeadBodyList.length, a = 0; a < r; ++a) {
             var o = this._HeadBodyList[a];
             o.x < e && (e = o.x), o.y < t && (t = o.y), o.x > i && (i = o.x), o.y > n && (n = o.y)
@@ -270,9 +268,9 @@ cc.Class({
             c = Math.abs(n - t),
             f = Math.max(s, c) + 100;
         this._GodSprite.width = f, this._GodSprite.height = f
-    },
+    }
 
-    update: function (e) {
+    update(e) {
         if (0 == e && (e = .017), null == this._SnakeHead) return false;
         if (this._PlayerSelf) {
             if (Math.abs(this._SnakeHead.x) > this._MapWidth / 2 || Math.abs(this._SnakeHead.y) > this._MapHeight / 2) {
@@ -297,9 +295,9 @@ cc.Class({
             (f + 1) * this._BodySpace < this._MovePath.length && (h.node.position = this._MovePath[(f + 1) * this._BodySpace]), this._MovePath.length > c * (1 + this._BodySpace) && this._MovePath.pop()
         }
         return this._StateTimer -= e, 1 == this._State && (this.updateGodSpritePos(), 0 == this._GodSprite.active && (this._GodSprite.active = true), this._StateTimer < 0 && (this._StateTimer = 0, this.setState(0))), true
-    },
+    }
 
-    updateShow: function (e) {
+    updateShow(e) {
         if (0 == e && (e = .017), null == this._SnakeHead) return false;
         this._StateTimer -= e
         1 == this._State && this._StateTimer < 0 && (this._StateTimer = 0, this._State = 0), this._PosUpdateTime -= e;
@@ -317,4 +315,4 @@ cc.Class({
         }
         return true
     }
-})
+}

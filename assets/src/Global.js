@@ -104,9 +104,11 @@ cc.Class({
     },
 
     getRandomNameList: function (e, t) {
-        for (var i = this.NameList.length, n = Math.floor(i / e), r = 0; r < e; ++r) {
-            var a = Math.floor(n * r + Math.random() * n);
-            a >= 0 && a < i && t.push(this.NameList[a])
+        const len = this.NameList.length;
+        const n = Math.floor(len / e)
+        for (let r = 0; r < e; ++r) {
+            const idx = Math.floor(n * r + Math.random() * n);
+            if (idx >= 0 && idx < len) t.push(this.NameList[idx])
         }
     }
 })

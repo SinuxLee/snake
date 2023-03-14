@@ -77,29 +77,35 @@ cc.Class({
 
     _touchStartEvent: function (e) {
         this._touchLocation = e.getLocation();
-        var t = this.node.convertToNodeSpaceAR(e.getLocation());
-        this.ring.node.setPosition(t)
-        this.dot.setPosition(t)
-        this._stickPos = t
+        const pos = this.node.convertToNodeSpaceAR(e.getLocation());
+        this.ring.node.setPosition(pos)
+        this.dot.setPosition(pos)
+        this._stickPos = pos
     },
 
     _touchMoveEvent: function (e) {
-        if (this._touchLocation.x == e.getLocation().x && this._touchLocation.y == e.getLocation().y) return false;
-        var t = this.ring.node.convertToNodeSpaceAR(e.getLocation()),
-            i = this.ring._getDistance(t, cc.Vec2(0, 0)),
-            n = this.ring.node.width / 2,
-            r = this._stickPos.x + t.x,
-            a = this._stickPos.y + t.y;
-        if (n > i) this.dot.setPosition(cc.Vec2(r, a));
+        const eventPos = e.getLocation();
+        if (this._touchLocation.x == eventPos.x && this._touchLocation.y == eventPos.y) return false;
+        
+        const pos = this.ring.node.convertToNodeSpaceAR(e.getLocation());
+        const distance = this.ring._getDistance(pos, cc.Vec2(0, 0));
+        const halfWidth = this.ring.node.width / 2;
+        const newPos = cc.Vec2(this._stickPos.x + pos.x, this._stickPos.y + pos.y);
+
+        if (halfWidth > distance) this.dot.setPosition(newPos);
         else {
-            var o = this._stickPos.x + Math.cos(this.ring._getRadian(cc.Vec2(r, a))) * n,
-                s = this._stickPos.y + Math.sin(this.ring._getRadian(cc.Vec2(r, a))) * n;
-            this.dot.setPosition(cc.Vec2(o, s))
+            const radian = this.ring._getRadian(newPos);
+            const x = this._stickPos.x + Math.cos(radian) * halfWidth;
+            const y = this._stickPos.y + Math.sin(radian) * halfWidth;
+            this.dot.setPosition(cc.Vec2(x, y))
         }
-        this.ring._getAngle(cc.Vec2(r, a)), this.ring._setSpeed(cc.Vec2(r, a))
+
+        this.ring._getAngle(newPos)
+        this.ring._setSpeed(newPos)
     },
 
     _touchEndEvent: function () {
-        this.dot.setPosition(this.ring.node.getPosition()), this.ring._speed = 0
+        this.dot.setPosition(this.ring.node.getPosition())
+        this.ring._speed = 0
     }
 })
