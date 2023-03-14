@@ -1,6 +1,7 @@
 {
-  "ver": "2.3.4",
+  "ver": "2.3.7",
   "uuid": "942b1ac6-54ce-4082-9192-a0cd36966b3f",
+  "importer": "texture",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -12,8 +13,9 @@
   "platformSettings": {},
   "subMetas": {
     "tankuangbeijing_1": {
-      "ver": "1.0.4",
+      "ver": "1.0.6",
       "uuid": "77f54260-8643-4c59-8bd8-1bbefe0884de",
+      "importer": "sprite-frame",
       "rawTextureUuid": "942b1ac6-54ce-4082-9192-a0cd36966b3f",
       "trimType": "auto",
       "trimThreshold": 1,
