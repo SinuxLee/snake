@@ -14,8 +14,7 @@ export default class extends cc.Component {
     private COMMON_M = "aishan_txtcs";
 
     onLoad() {
-        var e = cc.find("DataManager");
-        this._DataManager = e.getComponent("DataManager")
+        this._DataManager = cc.find("DataManager").getComponent("DataManager")
     }
 
     onEnable() {
