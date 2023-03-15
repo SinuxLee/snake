@@ -17,11 +17,11 @@ cc.Class({
     },
 
     onLoad: function () {
-        for (var e = 0; e < 5; ++e) this.FriendCtrlArray[e].initIndex(e)
+        for (let e = 0; e < 5; ++e) this.FriendCtrlArray[e].initIndex(e)
     },
 
     onEnable: function () {
-        for (var e = 0; e < 5; ++e) this.FriendCtrlArray[e].resetShow();
+        for (let e = 0; e < 5; ++e) this.FriendCtrlArray[e].resetShow();
         GameGlobal.Net.requestFriendList()
     },
 
@@ -32,14 +32,15 @@ cc.Class({
     },
 
     refreshList: function () {
-        for (var e = 0; e < 5; ++e) this.FriendCtrlArray[e].refreshUI()
+        for (let e = 0; e < 5; ++e) this.FriendCtrlArray[e].refreshUI()
     },
 
     onFriendInvite: function (e) {
         e.stopPropagation();
-        var t = GameGlobal.WeiXinPlatform;
-        if (void 0 != t._WXOpenID && 0 != t._WXOpenID.length) {
-            t._WXOpenID, GameGlobal.DataManager;
+        const wx = GameGlobal.WeiXinPlatform;
+        
+        if (void 0 != wx._WXOpenID && 0 != wx._WXOpenID.length) {
+            wx._WXOpenID, GameGlobal.DataManager;
             GameGlobal.WeiXinPlatform.showShare(function () { }, function () { })
         } else console.log("onFriendInvite invalid openID")
     },

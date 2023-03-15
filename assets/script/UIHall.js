@@ -186,12 +186,20 @@ cc.Class({
         this.KeFuBtn.node.on(cc.Node.EventType.TOUCH_END, this.onKeFuBtn, this)
         this.QianDaoBtn.node.on(cc.Node.EventType.TOUCH_END, this.onQianDaoBtn, this);
 
-        var e = this,
-            t = GameGlobal.DataManager;
-        GameGlobal.Net.request("entry/wxapp/SysInfo", {m: GameGlobal.Net.COMMON_M}, null, function (i, n) {
+        const mgr = GameGlobal.DataManager;
+        GameGlobal.Net.request("entry/wxapp/SysInfo", { m: GameGlobal.Net.COMMON_M }, null, (i, n) => {
             console.log("SysInfo ------------")
-            i.sysInfo && (i = i.sysInfo, t._FuHuoCostGold = i.revive, t._LinkIconURL = i.jump_img, t._LinkAppID = i.appid, t._LinkPath = i.path, t._LinkExtra = i.extra, t._ShareReward = i.reward, t._ShareReliveCount = i.revive_type)
-            e.updateLinkBtn()
+            const info = i.sysInfo
+            if (info == null) return
+
+            mgr._FuHuoCostGold = iinfo.revive
+            mgr._LinkIconURL = info.jump_img
+            mgr._LinkAppID = info.appid
+            mgr._LinkPath = info.path
+            mgr._LinkExtra = info.extra
+            mgr._ShareReward = info.reward
+            mgr._ShareReliveCount = info.revive_type
+            this.updateLinkBtn()
         })
 
         if (cc.sys.platform === cc.sys.WECHAT_GAME && window.wx) {
@@ -211,74 +219,90 @@ cc.Class({
     },
 
     updateMyInfo: function () {
-        var e = this;
-        if (cc.sys.platform === cc.sys.WECHAT_GAME) GameGlobal.DataManager._MyAvatarURL.length > 0 && cc.loader.load({
-            url: GameGlobal.DataManager._MyAvatarURL,
-            type: "png"
-        }, function (t, i) {
-            if (cc.log("load url", t), i instanceof cc.Texture2D) {
-                var n = new cc.SpriteFrame(i);
-                e.MyPhotoSprite.spriteFrame = n
+        if (GameGlobal.DataManager._MyAvatarURL.length <= 0) return
+
+        if (cc.sys.platform === cc.sys.WECHAT_GAME) {
+            cc.loader.load({ url: GameGlobal.DataManager._MyAvatarURL, type: "png" }, (t, asset) => {
+                cc.log("load url", t)
+                if (asset instanceof cc.Texture2D) {
+                    this.MyPhotoSprite.spriteFrame = new cc.SpriteFrame(asset)
+                }
+            })
+        } else if (cc.sys.platform === cc.sys.QQ_PLAY) {
+            const image = new Image();
+            image.src = GameGlobal.DataManager._MyAvatarURL
+            image.onload = () => {
+                const texture = new cc.Texture2D();
+                texture.initWithElement(image)
+                texture.handleLoadedTexture()
+                this.MyPhotoSprite.spriteFrame = new cc.SpriteFrame(texture)
             }
-        });
-        else if (cc.sys.platform === cc.sys.QQ_PLAY && GameGlobal.DataManager._MyAvatarURL.length > 0) {
-            var t = new Image;
-            t.onload = function () {
-                var i = new cc.Texture2D;
-                i.initWithElement(t), i.handleLoadedTexture(), e.MyPhotoSprite.spriteFrame = new cc.SpriteFrame(i)
-            }, t.src = GameGlobal.DataManager._MyAvatarURL
         }
-        GameGlobal.DataManager._MyNickName.length > 0 && (e.MyNickLabel.string = GameGlobal.DataManager._MyNickName)
+
+        this.MyNickLabel.string = GameGlobal.DataManager._MyNickName
     },
 
     updateGoldNum: function () {
-        GameGlobal.DataManager.CurGold;
-        var e = GameGlobal.localStorage.getItem("tcs_gold");
-        "" != e && null != e && void 0 != e || (e = 0, GameGlobal.localStorage.setItem("tcs_gold", 0)), this.GoldLabel.string = e
+        let gold = GameGlobal.localStorage.getItem("tcs_gold");
+        if (gold == null) {
+            gold = 0
+            GameGlobal.localStorage.setItem("tcs_gold", 0)
+        }
+
+        this.GoldLabel.string = gold
     },
 
     adddemo: function () {
-        GameGlobal.DataManager.CurDiamond += 50, GameGlobal.localStorage.setItem("tcs_diamond", GameGlobal.DataManager.CurDiamond), this.updateDiamondNum()
+        GameGlobal.DataManager.CurDiamond += 50
+        GameGlobal.localStorage.setItem("tcs_diamond", GameGlobal.DataManager.CurDiamond)
+        this.updateDiamondNum()
     },
 
     updateDiamondNum: function () {
-        var e = GameGlobal.DataManager.CurDiamond;
-        this.DiamLabel.string = e
+        this.DiamLabel.string = GameGlobal.DataManager.CurDiamond
     },
 
     updateLinkBtn: function () {
-        if (cc.sys.platform === cc.sys.WECHAT_GAME) {
-            var e = this;
-            GameGlobal.DataManager._LinkIconURL && GameGlobal.DataManager._LinkIconURL.length > 0 && cc.loader.load({
-                url: GameGlobal.DataManager._LinkIconURL,
-                type: "png"
-            }, function (t, i) {
-                if (cc.log("load url", t), i instanceof cc.Texture2D) {
-                    var n = new cc.SpriteFrame(i);
-                    e.LinkBtn.getComponent(cc.Sprite).spriteFrame = n
-                }
-            })
-        }
+        if (cc.sys.platform !== cc.sys.WECHAT_GAME) return
+
+        if (GameGlobal.DataManager._LinkIconURL == null ||
+            GameGlobal.DataManager._LinkIconURL.length > 0) return
+
+        cc.loader.load({ url: GameGlobal.DataManager._LinkIconURL, type: "png" }, (t, asset) => {
+            cc.log("load url", t)
+            if (asset instanceof cc.Texture2D) {
+                this.LinkBtn.getComponent(cc.Sprite).spriteFrame = new cc.SpriteFrame(asset)
+            }
+        })
     },
 
     onTimeModeBtn: function (e) {
-        e.stopPropagation(), GameGlobal.DataManager._CurSelectMode = 0, GameGlobal.UIManager.closeUI(UIType.UIType_Hall), GameGlobal.UIManager.openUI(UIType.UIType_GameLoading)
+        e.stopPropagation()
+        GameGlobal.DataManager._CurSelectMode = 0
+        GameGlobal.UIManager.closeUI(UIType.UIType_Hall)
+        GameGlobal.UIManager.openUI(UIType.UIType_GameLoading)
     },
 
     onWuXianModeBtn: function (e) {
-        e.stopPropagation(), GameGlobal.DataManager._CurSelectMode = 1, GameGlobal.UIManager.closeUI(UIType.UIType_Hall), GameGlobal.UIManager.openUI(UIType.UIType_GameLoading)
+        e.stopPropagation()
+        GameGlobal.DataManager._CurSelectMode = 1
+        GameGlobal.UIManager.closeUI(UIType.UIType_Hall)
+        GameGlobal.UIManager.openUI(UIType.UIType_GameLoading)
     },
 
     onTuanZhanBtn: function (e) {
-        e.stopPropagation(), GameGlobal.UIManager.showMessage("攻城狮玩命赶工中......")
+        e.stopPropagation()
+        GameGlobal.UIManager.showMessage("攻城狮玩命赶工中......")
     },
 
     onDuiZhanModeBtn: function (e) {
-        e.stopPropagation(), GameGlobal.UIManager.showMessage("攻城狮玩命赶工中......")
+        e.stopPropagation()
+        GameGlobal.UIManager.showMessage("攻城狮玩命赶工中......")
     },
 
     onLinkBtn: function (e) {
-        e.stopPropagation(), window.wx && wx.navigateToMiniProgram({
+        e.stopPropagation()
+        window.wx && wx.navigateToMiniProgram({
             appId: GameGlobal.DataManager._LinkAppID,
             path: GameGlobal.DataManager._LinkPath,
             extraData: GameGlobal.DataManager._LinkExtra
@@ -296,7 +320,7 @@ cc.Class({
         this.SubContentSprite.node.active = false
         this.SubMaskSprite.node.active = false
         this.RankCloseBtn.node.active = false
-        void 0 != window.wx && wx.postMessage({
+        window.wx && wx.postMessage({
             msgType: 7,
             isShow: false
         })
@@ -337,7 +361,8 @@ cc.Class({
     },
 
     onQianDaoBtn: function (e) {
-        e && e.stopPropagation(), GameGlobal.UIManager.openUI(UIType.UIType_QianDao)
+        e && e.stopPropagation()
+        GameGlobal.UIManager.openUI(UIType.UIType_QianDao)
     },
 
     _updateSubDomainCanvas: function () {
@@ -345,6 +370,6 @@ cc.Class({
     },
 
     update: function (e) {
-        cc.sys.platform, cc.sys.WECHAT_GAME, this._ShowSnake && this._ShowSnake.updateShow(e)
+        this._ShowSnake && this._ShowSnake.updateShow(e)
     }
 })

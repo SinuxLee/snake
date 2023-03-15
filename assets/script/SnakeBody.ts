@@ -62,28 +62,31 @@ export default class Food extends cc.Component {
     }
 
     getBodyPrePos(e, t, i, n, r, a) {
-        if (0 == this._CurBodyIndex) {
-            var o = this.node.width / 3;
-            return a.add(n.mul(o))
-        }
-        var s = i[this._CurBodyIndex - 1];
-        void 0 == s && cc.log("lastBody == undefined");
-        o = -this.node.width / 2;
-        var c = s.getComponent("SnakeBody");
-        return c._lastPos.add(c._lastMoveVec.mul(o))
+        if (0 == this._CurBodyIndex) return a.add(n.mul(this.node.width / 3));
+
+        const node = i[this._CurBodyIndex - 1];
+        if(node == null) cc.log("lastBody == undefined");
+
+        const body = node.getComponent("SnakeBody");
+        return body._lastPos.add(body._lastMoveVec.mul(-this.node.width / 2))
     }
 
     updateBody(e, t, i, n, r, a) {
         this._lastMoveVec = this._moveVec;
         this._lastPos = this.node.position;
-        var o = this.getBodyPrePos(e, t, i, n, this._IsFirstUpdate, r);
+        const bodyPos = this.getBodyPrePos(e, t, i, n, this._IsFirstUpdate, r);
         this._IsFirstUpdate = false;
-        var s = o.sub(this.node.position),
-            c = s.mag();
-        c < 1 && (s = this._moveVec, c = this.node.width / 2)
-        this._CurMoveDistance = c
+
+        let newPos = bodyPos.sub(this.node.position);
+        let vecLen = newPos.mag();
+        if(vecLen < 1) {
+            newPos = this._moveVec
+            vecLen = this.node.width / 2
+        }
+        
+        this._CurMoveDistance = vecLen
         this._MoveStartPos = this._lastPos
-        this._moveVec = s.normalize()
+        this._moveVec = newPos.normalize()
         cc.pDistance(this.node.position, this._MoveStartPos) > this._CurMoveDistance && console.log("invalid distance------------------")
         this.node.position = this.node.position.add(this._moveVec.mul(this._moveSpeed * e))
     }

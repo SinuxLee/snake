@@ -119,7 +119,7 @@ var GameJoystick = require('GameJoystick'),
 
         onEnable: function () {
             (this.NewerSprite.node.active = false, this._DataMgr._GameStartTime = (new Date).getTime(), this._DataMgr._CurShareReliveCount = 0, window.wx) && (console.log("uigame onEnable------------------"), wx.getStorageSync("isPlay") || (wx.setStorageSync("isPlay", true), this._IsFirstPause = true, this.NewerSprite.node.active = true));
-            
+
             this._SoundMgr = GameGlobal.SoundManager
             this._SoundMgr.stopAll()
             this._SoundMgr.playSound(SoundType.SoundType_GameBg)
@@ -128,7 +128,7 @@ var GameJoystick = require('GameJoystick'),
             this._KillShowTimer = 0
             this._CurTime = 120
             0 == this._DataMgr._CurSelectMode ? (this.TimerLabel.node.active = true, this.TimerSprite.active = true) : (this.TimerLabel.node.active = false, this.TimerSprite.active = false), this._NameList = [], GameGlobal.getRandomNameList(9, this._NameList), this._BodyList = [], this._HeadList = [];
-            
+
             for (var e = 0; e < 10; ++e)
                 if (0 == e) {
                     var t = new Snake,
@@ -219,8 +219,10 @@ var GameJoystick = require('GameJoystick'),
             0 == i.length && (i = "Me"), e.initMoveDir(cc.v2(1, 0)), e.setName(i, this.NameBaseNode), e.setMoveSpeed(300), e.changeSnakeSize(), this._SnakeList[0] = e, e.setState(1), this.setGameState(f)
         },
 
-        joyCallback: function (e, t, i, n) {
-            this._SnakeList.length <= 0 || this._SnakeList[0].setMoveDir(e, t, i, n)
+        joyCallback: function (x, y, dt, angle) {
+            if (this._SnakeList.length <= 0) return
+
+            this._SnakeList[0].setMoveDir(x, y, dt, angle)
         },
 
         onSpeedBtnDown: function (e) {
@@ -297,7 +299,7 @@ var GameJoystick = require('GameJoystick'),
                     t = this._SnakeList[0];
                     this._DataMgr.CurScore = t.getSnakeLength();
                     i = this;
-                    GameGlobal.WeiXinPlatform.postScoreToPlatform(i._DataMgr.getCurScore(),this._DataMgr._GameStartTime)
+                    GameGlobal.WeiXinPlatform.postScoreToPlatform(i._DataMgr.getCurScore(), this._DataMgr._GameStartTime)
                     GameGlobal.Net.requestScore(t.getSnakeLength())
                     GameGlobal.UIManager.openUI(UIType.UIType_GameEnd)
                     GameGlobal.Net.requestScoreGold(t.getSnakeLength())

@@ -37,10 +37,10 @@ cc.Class({
         this.BackBtn.node.active = false
         this.AgainBtn.node.active = false;
 
-        var e = GameGlobal.UIManager.getUI(UIType.UIType_Game);
+        const gameUI = GameGlobal.UIManager.getUI(UIType.UIType_Game);
         this.RewardGoldLabel.string = ""
-        this.LenLabel.string = "" + e.getMySnakeLen()
-        this.KillLabel.string = "" + e.getMySnakeKill()
+        this.LenLabel.string = "" + gameUI.getMySnakeLen()
+        this.KillLabel.string = "" + gameUI.getMySnakeKill()
     },
 
     start: function () {
@@ -56,22 +56,21 @@ cc.Class({
 
     onBack: function (e) {
         e && e.stopPropagation();
-        var t = GameGlobal.UIManager;
-        t.closeUI(UIType.UIType_GameEnd)
-        t.closeUI(UIType.UIType_Game)
-        t.openUI(UIType.UIType_Hall)
+        const mgr = GameGlobal.UIManager;
+        mgr.closeUI(UIType.UIType_GameEnd)
+        mgr.closeUI(UIType.UIType_Game)
+        mgr.openUI(UIType.UIType_Hall)
         window.wx && wx.triggerGC()
     },
 
     onAgain: function (e) {
         e && e.stopPropagation();
-        var t = GameGlobal.UIManager;
-        t.closeUI(UIType.UIType_GameEnd)
-        t.getUI(UIType.UIType_Game).resetGameEnd()
+        const mgr = GameGlobal.UIManager;
+        mgr.closeUI(UIType.UIType_GameEnd)
+        mgr.getUI(UIType.UIType_Game).resetGameEnd()
     },
 
-    onShareBtn: function (e) {
-        GameGlobal.DataManager;
+    onShareBtn: function () {
         GameGlobal.WeiXinPlatform.showShare()
     }
 })

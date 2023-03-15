@@ -20,50 +20,51 @@ cc.Class({
         this.TakeBtn.interactable = false
         this.GoldSprite.node.active = true
         this.HeadSprite.node.active = false;
-        var e = GameGlobal.DataManager;
-        this.IndexLabel.string = e._ShareReward * Math.pow(2, this._Index)
+        const mgr = GameGlobal.DataManager;
+        this.IndexLabel.string = mgr._ShareReward * Math.pow(2, this._Index)
     },
 
     refreshUI: function () {
-        var e = GameGlobal.DataManager;
-        if (this.IndexLabel.string = e._ShareReward * Math.pow(2, this._Index), !(this._Index >= e._FriendDataList.length)) {
-            var t = e._FriendDataList[this._Index];
-            this.TakeBtn.interactable = t.IsCanTake, this.IndexLabel.string = t.Reward;
-            var i = this;
-            t.HeadUrl && 0 != t.HeadUrl.length && cc.loader.load({
-                url: t.HeadUrl,
-                type: "png"
-            }, function (e, t) {
-                if (t instanceof cc.Texture2D) {
-                    i.GoldSprite.node.active = false, i.HeadSprite.node.active = true;
-                    var n = new cc.SpriteFrame(t);
-                    i.HeadSprite.spriteFrame = n
-                }
-            })
-        }
+        const mgr = GameGlobal.DataManager;
+        this.IndexLabel.string = mgr._ShareReward * Math.pow(2, this._Index)
+        if (this._Index >= mgr._FriendDataList.length) return
+
+        const item = mgr._FriendDataList[this._Index];
+        this.TakeBtn.interactable = item.IsCanTake
+        this.IndexLabel.string = item.Reward;
+
+        if (item.HeadUrl == null && 0 == item.HeadUrl.length) return
+        cc.loader.load({ url: item.HeadUrl, type: "png" }, (e, t) => {
+            if (t instanceof cc.Texture2D) {
+                this.GoldSprite.node.active = false;
+                this.HeadSprite.node.active = true;
+                this.HeadSprite.spriteFrame = new cc.SpriteFrame(t)
+            }
+        })
     },
 
     onFriendTake: function (e) {
         e.stopPropagation();
-        e.target;
         cc.log("onFriendTake", this._Index);
-        var t = e.target.getComponent(cc.Button);
-        if (!t || 0 != t.interactable) {
-            var i = GameGlobal.WeiXinPlatform,
-                n = GameGlobal.Net,
-                r = GameGlobal.DataManager;
-            if (!(this._Index >= r._FriendDataList.length)) {
-                var a = r._FriendDataList[this._Index];
-                n.request("entry/wxapp/InviteReward", {
-                    m: n.COMMON_M
-                }, {
-                    session3rd: i._SessionID,
-                    srcOpenID: a.OpenID,
-                    reward: a.Reward
-                }, function (e, t) {
-                    console.log("response InviteReward"), e.diamond && GameGlobal.DataManager.setDiamond(e.diamond), GameGlobal.UIManager.showMessage("领取成功"), GameGlobal.UIManager.RefreshCoin(), GameGlobal.Net.requestFriendList()
-                })
-            }
-        }
+        const btn = e.target.getComponent(cc.Button);
+        if (btn == null || btn.interactable == false) return
+
+        const wx = GameGlobal.WeiXinPlatform;
+        const net = GameGlobal.Net;
+        const mgr = GameGlobal.DataManager;
+        if (this._Index >= mgr._FriendDataList.length) return
+
+        const item = mgr._FriendDataList[this._Index];
+        net.request("entry/wxapp/InviteReward", {m: net.COMMON_M}, {
+            session3rd: wx._SessionID,
+            srcOpenID: item.OpenID,
+            reward: item.Reward
+        }, (e, t) => {
+            console.log("response InviteReward")
+            e.diamond && GameGlobal.DataManager.setDiamond(e.diamond)
+            GameGlobal.UIManager.showMessage("领取成功")
+            GameGlobal.UIManager.RefreshCoin()
+            GameGlobal.Net.requestFriendList()
+        })
     }
 })

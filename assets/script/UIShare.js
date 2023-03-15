@@ -33,44 +33,49 @@ cc.Class({
 
     onInviteBtn: function (e) {
         e.stopPropagation();
-        if (void 0 != window.wx) {
-            var t = GameGlobal.DataManager;
-            wx.shareAppMessage({
-                title: t.getShareTitle(),
-                imageUrl: t.getShareImage(),
-                success: function (e) {
-                    console.log("shareAppMessage success"), wx.showToast({
-                        title: "分享成功",
-                        icon: "success",
-                        duration: 1500
-                    })
-                },
-                fail: function (e) {
-                    console.log("shareAppMessage fail")
-                }
-            })
-        }
+        if (window.wx == null) return
+
+        const mgr = GameGlobal.DataManager;
+        wx.shareAppMessage({
+            title: mgr.getShareTitle(),
+            imageUrl: mgr.getShareImage(),
+            success: function (e) {
+                console.log("shareAppMessage success"), wx.showToast({
+                    title: "分享成功",
+                    icon: "success",
+                    duration: 1500
+                })
+            },
+            fail: function (e) {
+                console.log("shareAppMessage fail")
+            }
+        })
     },
 
     onVideoBtn: function () {
-        var e = this;
-        GameGlobal.DataManager;
-        null != this._CurVideoAd && (this._CurVideoAd.onLoad(function () {
+        if (this._CurVideoAd == null) return
+        
+        this._CurVideoAd.onLoad(() =>{
             console.log("激励视频 广告加载成功")
-        }), this._CurVideoAd.show().catch(function (t) {
-            e._CurVideoAd.load().then(function () {
-                return e._CurVideoAd.show()
+        })
+        
+        this._CurVideoAd.show().catch((t) =>{
+            this._CurVideoAd.load().then(() =>{
+                return this._CurVideoAd.show()
             })
-        }), this._CurVideoAd.onClose(function (e) {
+        })
+        
+        this._CurVideoAd.onClose((e) =>{
             (e && e.isEnded || void 0 === e) && wx.showToast({
                 title: "+ 10",
                 icon: "success",
                 duration: 1500
             })
-        }))
+        })
     },
 
     onCloseBtn: function (e) {
-        e.stopPropagation(), GameGlobal.UIManager.closeUI(UIType.UIType_HallInvite)
+        e.stopPropagation()
+        GameGlobal.UIManager.closeUI(UIType.UIType_HallInvite)
     }
 })

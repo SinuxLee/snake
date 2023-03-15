@@ -53,19 +53,19 @@ cc.Class({
         this.node.on(cc.Node.EventType.TOUCH_CANCEL, this._touchEndEvent, this)
     },
 
-    update: function (e) {
+    update: function (dt) {
         switch (this._joyCom.directionType) {
             case JoystickCommon.DirectionType.ALL:
-                this._allDirectionsMove(e)
+                this._allDirectionsMove(dt)
         }
     },
 
-    _allDirectionsMove: function (e) {
-        if (this.callBackObj) {
-            var t = Math.cos(this._angle * radian),
-                i = Math.sin(this._angle * radian);
-            this.callBackObj.joyCallback(t, i, e, this._angle)
-        }
+    _allDirectionsMove: function (dt) {
+        if (!this.callBackObj) return
+        
+        const x = Math.cos(this._angle * radian);
+        const y = Math.sin(this._angle * radian);
+        this.callBackObj.joyCallback(x, y, dt, this._angle)
     },
 
     _getDistance: function (e, t) {

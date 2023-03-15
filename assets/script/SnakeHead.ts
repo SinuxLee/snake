@@ -37,38 +37,43 @@ export default class extends cc.Component {
         if (this._Game == null) return
 
         const tag = self.tag;
+        const group = other.node.group;
         if (0 == tag) {
-            if ("body" == (h = other.node.group)) {
+            if ("body" == group) {
                 const body = other.node.getComponent(SnakeBody);
                 if (this._Snake === body._Snake) return;
                 if (1 == this._Snake._State || 1 == body._Snake._State) return;
+
                 if (this._Snake._PlayerSelf) {
                     if (0 == this._Snake._State) {
-                        var s = new cc.Event.EventCustom("meKill", true);
-                        this.node.dispatchEvent(s)
+                        const event = new cc.Event.EventCustom("meKill", true);
+                        this.node.dispatchEvent(event)
                     }
-                } else (s = new cc.Event.EventCustom("otherKill", true)).detail = {
-                    killed: body._Snake,
-                    beKilled: this._Snake
-                }, this.node.dispatchEvent(s)
-            } else if ("food" == h) {
-                if (this._Game.DelUseFood(other.node)) {
-                    var c = other.node.getComponent(Food).getAddWeight();
-                    this._Snake.addWeight(c)
+                } else {
+                    const event = new cc.Event.EventCustom("otherKill", true)
+                    event.detail = {
+                        killed: body._Snake,
+                        beKilled: this._Snake
+                    }
+                    this.node.dispatchEvent(event)
                 }
-                var f = GameGlobal.UIManager.getUI(UIType.UIType_Game);
-                f && (f.onSnakeHitFood(this._Snake), f.checkAddFood())
+            } else if ("food" == group) {
+                if (this._Game.DelUseFood(other.node)) {
+                    const weight = other.node.getComponent(Food).getAddWeight();
+                    this._Snake.addWeight(weight)
+                }
+                const gameUI = GameGlobal.UIManager.getUI(UIType.UIType_Game);
+                gameUI && (gameUI.onSnakeHitFood(this._Snake), gameUI.checkAddFood())
             }
         } else if (1e3 == tag) {
-            var h;
-            if ("body" == (h = other.node.group)) {
+            if ("body" == group) {
                 const body = other.node.getComponent(SnakeBody);
                 if (this._Snake === body._Snake) return;
                 if (false == this._Snake._PlayerSelf) {
                     if (100 * Math.random() > 85) return;
                     this._Snake.changeAI(6)
                 }
-            } else "food" == h && false == this._Snake._PlayerSelf && this._Snake.changeAI(7, other.node.position)
+            } else if("food" == group && false == this._Snake._PlayerSelf) this._Snake.changeAI(7, other.node.position)
         }
     }
 }

@@ -20,7 +20,7 @@ window.i18n || (window.i18n = {
 module.exports = {
     init: function (lang) {
         if (lang !== window.i18n.curLang) {
-            var t = getLang(lang) || {};
+            let t = getLang(lang) || {};
             window.i18n.curLang = lang
             newPoly(t)
             this.inst = noDef
@@ -34,24 +34,15 @@ module.exports = {
     inst: noDef,
 
     updateSceneRenderers: function () {
-        for (var e = cc.director.getScene().children, t = [], i = 0; i < e.length; ++i) {
-            var n = e[i].getComponentsInChildren("LocalizedLabel");
-            Array.prototype.push.apply(t, n)
+        const children = cc.director.getScene().children
+        for (let i = 0; i < children.length; ++i) {
+            const label = children[i].getComponentsInChildren("LocalizedLabel");
+            label.node.active && label.updateLabel()
         }
 
-        for (var r = 0; r < t.length; ++r) {
-            var a = t[r];
-            a.node.active && a.updateLabel()
-        }
-
-        for (var o = [], s = 0; s < e.length; ++s) {
-            var c = e[s].getComponentsInChildren("LocalizedSprite");
-            Array.prototype.push.apply(o, c)
-        }
-
-        for (var f = 0; f < o.length; ++f) {
-            var h = o[f];
-            h.node.active && h.updateSprite(window.i18n.curLang)
+        for (let s = 0; s < children.length; ++s) {
+            const sprite = children[s].getComponentsInChildren("LocalizedSprite");
+            sprite.node.active && sprite.updateSprite(window.i18n.curLang)
         }
     }
 }

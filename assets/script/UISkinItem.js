@@ -18,10 +18,15 @@ cc.Class({
     },
 
     initSkin: function () {
-        var e = this.node.taggame,
-            t = "xingxiang_" + (e + 1),
-            i = this.ResAtlas.getSpriteFrame(t);
-        i && (this.SkinSprite.spriteFrame = i), t = "xingxiangwenzi_" + (e + 1), (i = this.ResAtlas.getSpriteFrame(t)) && (this.SkinText.spriteFrame = i), this.LockSprite.node.active = false, this.UseSprite.node.active = false
+        let tag = this.node.taggame + 1;
+        let frame = this.ResAtlas.getSpriteFrame(`xingxiang_${tag}`);
+        if (frame) this.SkinSprite.spriteFrame = frame;
+
+        frame = this.ResAtlas.getSpriteFrame(`xingxiangwenzi_${tag}`)
+        if (frame) this.SkinText.spriteFrame = frame
+
+        this.LockSprite.node.active = false
+        this.UseSprite.node.active = false
     },
 
     setCostType: function (e) {
@@ -43,9 +48,10 @@ cc.Class({
 
     onSkinClick: function (e) {
         e.stopPropagation();
-        var t = e.target.taggame;
-        cc.log("onSkinClick", t);
-        var i = GameGlobal.UIManager.getUI(UIType.UIType_Skin);
-        i && i.setCurSelectSkin(t)
+        const tag = e.target.taggame;
+        cc.log("onSkinClick", tag);
+
+        const skin = GameGlobal.UIManager.getUI(UIType.UIType_Skin);
+        if(skin) skin.setCurSelectSkin(tag)
     }
 })

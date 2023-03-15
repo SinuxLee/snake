@@ -23,8 +23,11 @@ cc.Class({
     },
 
     fetchRender: function () {
-        var e = this.getComponent(cc.Label);
-        if (e) return this.label = e, void this.updateLabel()
+        const label = this.getComponent(cc.Label);
+        if (label == null) return
+        
+        this.label = label
+        this.updateLabel()
     },
 
     updateLabel: function () {

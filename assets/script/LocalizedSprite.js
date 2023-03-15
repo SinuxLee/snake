@@ -19,19 +19,25 @@ cc.Class({
     },
 
     fetchRender: function () {
-        var e = this.getComponent(cc.Sprite);
-        if (e) return this.sprite = e, void this.updateSprite(window.i18n.curLang)
+        const sprite = this.getComponent(cc.Sprite);
+        if (sprite == null) return 
+        this.sprite = sprite
+        this.updateSprite(window.i18n.curLang)
     },
 
     getSpriteFrameByLang: function (e) {
-        for (var t = 0; t < this.spriteFrameSet.length; ++t)
+        for (let t = 0; t < this.spriteFrameSet.length; ++t)
             if (this.spriteFrameSet[t].language === e) return this.spriteFrameSet[t].spriteFrame
     },
 
     updateSprite: function (e) {
-        if (this.sprite) {
-            var t = this.getSpriteFrameByLang(e);
-            !t && this.spriteFrameSet[0] && (t = this.spriteFrameSet[0].spriteFrame), this.sprite.spriteFrame = t
-        } else cc.error("Failed to update localized sprite, sprite component is invalid!")
+        if (!this.sprite) return cc.error("Failed to update localized sprite, sprite component is invalid!")
+
+        let frame = this.getSpriteFrameByLang(e);
+        if(!frame && this.spriteFrameSet[0]) {
+            frame = this.spriteFrameSet[0].spriteFrame
+        }
+
+        this.sprite.spriteFrame = frame
     }
 })

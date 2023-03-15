@@ -28,20 +28,24 @@ cc.Class({
                         width: 300
                     }
                 }), this._MatchAd.show();
-                var e = this;
-                this._MatchAd.onResize(function (t) {
-                    console.log(t.width, t.height), console.log(e._MatchAd.style.realWidth, e._MatchAd.style.realHeight);
-                    var i = wx.getSystemInfoSync();
-                    e._MatchAd.style.left = i.screenWidth - e._MatchAd.style.realWidth, e._MatchAd.style.top = i.screenHeight - e._MatchAd.style.realHeight
+
+                this._MatchAd.onResize((t) => {
+                    console.log(t.width, t.height), console.log(this._MatchAd.style.realWidth, this._MatchAd.style.realHeight);
+                    const info = wx.getSystemInfoSync();
+                    this._MatchAd.style.left = info.screenWidth - this._MatchAd.style.realWidth
+                    this._MatchAd.style.top = info.screenHeight - this._MatchAd.style.realHeight
                 })
             }
         } else if (cc.sys.platform === cc.sys.QQ_PLAY) {
-            e = this;
-            this._MatchAd = null, this._MatchAd = BK.Advertisement.createBannerAd({
+            this._MatchAd = BK.Advertisement.createBannerAd({
                 viewId: 1001
-            }), this._MatchAd.onError(function (e) {
+            })
+            
+            this._MatchAd.onError(function (e) {
                 e.msg, e.code
-            }), this._MatchAd.show()
+            })
+            
+            this._MatchAd.show()
         }
         cc.log("UILoading onEnable leave--------------------------------------")
     },
@@ -50,10 +54,21 @@ cc.Class({
         cc.sys.platform === cc.sys.WECHAT_GAME ? void 0 != window.wx && this._MatchAd && this._MatchAd.hide() : cc.sys.platform === cc.sys.QQ_PLAY && this._MatchAd && this._MatchAd.destory(), this._MatchAd = null
     },
 
-    update: function (e) {
-        if (0 != this._needUpdate) {
-            var t = .25 * e;
-            this.LoadingProgress.progress = this.LoadingProgress.progress + t, this.LoadingProgress.progress >= 1 && (this.LoadingProgress.progress = 1, this._needUpdate = false, GameGlobal.UIManager.closeUI(UIType.UIType_GameLoading), GameGlobal.UIManager.openUI(UIType.UIType_Game)), this.GuangSprite && (this.GuangSprite.node.x = this.LoadingProgress.barSprite.node.x + this.LoadingProgress.progress * this.LoadingProgress.totalLength)
+    update: function (dt) {
+        if(this._needUpdate == false) return
+        const delta = .25 * dt;
+        this.LoadingProgress.progress += delta
+        
+        if(this.LoadingProgress.progress >= 1) {
+            this.LoadingProgress.progress = 1
+            this._needUpdate = false
+            GameGlobal.UIManager.closeUI(UIType.UIType_GameLoading)
+            GameGlobal.UIManager.openUI(UIType.UIType_Game)
+        }
+
+        if(this.GuangSprite) {
+            const length = this.LoadingProgress.progress * this.LoadingProgress.totalLength
+            this.GuangSprite.node.x = this.LoadingProgress.barSprite.node.x + length
         }
     }
 })

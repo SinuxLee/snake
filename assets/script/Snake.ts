@@ -169,7 +169,11 @@ export default class Snake {
     }
 
     setOtherMoveDir(e, t) {
-        0 == e && 0 == t && (e = 1), this._MoveVec.x = e, this._MoveVec.y = t, this._MoveVec.normalizeSelf();
+        0 == e && 0 == t && (e = 1)
+        this._MoveVec.x = e
+        this._MoveVec.y = t
+        this._MoveVec.normalizeSelf();
+        
         var i = Math.atan2(t, e) * (180 / Math.PI);
         this._SnakeHead.angle = -i - 90
     }

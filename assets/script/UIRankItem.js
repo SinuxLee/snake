@@ -31,35 +31,46 @@ cc.Class({
         this.IndexSprite.node.active = e <= 2
     },
 
-    createImage: function (e) {
-        var t = this;
+    createImage: function (url) {
         if (cc.sys.platform === cc.sys.WECHAT_GAME) {
-            if (void 0 == window.wx) return void console.log("createImage wx undefined");
+            if (window.wx == null) return void console.log("createImage wx undefined");
             try {
-                var i = wx.createImage();
-                i.onload = function () {
+                const image = wx.createImage();
+                image.src = url
+                image.onload = () =>{
                     try {
-                        var e = new cc.Texture2D;
-                        e.initWithElement(i), e.handleLoadedTexture(), t.HeadImageSprite.spriteFrame = new cc.SpriteFrame(e)
+                        const texture = new cc.Texture2D();
+                        texture.initWithElement(image)
+                        texture.handleLoadedTexture()
+                        this.HeadImageSprite.spriteFrame = new cc.SpriteFrame(texture)
                     } catch (e) {
-                        console.log(e), t.HeadImageSprite.node.active = false
+                        console.log(e)
+                        this.HeadImageSprite.node.active = false
                     }
-                }, i.src = e
-            } catch (e) {
-                console.log(e), this.HeadImageSprite.node.active = false
-            }
-        } else if (cc.sys.platform === cc.sys.QQ_PLAY) try {
-            var n = new Image;
-            n.onload = function () {
-                try {
-                    var e = new cc.Texture2D;
-                    e.initWithElement(n), e.handleLoadedTexture(), t.HeadImageSprite.spriteFrame = new cc.SpriteFrame(e)
-                } catch (e) {
-                    console.log(e), t.HeadImageSprite.node.active = false
                 }
-            }, n.src = e
-        } catch (e) {
-            console.log(e), this.HeadImageSprite.node.active = false
+            } catch (e) {
+                console.log(e)
+                this.HeadImageSprite.node.active = false
+            }
+        } else if (cc.sys.platform === cc.sys.QQ_PLAY){
+            try {
+                const image = new Image();
+                image.src = url;
+                image.onload = () =>{
+                    try {
+                        const texture = new cc.Texture2D;
+                        texture.initWithElement(image)
+                        texture.handleLoadedTexture()
+                        this.HeadImageSprite.spriteFrame = new cc.SpriteFrame(texture)
+                    } catch (e) {
+                        console.log(e)
+                        this.HeadImageSprite.node.active = false
+                    }
+                }
+            } catch (e) {
+                console.log(e)
+                this.HeadImageSprite.node.active = false
+            }
         }
     }
 })

@@ -18,20 +18,21 @@ cc.Class({
     },
 
     onEnable: function () {
-        var e = this;
-        if (cc.sys.platform === cc.sys.QQ_PLAY) {
-            e.ScrollviewContent.removeAllChildren();
-            BK.QQ.getRankListWithoutRoom("score", 1, 0, function (t, i, n) {
-                if (BK.Script.log(1, 1, "getRankListWithoutRoom callback  cmd" + i + " errCode:" + t + "  data:" + JSON.stringify(n)), 0 === t) {
-                    if (n)
-                        for (var r = 0; r < n.data.ranking_list.length; ++r) {
-                            var a = n.data.ranking_list[r],
-                                o = cc.instantiate(e.RankPrefab);
-                            o.getComponent("UIRankItem").init(r, a), e.ScrollviewContent.addChild(o)
-                        }
-                } else BK.Script.log(1, 1, "获取排行榜数据失败!错误码：" + t)
-            })
-        }
+        if (cc.sys.platform !== cc.sys.QQ_PLAY) return
+
+        this.ScrollviewContent.removeAllChildren();
+        BK.QQ.getRankListWithoutRoom("score", 1, 0, (code, cmd, rankInfo) => {
+            BK.Script.log(1, 1, "getRankListWithoutRoom callback  cmd" + cmd + " errCode:" + code + "  data:" + JSON.stringify(rankInfo))
+            if (0 !== code || !rankInfo) return BK.Script.log(1, 1, "获取排行榜数据失败!错误码：" + code)
+
+            for (let idx = 0; idx < rankInfo.data.ranking_list.length; ++idx) {
+                const item = rankInfo.data.ranking_list[idx];
+                const node = cc.instantiate(this.RankPrefab);
+                
+                node.getComponent("UIRankItem").init(idx, item);
+                this.ScrollviewContent.addChild(node)
+            }
+        })
     },
 
     start: function () {
@@ -39,6 +40,7 @@ cc.Class({
     },
 
     onClose: function (e) {
-        e.stopPropagation(), GameGlobal.UIManager.closeUI(UIType.UIType_RankQQ)
+        e.stopPropagation()
+        GameGlobal.UIManager.closeUI(UIType.UIType_RankQQ)
     }
 })
