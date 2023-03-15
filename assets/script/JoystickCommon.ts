@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     TouchType: cc.Enum({
         DEFAULT: 0,
         FOLLOW: 1

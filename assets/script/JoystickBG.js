@@ -1,4 +1,4 @@
-const JoystickCommon = require('JoystickCommon');
+import JoystickCommon from './JoystickCommon';
 const radian = Math.PI / 180;
 
 cc.Class({

@@ -1,13 +1,13 @@
 
-var polyglot = require('polyglot.min'),
-    r = null;
+const polyglot = require('../lib/polyglot.min');
+const noDef = null;
 
-function a(e) {
+function getLang(e) {
     return window.i18n.languages[e]
 }
 
-function o(e) {
-    e && (r ? r.replace(e) : r = new polyglot({
+function newPoly(e) {
+    e && (noDef ? noDef.replace(e) : noDef = new polyglot({
         phrases: e,
         allowMissing: true
     }))
@@ -18,18 +18,20 @@ window.i18n || (window.i18n = {
 })
 
 module.exports = {
-    init: function (e) {
-        if (e !== window.i18n.curLang) {
-            var t = a(e) || {};
-            window.i18n.curLang = e, o(t), this.inst = r
+    init: function (lang) {
+        if (lang !== window.i18n.curLang) {
+            var t = getLang(lang) || {};
+            window.i18n.curLang = lang
+            newPoly(t)
+            this.inst = noDef
         }
     },
 
     t: function (e, t) {
-        if (r) return r.t(e, t)
+        if (noDef) return noDef.t(e, t)
     },
 
-    inst: r,
+    inst: noDef,
 
     updateSceneRenderers: function () {
         for (var e = cc.director.getScene().children, t = [], i = 0; i < e.length; ++i) {

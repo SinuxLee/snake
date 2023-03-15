@@ -1,4 +1,4 @@
-const JoystickCommon = require('JoystickCommon');
+import JoystickCommon from './JoystickCommon';
 const JoystickBG = require('JoystickBG');
 
 cc.Class({

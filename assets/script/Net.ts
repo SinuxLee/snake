@@ -61,8 +61,8 @@ export default class extends cc.Component {
     }
 
     getSign(t, i, n) {
-        var r = require('underscore'),
-            a = require('md5'),
+        var r = require('../lib/underscore'),
+            a = require('../lib/md5'),
             s = "",
             c = this.getUrlParam(t, "sign");
         if (c || i && i.sign) return false;
@@ -87,8 +87,8 @@ export default class extends cc.Component {
     }
 
     getSign_qq(t, i, n) {
-        var r = e("underscore"),
-            a = e("md5"),
+        var r = require("../lib/underscore"),
+            a = require("../lib/md5"),
             s = "",
             c = this.getUrlParam_qq(t, "sign");
         if (c || i && i.sign) return false;
@@ -270,35 +270,6 @@ export default class extends cc.Component {
         console.log(" -----jinbi :  " + i);
         var n = parseInt(i) + t;
         return GameGlobal.localStorage.setItem("tcs_gold", JSON.stringify(n)), void this.requestUserInfo()
-    }
-
-    getZSURL(e, t) {
-        if (void 0 == t.sign && (t.sign = this.getZSSign(e, t)), t) {
-            var i = "",
-                n = 0;
-            for (var r in t) r && t[r] && (i += 0 == n ? r + "=" + t[r] : "&" + r + "=" + t[r], ++n);
-            e += "?" + i
-        }
-        return e
-    }
-
-    getZSSign(t, i) {
-        var n = e("underscore"),
-            r = require('md5-2'),
-            a = "";
-        if (t && (a = this.getQuery(t)), i) {
-            var o = [];
-            for (var s in i) s && i[s] && (o = o.concat({
-                name: s,
-                value: i[s]
-            }));
-            a = a.concat(o)
-        }
-        a = n.sortBy(a, "name"), a = n.uniq(a, true, "name");
-        for (var c = "", f = 0; f < a.length; f++) a[f] && a[f].name && a[f].value && (c += a[f].name + ":" + a[f].value);
-        c += "u9GUhTZ8DzV2f5ko", console.log("getZSSign before ", c);
-        var h = r(c).toLowerCase();
-        return console.log("getZSSign", h, c), h
     }
 
     requestZSShare() {
