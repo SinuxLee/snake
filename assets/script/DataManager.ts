@@ -1,89 +1,91 @@
-const UIType = require('UIType')
-const SignInitData = cc.Class({
-    properties: {
-        signDay: 0,
-        signReward: 0,
-        signRewardNum: 0,
-        signStatus: 0
-    }
-})
+import { UIType } from './UIType';
+const { ccclass, property } = cc._decorator;
 
-const FriendInviteData = cc.Class({
-    properties: {
-        HeadUrl: "",
-        IsCanTake: false,
-        Reward: 0,
-        ID: 0,
-        OpenID: ""
-    }
-})
+export class SignInitData{
+    public signDay = 0;
+    public signReward = 0;
+    public signRewardNum = 0;
+    public signStatus = 0;
+}
 
-const SkinData = cc.Class({
-    properties: {
-        ID: 0,
-        Price: 5,
-        Type: 0,
-        IsOwn: false,
-        IsUse: false
-    }
-});
+export class FriendInviteData {
+    public HeadUrl = "";
+    public IsCanTake = false;
+    public Reward = 0;
+    public ID = 0;
+    public OpenID = "";
+}
 
-cc.Class({
-    extends: cc.Component,
-    properties: {
-        CurScore: {
-            default: 0,
-            type: cc.Integer
-        },
-        CurGold: {
-            default: 0,
-            type: cc.Integer
-        },
-        CurFlower: {
-            default: 0,
-            type: cc.Integer
-        },
-        CurDiamond: {
-            default: 0,
-            type: cc.Integer
-        },
-        IsShareRelive: {
-            default: false,
-        },
+export class SkinData{
+    public ID = 0;
+    public Price = 5;
+    public Type = 0;
+    public IsOwn = false;
+    public IsUse = false;
+}
 
-        VideoAdid: "adunit-bf61185a259df4c2",
-        BannerAdid1: "adunit-84752a29a640a476",
-        BannerAdid2: "adunit-cb8e21a61e779439",
-        AppID: "wxf6746ff760dc4257",
-        _ShareReliveCount: 0,
-        _MyAvatarURL: "",
-        _MyNickName: "",
-        _Province: 0,
-        _AllLinks: [],
-        _CurSelectMode: 0,
-        _FriendDataList: [],
-        _MyQianDaoCount: 0,
-        _MyQianDaoTake: false,
-        _SignInitList: [],
-        _FuHuoCostGold: 0,
-        _LinkIconURL: "",
-        _LinkAppID: "",
-        _LinkPath: "",
-        _LinkExtra: "",
-        _ShareTitle: "",
-        _ShareImageUrl: "",
-        _ShareContent: "",
-        _ShareReward: 5,
-        _IsShareRelive: true,
-        _CurShareReliveCount: 0,
-        _CurZSAdData: null,
-        _SKinDataArray: [],
-        _CurMySKinIndex: 0,
-        _CurRecord: 0,
-        _GameStartTime: 0,
-    },
+enum RewardType{
+    RT_GOLD = 0,
+    RT_DIAMOND = 1,
+    RT_FLOWER = 2
+}
 
-    onEnable: function () {
+// TODO: 改为 enum
+window.GameRewardType = {
+    RT_GOLD: 0,
+    RT_DIAMOND: 1,
+    RT_FLOWER: 2
+}
+
+@ccclass
+export default class extends cc.Component {
+    @property(cc.Integer)
+    public CurScore = 0;
+
+    @property(cc.Integer)
+    public CurGold = 0;
+
+    @property(cc.Integer)
+    public CurFlower = 0;
+
+    @property(cc.Integer)
+    public CurDiamond = 0;
+
+    @property(cc.Boolean)
+    public IsShareRelive = false;
+
+    private VideoAdid = "adunit-bf61185a259df4c2"
+    private BannerAdid1 = "adunit-84752a29a640a476"
+    private BannerAdid2 = "adunit-cb8e21a61e779439"
+    private AppID = "wxf6746ff760dc4257"
+    private _ShareReliveCount = 0
+    private _MyAvatarURL = ""
+    private _MyNickName = ""
+    private _Province = 0
+    private _AllLinks = []
+    private _CurSelectMode = 0
+    private _FriendDataList = []
+    private _MyQianDaoCount = 0
+    private _MyQianDaoTake = false
+    private _SignInitList = []
+    private _FuHuoCostGold = 0
+    private _LinkIconURL = ""
+    private _LinkAppID = ""
+    private _LinkPath = ""
+    private _LinkExtra = ""
+    private _ShareTitle = ""
+    private _ShareImageUrl = ""
+    private _ShareContent = ""
+    private _ShareReward = 5
+    private _IsShareRelive = true
+    private _CurShareReliveCount = 0
+    private _CurZSAdData = null
+    private _SKinDataArray = []
+    private _CurMySKinIndex = 0
+    private _CurRecord = 0
+    private _GameStartTime = 0
+
+    onEnable() {
         if (window.wx == null) return
 
         wx.getStorage({
@@ -98,90 +100,78 @@ cc.Class({
                 console.log("getStorage wxData fail ")
             }
         })
-    },
+    }
 
-    start: function () {
+    start() {
         cc.log("DataManager start")
         this._CurSelectMode = 0
-    },
+    }
 
-    getCurScore: function () {
+    getCurScore() {
         return this.CurScore
-    },
+    }
 
-    setCurScore: function (e) {
-        this.CurScore = e
-    },
+    setCurScore(score: number) {
+        this.CurScore = score
+    }
 
-    getCurGold: function () {
+    getCurGold() {
         return this.CurGold
-    },
+    }
 
-    setCurGold: function (e) {
-        e && (this.CurGold = e)
-    },
+    setCurGold(gold: number) {
+        this.CurGold = gold
+    }
 
-    getCurFlower: function () {
+    getCurFlower() {
         return this.CurFlower
-    },
+    }
 
-    setCurFlower: function (e) {
-        e < 0 && (e = 0), this.CurFlower = e
-    },
+    setCurFlower(flower: number) {
+        this.CurFlower = flower
+    }
 
-    setDiamond: function (e) {
-        e && (e < 0 && (e = 0), this.CurDiamond = e)
-    },
+    setDiamond(diamond: number) {
+        this.CurDiamond = diamond
+    }
 
-    getCurDiamond: function () {
+    getCurDiamond() {
         return this.CurDiamond
-    },
+    }
 
-    getFuHuoGold: function () {
+    getFuHuoGold() {
         return this._FuHuoCostGold
-    },
+    }
 
-    setShareRelive: function (e) {
-        e && (this.IsShareRelive = e)
-    },
+    setShareRelive(isRelive: boolean) {
+        this.IsShareRelive = isRelive
+    }
 
-    getShareRelive: function () {
+    getShareRelive() {
         return this.IsShareRelive
-    },
+    }
 
-    setShareTitle: function (e) {
-        this._ShareTitle = e
-    },
+    setShareTitle(title: string) {
+        this._ShareTitle = title
+    }
 
-    getShareTitle: function () {
+    getShareTitle() {
         return this._ShareTitle
-    },
+    }
 
-    setShareImage: function (e) {
-        this._ShareImageUrl = e
-    },
+    setShareImage(url: string) {
+        this._ShareImageUrl = url
+    }
 
-    getShareImage: function () {
+    getShareImage() {
         return this._ShareImageUrl
-    },
+    }
 
-    setShareReliveCount: function (e) {
-        this._ShareReliveCount = e
-    },
+    setShareReliveCount(count: number) {
+        this._ShareReliveCount = count
+    }
 
-    getShareReliveCount: function () {
+    getShareReliveCount() {
         return this._ShareReliveCount
     }
-})
-
-module.exports = {
-    FriendInviteData,
-    SignInitData,
-    SkinData
-}
-
-window.GameRewardType = {
-    RT_GOLD: 0,
-    RT_DIAMOND: 1,
-    RT_FLOWER: 2
 }

@@ -1,24 +1,24 @@
-const SnakeBody = require('SnakeBody');
-const Food = require('Food');
-const UIType = require('UIType');
+import SnakeBody from './SnakeBody'
+import Food from './Food'
+import Game from './Game'
+import Snake from './Snake'
+import { UIType } from './UIType'
 
-cc.Class({
-    extends: cc.Component,
-    properties: {
-        Atlas: {
-            default: null,
-            type: cc.SpriteAtlas
-        },
+const { ccclass, property } = cc._decorator;
 
-        _Snake: null,
-        _Game: null
-    },
+@ccclass
+export default class extends cc.Component {
+    @property(cc.SpriteAtlas)
+    public Atlas: cc.SpriteAtlas = null;
 
-    start: function () {
+    private _Snake: Snake = null;
+    private _Game: Game = null;
+
+    start() {
         this._Game = GameGlobal.Game
-    },
+    }
 
-    setType: function (type) {
+    setType(type: number) {
         if (type < 1 || type > 16) (type = 1);
         this.headType1 = type;
 
@@ -27,28 +27,28 @@ cc.Class({
         const frame = this.Atlas.getSpriteFrame(name);
 
         frame && (sprite.spriteFrame = frame)
-    },
+    }
 
-    setSnake: function (snake) {
+    setSnake(snake: Snake) {
         this._Snake = snake
-    },
+    }
 
-    onCollisionEnter: function (other, self) {
+    onCollisionEnter(other: cc.Collider, self: cc.Collider) {
         if (this._Game == null) return
 
         const tag = self.tag;
         if (0 == tag) {
             if ("body" == (h = other.node.group)) {
-                var o = other.node.getComponent(SnakeBody);
-                if (this._Snake === o._Snake) return;
-                if (1 == this._Snake._State || 1 == o._Snake._State) return;
+                const body = other.node.getComponent(SnakeBody);
+                if (this._Snake === body._Snake) return;
+                if (1 == this._Snake._State || 1 == body._Snake._State) return;
                 if (this._Snake._PlayerSelf) {
                     if (0 == this._Snake._State) {
                         var s = new cc.Event.EventCustom("meKill", true);
                         this.node.dispatchEvent(s)
                     }
                 } else (s = new cc.Event.EventCustom("otherKill", true)).detail = {
-                    killed: o._Snake,
+                    killed: body._Snake,
                     beKilled: this._Snake
                 }, this.node.dispatchEvent(s)
             } else if ("food" == h) {
@@ -62,13 +62,13 @@ cc.Class({
         } else if (1e3 == tag) {
             var h;
             if ("body" == (h = other.node.group)) {
-                o = other.node.getComponent(SnakeBody);
-                if (this._Snake === o._Snake) return;
-                if (0 == this._Snake._PlayerSelf) {
+                const body = other.node.getComponent(SnakeBody);
+                if (this._Snake === body._Snake) return;
+                if (false == this._Snake._PlayerSelf) {
                     if (100 * Math.random() > 85) return;
                     this._Snake.changeAI(6)
                 }
-            } else "food" == h && 0 == this._Snake._PlayerSelf && this._Snake.changeAI(7, other.node.position)
+            } else "food" == h && false == this._Snake._PlayerSelf && this._Snake.changeAI(7, other.node.position)
         }
     }
-})
+}

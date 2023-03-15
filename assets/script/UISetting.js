@@ -1,4 +1,4 @@
-const UIType = require('UIType');
+import { UIType } from './UIType';
 
 cc.Class({
     extends: cc.Component,

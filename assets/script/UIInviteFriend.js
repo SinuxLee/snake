@@ -1,4 +1,4 @@
-const UIType = require('UIType');
+import { UIType } from './UIType';
 const UIInviteFriendItem = require('UIInviteFriendItem');
 require('DataManager').FriendInviteData;
 

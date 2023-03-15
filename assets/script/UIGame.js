@@ -1,8 +1,9 @@
-var Snake = require('Snake'),
-    Food = require('Food'),
-    GameJoystick = require('GameJoystick'),
-    UIType = require('UIType'),
-    SoundType = require('SoundType'),
+import { UIType } from './UIType';
+import Snake from './Snake';
+import Food from './Food';
+import SoundType from './SoundType';
+
+var GameJoystick = require('GameJoystick'),
     c = [
         cc.v2(-120, -120), cc.v2(600, 600), cc.v2(-500, -800), cc.v2(200, 800),
         cc.v2(-800, 1200), cc.v2(500, -800), cc.v2(-300, 500), cc.v2(500, -400),
@@ -118,7 +119,16 @@ var Snake = require('Snake'),
 
         onEnable: function () {
             (this.NewerSprite.node.active = false, this._DataMgr._GameStartTime = (new Date).getTime(), this._DataMgr._CurShareReliveCount = 0, window.wx) && (console.log("uigame onEnable------------------"), wx.getStorageSync("isPlay") || (wx.setStorageSync("isPlay", true), this._IsFirstPause = true, this.NewerSprite.node.active = true));
-            this._SoundMgr = GameGlobal.SoundManager, this._SoundMgr.stopAll(), this._SoundMgr.playSound(SoundType.SoundType_GameBg), this.KillSprite.node.active = false, cc.director.getCollisionManager().enabled = true, this._KillShowTimer = 0, this._CurTime = 120, 0 == this._DataMgr._CurSelectMode ? (this.TimerLabel.node.active = true, this.TimerSprite.active = true) : (this.TimerLabel.node.active = false, this.TimerSprite.active = false), this._NameList = [], GameGlobal.getRandomNameList(9, this._NameList), this._BodyList = [], this._HeadList = [];
+            
+            this._SoundMgr = GameGlobal.SoundManager
+            this._SoundMgr.stopAll()
+            this._SoundMgr.playSound(SoundType.SoundType_GameBg)
+            this.KillSprite.node.active = false
+            cc.director.getCollisionManager().enabled = true
+            this._KillShowTimer = 0
+            this._CurTime = 120
+            0 == this._DataMgr._CurSelectMode ? (this.TimerLabel.node.active = true, this.TimerSprite.active = true) : (this.TimerLabel.node.active = false, this.TimerSprite.active = false), this._NameList = [], GameGlobal.getRandomNameList(9, this._NameList), this._BodyList = [], this._HeadList = [];
+            
             for (var e = 0; e < 10; ++e)
                 if (0 == e) {
                     var t = new Snake,
@@ -167,7 +177,8 @@ var Snake = require('Snake'),
 
         reliveResetGame: function () {
             var e = this._SnakeList[0];
-            e && (e.resetPos(cc.Vec2(0, 0)), e.initMoveDir(cc.v2(1, 0)), e.setState(1), e.changeSnakeSize()), this.setGameState(f)
+            e && (e.resetPos(cc.Vec2(0, 0)), e.initMoveDir(cc.v2(1, 0)), e.setState(1), e.changeSnakeSize())
+            this.setGameState(f)
         },
 
         getMySnakeLen: function () {
@@ -213,15 +224,18 @@ var Snake = require('Snake'),
         },
 
         onSpeedBtnDown: function (e) {
-            e.stopPropagation(), this._IsSpeedDown = true
+            e.stopPropagation()
+            this._IsSpeedDown = true
         },
 
         onSpeedBtnUp: function (e) {
-            e.stopPropagation(), this._IsSpeedDown = false
+            e.stopPropagation()
+            this._IsSpeedDown = false
         },
 
         onSelfBeKilled: function (e) {
-            e.stopPropagation(), this.setGameState(h)
+            e.stopPropagation()
+            this.setGameState(h)
         },
 
         onOtherBeKilled: function (e) {
@@ -229,9 +243,16 @@ var Snake = require('Snake'),
             var t = e.detail.killed,
                 i = e.detail.beKilled;
             if (t.addKillCount(), t === this._SnakeList[0] && this.updateSelfSnakeInfo(), null != i) {
-                this.KillSprite.node.active = true, this.KillCountLabel.string = t._KillCount, this.KillNameLabel.string = t._PlayerName, this.BeKilledNameLabel.string = i._PlayerName, this._KillShowTimer = 1.5, i.deadFood(this.FoodBaseNode), i.deadReset();
+                this.KillSprite.node.active = true
+                this.KillCountLabel.string = t._KillCount
+                this.KillNameLabel.string = t._PlayerName
+                this.BeKilledNameLabel.string = i._PlayerName
+                this._KillShowTimer = 1.5
+                i.deadFood(this.FoodBaseNode)
+                i.deadReset();
                 var n = this._SnakeList.indexOf(i);
-                this._SnakeList.splice(n, 1), this.onOtherRelive(i._HeadType, i._BodyTypeList, i._PlayerName)
+                this._SnakeList.splice(n, 1)
+                this.onOtherRelive(i._HeadType, i._BodyTypeList, i._PlayerName)
             } else cc.log("onOtherBeKilled beSnake = null")
         },
 
@@ -240,7 +261,12 @@ var Snake = require('Snake'),
                 a = Math.floor(9 * Math.random());
             r.init(e, t, this.AllObjNode, c[a], this.Camera, false, this._MapSizeWidth, this._MapSizeHeight, this._SnakeList.length);
             var o = cc.v2(1, 0);
-            o.rotateSelf(3.14 * Math.random()), r.initMoveDir(o), r.setName(i, this.NameBaseNode), r.setMoveSpeed(300), this._SnakeList.push(r), r.setState(1)
+            o.rotateSelf(3.14 * Math.random())
+            r.initMoveDir(o)
+            r.setName(i, this.NameBaseNode)
+            r.setMoveSpeed(300)
+            this._SnakeList.push(r)
+            r.setState(1)
         },
 
         onMeBound: function (e) {
@@ -252,7 +278,9 @@ var Snake = require('Snake'),
         },
 
         onTouchNewer: function (e) {
-            e.stopPropagation(), this.NewerSprite.node.active = false, this._IsFirstPause = false
+            e.stopPropagation()
+            this.NewerSprite.node.active = false
+            this._IsFirstPause = false
         },
 
         setGameState: function (e) {
@@ -262,12 +290,17 @@ var Snake = require('Snake'),
                     var t = this._SnakeList[0];
                     this._DataMgr.CurScore = t.getSnakeLength();
                     var i = this;
-                    GameGlobal.WeiXinPlatform.postScoreToPlatform(this._DataMgr.getCurScore(), this._DataMgr._GameStartTime), GameGlobal.Net.requestScore(t.getSnakeLength()), GameGlobal.UIManager.openUI(UIType.UIType_GameOver)
+                    GameGlobal.WeiXinPlatform.postScoreToPlatform(this._DataMgr.getCurScore(), this._DataMgr._GameStartTime)
+                    GameGlobal.Net.requestScore(t.getSnakeLength())
+                    GameGlobal.UIManager.openUI(UIType.UIType_GameOver)
                 } else if (this._GameState == d) {
                     t = this._SnakeList[0];
                     this._DataMgr.CurScore = t.getSnakeLength();
                     i = this;
-                    GameGlobal.WeiXinPlatform.postScoreToPlatform(i._DataMgr.getCurScore(), this._DataMgr._GameStartTime), GameGlobal.Net.requestScore(t.getSnakeLength()), GameGlobal.UIManager.openUI(UIType.UIType_GameEnd), GameGlobal.Net.requestScoreGold(t.getSnakeLength())
+                    GameGlobal.WeiXinPlatform.postScoreToPlatform(i._DataMgr.getCurScore(),this._DataMgr._GameStartTime)
+                    GameGlobal.Net.requestScore(t.getSnakeLength())
+                    GameGlobal.UIManager.openUI(UIType.UIType_GameEnd)
+                    GameGlobal.Net.requestScoreGold(t.getSnakeLength())
                 }
         },
 

@@ -1,5 +1,5 @@
-const SnakeBody = require('SnakeBody');
-const SnakeHead = require('SnakeHead');
+import SnakeBody from './SnakeBody';
+import SnakeHead from './SnakeHead';
 
 export default class Snake {
     _SnakeIndex = 0;

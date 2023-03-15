@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     name: "aishan_txtcs",
     uniacid: "60",
     acid: "60",

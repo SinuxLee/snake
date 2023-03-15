@@ -1,37 +1,31 @@
-cc.Class({
-    extends: cc.Component,
-    properties: {
-        DataManager: {
-            default: null,
-            type: cc.Component
-        },
-        SoundManager: {
-            default: null,
-            type: cc.Component
-        },
-        UIManager: {
-            default: null,
-            type: cc.Component
-        },
-        Game: {
-            default: null,
-            type: cc.Component
-        },
-        Net: {
-            default: null,
-            type: cc.Component
-        },
-        WeiXinPlatform: {
-            default: null,
-            type: cc.Component
-        },
-        NameList: [],
-        IsSingleMode: true,
-        localStorage: null,
-        GameVersion: "1.0.0"
-    },
+const { ccclass, property } = cc._decorator;
 
-    onLoad: function () {
+@ccclass
+export default class Food extends cc.Component {
+    @property(cc.Component)
+    public DataManager = null;
+
+    @property(cc.Component)
+    public SoundManager = null;
+
+    @property(cc.Component)
+    public UIManager = null;
+
+    @property(cc.Component)
+    public Game = null;
+
+    @property(cc.Component)
+    public Net = null;
+
+    @property(cc.Component)
+    public WeiXinPlatform = null;
+
+    private NameList: string[] = [];
+    private IsSingleMode = true;
+    private localStorage = cc.sys.localStorage;
+    private GameVersion = "1.0.0";
+
+    onLoad() {
         this.DataManager = cc.find("DataManager").getComponent("DataManager")
         this.SoundManager = cc.find("SoundManager").getComponent("SoundManager")
         this.UIManager = cc.find("Canvas/UIManager").getComponent("UIManager")
@@ -93,22 +87,16 @@ cc.Class({
             "爱情有保质期", "魔力小王子", "王欣"
         ]
 
-        this.localStorage = {
-            getItem: function (e) {
-                return cc.sys.localStorage.getItem(e)
-            },
-            setItem: function (e, t) {
-                return cc.sys.localStorage.setItem(e, t)
-            }
-        }, window.GameGlobal = this
-    },
+        window.GameGlobal = this
+    }
 
-    getRandomNameList: function (e, t) {
+    getRandomNameList(num:number, t:string[]) {
         const len = this.NameList.length;
-        const n = Math.floor(len / e)
-        for (let r = 0; r < e; ++r) {
+
+        const n = Math.floor(len / num)
+        for (let r = 0; r < num; ++r) {
             const idx = Math.floor(n * r + Math.random() * n);
             if (idx >= 0 && idx < len) t.push(this.NameList[idx])
         }
     }
-})
+}

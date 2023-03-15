@@ -1,6 +1,6 @@
-const UIType = require('UIType');
-const SoundType = require('SoundType');
-require('Snake');
+import { UIType } from './UIType';
+import SoundType from './SoundType';
+import Snake from './Snake';
 
 cc.Class({
     extends: cc.Component,
@@ -119,32 +119,49 @@ cc.Class({
 
     onEnable: function () {
         cc.log("UIHall onEnable  enter------------------------")
-        window.wx && wx.postMessage({
-            msgType: 4
-        }), this.VersionLabel && (this.VersionLabel.string = GameGlobal.GameVersion), this.SubContentSprite.node.active = false, this._SoundMgr = GameGlobal.SoundManager, this._SoundMgr.stopAll(), this._SoundMgr.playSound(SoundType.SoundType_Bg), this.SubMaskSprite.node.active = false, this.RankCloseBtn.node.active = false, void 0 != window.wx && wx.postMessage({
-            msgType: 2
-        }), window.wx, this.updateMyInfo(), cc.sys.platform === cc.sys.QQ_PLAY && (this._IsAdPause = false, this.refreshAd(), this.schedule(this.refreshAd, 20)), cc.log("UIHall onEnable  leave------------------------")
+        window.wx && wx.postMessage({ msgType: 4 })
+        this.VersionLabel && (this.VersionLabel.string = GameGlobal.GameVersion)
+        this.SubContentSprite.node.active = false
+        this._SoundMgr = GameGlobal.SoundManager
+        this._SoundMgr.stopAll()
+        this._SoundMgr.playSound(SoundType.SoundType_Bg)
+        this.SubMaskSprite.node.active = false
+        this.RankCloseBtn.node.active = false;
+        window.wx && wx.postMessage({ msgType: 2 })
+        this.updateMyInfo()
+        cc.sys.platform === cc.sys.QQ_PLAY && (this._IsAdPause = false, this.refreshAd(), this.schedule(this.refreshAd, 20))
+        cc.log("UIHall onEnable  leave------------------------")
     },
 
     onDisable: function () {
         cc.log("UIHall onDisable enter ----------------------------")
-        void 0 != window.wx && null != this._GameClubBtn && this._GameClubBtn.hide(), cc.sys.platform === cc.sys.QQ_PLAY && (this._QQAd && this._QQAd.destory(), this._QQAd = null, this.unscheduleAllCallbacks()), cc.log("UIHall onDisable leave ----------------------------")
+        void 0 != window.wx && null != this._GameClubBtn && this._GameClubBtn.hide()
+        cc.sys.platform === cc.sys.QQ_PLAY && (this._QQAd && this._QQAd.destory(), this._QQAd = null, this.unscheduleAllCallbacks())
+        cc.log("UIHall onDisable leave ----------------------------")
     },
 
     refreshAd: function () {
         if (1 != this._IsAdPause && cc.sys.platform === cc.sys.QQ_PLAY) {
             cc.log("UIHall refreshAd --------------------------");
             this._QQAd && this._QQAd.destory();
-            this._QQAd = null, this._QQAd = BK.Advertisement.createBannerAd({
-                viewId: 1001
-            }), this._QQAd.onError(function (e) {
+            this._QQAd = null
+            this._QQAd = BK.Advertisement.createBannerAd({ viewId: 1001 })
+            this._QQAd.onError(function (e) {
                 e.msg, e.code
-            }), this._QQAd.show(), cc.log("UIHall refreshAd finish--------------------------")
+            })
+            this._QQAd.show()
+            cc.log("UIHall refreshAd finish--------------------------")
         }
     },
 
     pauseAdShow: function () {
-        cc.sys.platform === cc.sys.QQ_PLAY && (cc.log("UIHall pauseAdShow enter --------------------------------"), this._QQAd && this._QQAd.destory(), this._QQAd = null, this._IsAdPause = true, cc.log("UIHall pauseAdShow leave --------------------------------"))
+        if (cc.sys.platform === cc.sys.QQ_PLAY) {
+            cc.log("UIHall pauseAdShow enter --------------------------------")
+            this._QQAd && this._QQAd.destory()
+            this._QQAd = null
+            this._IsAdPause = true
+            cc.log("UIHall pauseAdShow leave --------------------------------")
+        }
     },
 
     resumeAdShow: function () {
@@ -152,20 +169,45 @@ cc.Class({
     },
 
     start: function () {
-        cc.log("UIHall   start enter ------------------------"), this.TimeModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onTimeModeBtn, this), this.WuXianModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onWuXianModeBtn, this), this.TuanZhanModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onTuanZhanBtn, this), this.DuiZhanModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onDuiZhanModeBtn, this), this.LinkBtn.node.on(cc.Node.EventType.TOUCH_END, this.onLinkBtn, this), this.SubMaskSprite.node.on(cc.Node.EventType.TOUCH_END, this.onRankMask, this), this.RankBtn.node.on(cc.Node.EventType.TOUCH_END, this.onRankBtn, this), this.RankCloseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onRankCloseBtn, this), this.ShareBtn.node.on(cc.Node.EventType.TOUCH_END, this.onShareBtn, this), this.HuoDongBtn.node.on(cc.Node.EventType.TOUCH_END, this.onHuoDongBtn, this), this.SettingBtn.node.on(cc.Node.EventType.TOUCH_END, this.onSettingBtn, this), this.BaoXiangBtn.node.on(cc.Node.EventType.TOUCH_END, this.onBaoXiangBtn, this), this.ChengJiuBtn.node.on(cc.Node.EventType.TOUCH_END, this.onChengJiuBtn, this), this.KeFuBtn.node.on(cc.Node.EventType.TOUCH_END, this.onKeFuBtn, this), this.QianDaoBtn.node.on(cc.Node.EventType.TOUCH_END, this.onQianDaoBtn, this);
+        cc.log("UIHall   start enter ------------------------")
+        this.TimeModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onTimeModeBtn, this)
+        this.WuXianModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onWuXianModeBtn, this)
+        this.TuanZhanModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onTuanZhanBtn, this)
+        this.DuiZhanModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onDuiZhanModeBtn, this)
+        this.LinkBtn.node.on(cc.Node.EventType.TOUCH_END, this.onLinkBtn, this)
+        this.SubMaskSprite.node.on(cc.Node.EventType.TOUCH_END, this.onRankMask, this)
+        this.RankBtn.node.on(cc.Node.EventType.TOUCH_END, this.onRankBtn, this)
+        this.RankCloseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onRankCloseBtn, this)
+        this.ShareBtn.node.on(cc.Node.EventType.TOUCH_END, this.onShareBtn, this)
+        this.HuoDongBtn.node.on(cc.Node.EventType.TOUCH_END, this.onHuoDongBtn, this)
+        this.SettingBtn.node.on(cc.Node.EventType.TOUCH_END, this.onSettingBtn, this)
+        this.BaoXiangBtn.node.on(cc.Node.EventType.TOUCH_END, this.onBaoXiangBtn, this)
+        this.ChengJiuBtn.node.on(cc.Node.EventType.TOUCH_END, this.onChengJiuBtn, this)
+        this.KeFuBtn.node.on(cc.Node.EventType.TOUCH_END, this.onKeFuBtn, this)
+        this.QianDaoBtn.node.on(cc.Node.EventType.TOUCH_END, this.onQianDaoBtn, this);
+
         var e = this,
             t = GameGlobal.DataManager;
-        GameGlobal.Net.request("entry/wxapp/SysInfo", {
-            m: GameGlobal.Net.COMMON_M
-        }, null, function (i, n) {
-            console.log("SysInfo ------------"), i.sysInfo && (i = i.sysInfo, t._FuHuoCostGold = i.revive, t._LinkIconURL = i.jump_img, t._LinkAppID = i.appid, t._LinkPath = i.path, t._LinkExtra = i.extra, t._ShareReward = i.reward, t._ShareReliveCount = i.revive_type), e.updateLinkBtn()
-        }), cc.sys.platform === cc.sys.WECHAT_GAME && void 0 != window.wx && (console.log("showShareMenu call "), wx.showShareMenu({
-            withShareTicket: true,
-            success: function () { },
-            fail: function () { }
-        }), wx.postMessage({
-            msgType: 2
-        })), this.updateMyInfo(), cc.log("UIHall   start leave ------------------------")
+        GameGlobal.Net.request("entry/wxapp/SysInfo", {m: GameGlobal.Net.COMMON_M}, null, function (i, n) {
+            console.log("SysInfo ------------")
+            i.sysInfo && (i = i.sysInfo, t._FuHuoCostGold = i.revive, t._LinkIconURL = i.jump_img, t._LinkAppID = i.appid, t._LinkPath = i.path, t._LinkExtra = i.extra, t._ShareReward = i.reward, t._ShareReliveCount = i.revive_type)
+            e.updateLinkBtn()
+        })
+
+        if (cc.sys.platform === cc.sys.WECHAT_GAME && window.wx) {
+            console.log("showShareMenu call ")
+            wx.showShareMenu({
+                withShareTicket: true,
+                success: function () { },
+                fail: function () { }
+            })
+            wx.postMessage({
+                msgType: 2
+            })
+        }
+
+        this.updateMyInfo()
+        cc.log("UIHall   start leave ------------------------")
     },
 
     updateMyInfo: function () {

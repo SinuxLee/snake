@@ -1,24 +1,22 @@
-cc.Class({
-    extends: cc.Component,
-    properties: {
-        Atlas: {
-            default: null,
-            type: cc.SpriteAtlas
-        },
-        _type: 1
-    },
+const { ccclass, property } = cc._decorator;
 
-    setType: function (type) {
-        if (type < 1 || type > 5) (type = 1);
-        this._Type = type;
+@ccclass
+export default class Food extends cc.Component {
+    @property(cc.SpriteAtlas)
+    public Atlas: cc.SpriteAtlas = null;
+
+    private _type = 1;
+
+    setType(type: number) {
+        if (type < 1 || type > 5) type = 1;
+        this._type = type;
 
         const sprite = this.node.getComponent(cc.Sprite)
         const frame = this.Atlas.getSpriteFrame(`food_${type}`);
+        if (frame) sprite.spriteFrame = frame
+    }
 
-        frame && (sprite.spriteFrame = frame)
-    },
-
-    getAddWeight: function () {
+    getAddWeight() {
         return 2
     }
-})
+}

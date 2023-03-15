@@ -1,4 +1,5 @@
-var n = require('UIType');
+import { UIType } from './UIType';
+
 cc.Class({
     extends: cc.Component,
     properties: {
@@ -72,7 +73,7 @@ cc.Class({
                     session3rd: r._SessionID
                 }, function (e, t) {
                     var i = GameGlobal.UIManager;
-                    i.closeUI(n.UIType_GameOver), i.getUI(n.UIType_Game).reliveResetGame(), window.wx, a.requestUserInfo()
+                    i.closeUI(UIType.UIType_GameOver), i.getUI(UIType.UIType_Game).reliveResetGame(), window.wx, a.requestUserInfo()
                 })
             }
         }
@@ -84,7 +85,7 @@ cc.Class({
         GameGlobal.WeiXinPlatform.showShare(function (e) {
             t._ShareCount++, t._IsPause = false;
             var i = GameGlobal.UIManager;
-            i.closeUI(n.UIType_GameOver), i.getUI(n.UIType_Game).reliveResetGame(), void 0 != window.wx && wx.triggerGC()
+            i.closeUI(UIType.UIType_GameOver), i.getUI(UIType.UIType_Game).reliveResetGame(), void 0 != window.wx && wx.triggerGC()
         }, function () {
             t._IsPause = false
         })
@@ -102,7 +103,7 @@ cc.Class({
         }), this._CurVideoAd.onClose(function (e) {
             if (e && e.isEnded || void 0 === e) {
                 var i = GameGlobal.UIManager;
-                i.closeUI(n.UIType_GameOver), i.getUI(n.UIType_Game).reliveResetGame(), window.wx
+                i.closeUI(UIType.UIType_GameOver), i.getUI(UIType.UIType_Game).reliveResetGame(), window.wx
             }
             t._IsPause = false
         })) : cc.sys.platform === cc.sys.QQ_PLAY && (this._CurVideoAd = BK.Advertisement.createVideoAd(), this._CurVideoAd.onLoad(function () {
@@ -112,7 +113,7 @@ cc.Class({
         }), this._CurVideoAd.onPlayFinish(function () {
             BK.Script.log(1, 1, "onPlayFinish"), t._IsPause = false;
             var e = GameGlobal.UIManager;
-            e.closeUI(n.UIType_GameOver), e.getUI(n.UIType_Game).reliveResetGame()
+            e.closeUI(UIType.UIType_GameOver), e.getUI(UIType.UIType_Game).reliveResetGame()
         }), this._CurVideoAd.onError(function (e) {
             BK.Script.log(1, 1, "onError code:" + e.code + " msg:" + e.msg), t._IsPause = false
         }), this._CurVideoAd.onClose(function () {
@@ -125,7 +126,7 @@ cc.Class({
     onBack: function (e) {
         e.stopPropagation();
         var t = GameGlobal.UIManager;
-        t.closeUI(n.UIType_GameOver), t.getUI(n.UIType_Game).setGameState(4)
+        t.closeUI(UIType.UIType_GameOver), t.getUI(UIType.UIType_Game).setGameState(4)
     },
 
     onAgain: function (e) {
@@ -136,7 +137,7 @@ cc.Class({
         if (1 != this._IsPause && (this._CurTimeCount -= 1, this.TimerLabel.string = this._CurTimeCount + "", 0 == this._CurTimeCount)) {
             this.unscheduleAllCallbacks();
             var e = GameGlobal.UIManager;
-            e.closeUI(n.UIType_GameOver), e.getUI(n.UIType_Game).setGameState(4)
+            e.closeUI(UIType.UIType_GameOver), e.getUI(UIType.UIType_Game).setGameState(4)
         }
     },
 

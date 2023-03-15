@@ -1,65 +1,67 @@
-cc.Class({
-    extends: cc.Component,
-    properties: {
-        Atlas: {
-            default: null,
-            type: cc.SpriteAtlas
-        },
-        _Snake: null,
-        _lastMoveVec: cc.v2(1, 0),
-        _moveVec: cc.v2(1, 0),
-        _moveSpeed: 0,
-        _IsFirstUpdate: true,
-        _CurStartPos: cc.v2(0, 0),
-        _CurMoveDistance: 0,
-        _CurBodyIndex: -1,
-        _MoveStartPos: cc.v2(0, 0),
-        _lastPos: cc.v2(0, 0)
-    },
+const { ccclass, property } = cc._decorator;
 
-    start: function () {
+@ccclass
+export default class Food extends cc.Component {
+    @property(cc.SpriteAtlas)
+    public Atlas: cc.SpriteAtlas = null;
+
+    public _Snake = null;
+
+    private _lastMoveVec = cc.v2(1, 0);
+    private _moveVec = cc.v2(1, 0);
+    private _moveSpeed = 0;
+    private _IsFirstUpdate = true;
+    private _CurStartPos = cc.v2(0, 0);
+    private _CurMoveDistance = 0;
+    private _CurBodyIndex = -1;
+    private _MoveStartPos = cc.v2(0, 0);
+    private _lastPos = cc.v3(0, 0);
+
+    start() {
         this._IsFirstUpdate = true
-    },
+    }
 
-    setType: function (type) {
-        if (type < 1 || type > 16) (type = 1);
+    setType(type: number) {
+        if (type < 1 || type > 16) type = 1;
 
         const sprite = this.node.getComponent(cc.Sprite);
-        const name = "body_" + type;
-        const frame = this.Atlas.getSpriteFrame(name);
+        const frame = this.Atlas.getSpriteFrame(`body_${type}`);
         frame && (sprite.spriteFrame = frame)
-    },
+    }
 
-    setSnake: function (e) {
+    setSnake(e) {
         this._Snake = e
-    },
+    }
 
-    setInitMoveDir: function (e) {
-        this._lastMoveVec = e, this._moveVec = e
-    },
+    setInitMoveDir(e: cc.Vec2) {
+        this._lastMoveVec = e
+        this._moveVec = e
+    }
 
-    setMoveDir: function (e) { },
-    getMoveDir: function () {
+    setMoveDir() { }
+    getMoveDir() {
         return this._moveVec
-    },
+    }
 
-    getLastMoveDir: function () {
+    getLastMoveDir() {
         return this._lastMoveVec
-    },
+    }
 
-    setMoveSpeed: function (e) {
+    setMoveSpeed(e: number) {
         this._moveSpeed = e
-    },
+    }
 
-    setBodyIndex: function (e) {
+    setBodyIndex(e: number) {
         this._CurBodyIndex = e
-    },
+    }
 
-    reset: function () {
-        this._IsFirstUpdate = true, this.node.width = 30, this.node.height = 30
-    },
+    reset() {
+        this._IsFirstUpdate = true
+        this.node.width = 30
+        this.node.height = 30
+    }
 
-    getBodyPrePos: function (e, t, i, n, r, a) {
+    getBodyPrePos(e, t, i, n, r, a) {
         if (0 == this._CurBodyIndex) {
             var o = this.node.width / 3;
             return a.add(n.mul(o))
@@ -69,14 +71,20 @@ cc.Class({
         o = -this.node.width / 2;
         var c = s.getComponent("SnakeBody");
         return c._lastPos.add(c._lastMoveVec.mul(o))
-    },
+    }
 
-    updateBody: function (e, t, i, n, r, a) {
-        this._lastMoveVec = this._moveVec, this._lastPos = this.node.position;
+    updateBody(e, t, i, n, r, a) {
+        this._lastMoveVec = this._moveVec;
+        this._lastPos = this.node.position;
         var o = this.getBodyPrePos(e, t, i, n, this._IsFirstUpdate, r);
         this._IsFirstUpdate = false;
         var s = o.sub(this.node.position),
             c = s.mag();
-        c < 1 && (s = this._moveVec, c = this.node.width / 2), this._CurMoveDistance = c, this._MoveStartPos = this._lastPos, this._moveVec = s.normalize(), cc.pDistance(this.node.position, this._MoveStartPos) > this._CurMoveDistance && console.log("invalid distance------------------"), this.node.position = this.node.position.add(this._moveVec.mul(this._moveSpeed * e))
+        c < 1 && (s = this._moveVec, c = this.node.width / 2)
+        this._CurMoveDistance = c
+        this._MoveStartPos = this._lastPos
+        this._moveVec = s.normalize()
+        cc.pDistance(this.node.position, this._MoveStartPos) > this._CurMoveDistance && console.log("invalid distance------------------")
+        this.node.position = this.node.position.add(this._moveVec.mul(this._moveSpeed * e))
     }
-})
+}

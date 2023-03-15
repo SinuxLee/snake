@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     SoundType_Bg: {
         ID: 0,
         IsLoop: true

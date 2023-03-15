@@ -1,44 +1,28 @@
-var n;
-var r = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (e) {
-    return typeof e
-} : function (e) {
-    return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e
-};
+import { SignInitData, FriendInviteData, SkinData } from './DataManager'
 
-function a(e, t, i) {
-    return t in e ? Object.defineProperty(e, t, {
-        value: i,
-        enumerable: true,
-        configurable: true,
-        writable: true
-    }) : e[t] = i, e
-}
+import siteinfo from './siteinfo';
+import {UIType} from './UIType';
 
-var siteinfo = require('siteinfo'),
-    UIType = require('UIType'),
-    c = require('DataManager').SignInitData,
-    f = require("DataManager").FriendInviteData,
-    h = require("DataManager").SkinData,
-    d = [0, 5e3, 8e3, 12e3, 100, 300, 600, 1e3, 2e3, 3e3, 4e3, 5e3, 6e3, 7e3, 8e3, 9e3, 1e4],
-    u = [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+const d = [0, 5e3, 8e3, 12e3, 100, 300, 600, 1e3, 2e3, 3e3, 4e3, 5e3, 6e3, 7e3, 8e3, 9e3, 1e4];
+const u = [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
-cc.Class((a(n = {
-    extends: cc.Component,
-    properties: {
-        _DataManager: null,
-        COMMON_M: "aishan_txtcs"
-    },
+const { ccclass, property } = cc._decorator;
 
-    onLoad: function () {
+@ccclass
+export default class extends cc.Component {
+    private _DataManager = null;
+    private COMMON_M = "aishan_txtcs";
+
+    onLoad() {
         var e = cc.find("DataManager");
         this._DataManager = e.getComponent("DataManager")
-    },
+    }
 
-    onEnable: function () {
+    onEnable() {
         this.requestUserInfo()
-    },
+    }
 
-    getURL: function (e, t) {
+    getURL(e, t) {
         var i = siteinfo.siteroot + "?i=" + siteinfo.uniacid + "&t=" + siteinfo.multiid + "&v=" + siteinfo.version + "&from=wxapp&";
         if (e && ((e = e.split("/"))[0] &&
             (i += "c=" + e[0] + "&"), e[1] &&
@@ -47,9 +31,9 @@ cc.Class((a(n = {
             "object" === (void 0 === t ? "undefined" : r(t)))
             for (var n in t) n && t.hasOwnProperty(n) && t[n] && (i += n + "=" + t[n] + "&");
         return i
-    },
+    }
 
-    getUrl_qq: function (e, t) {
+    getUrl_qq(e, t) {
         var i = "i=" + siteinfo.uniacid + "&t=" + siteinfo.multiid + "&v=" + siteinfo.version + "&from=wxapp&";
         if (e && ((e = e.split("/"))[0] &&
             (i += "c=" + e[0] + "&"), e[1] &&
@@ -58,9 +42,9 @@ cc.Class((a(n = {
             "object" === (void 0 === t ? "undefined" : r(t)))
             for (var n in t) n && t.hasOwnProperty(n) && t[n] && (i += n + "=" + t[n] + "&");
         return i
-    },
+    }
 
-    getQuery: function (e) {
+    getQuery(e) {
         var t = [];
         if (-1 != e.indexOf("?"))
             for (var i = e.split("?")[1].split("&"), n = 0; n < i.length; n++) i[n].split("=")[0] && unescape(i[n].split("=")[1]) && (t[n] = {
@@ -68,15 +52,15 @@ cc.Class((a(n = {
                 value: unescape(i[n].split("=")[1])
             });
         return t
-    },
+    }
 
-    getUrlParam: function (e, t) {
+    getUrlParam(e, t) {
         var i = new RegExp("(^|&)" + t + "=([^&]*)(&|$)"),
             n = e.split("?")[1].match(i);
         return null != n ? unescape(n[2]) : null
-    },
+    }
 
-    getSign: function (t, i, n) {
+    getSign(t, i, n) {
         var r = require('underscore'),
             a = require('md5'),
             s = "",
@@ -90,44 +74,19 @@ cc.Class((a(n = {
             }));
             s = s.concat(f)
         }
-        s = r.sortBy(s, "name"), s = r.uniq(s, true, "name");
+        s = r.sortBy(s, "name")
+        s = r.uniq(s, true, "name");
         for (var d = "", u = 0; u < s.length; u++) s[u] && s[u].name && s[u].value && (d += s[u].name + "=" + s[u].value, u < s.length - 1 && (d += "&"));
         return n = n || siteinfo.token, console.log("危情生成的" + d + "---------" + n), c = a(d + n)
     }
-},
 
-    "getUrlParam", function (e, t) {
-        var i = new RegExp("(^|&)" + t + "=([^&]*)(&|$)"),
-            n = e.split("?")[1].match(i);
-        return null != n ? unescape(n[2]) : null
-    }),
-
-    a(n, "getSign", function (t, i, n) {
-        var r = e("underscore"),
-            a = e("md5"),
-            s = "",
-            c = this.getUrlParam(t, "sign");
-        if (c || i && i.sign) return false;
-        if (t && (s = this.getQuery(t)), i) {
-            var f = [];
-            for (var h in i) h && i[h] && (f = f.concat({
-                name: h,
-                value: i[h]
-            }));
-            s = s.concat(f)
-        }
-        s = r.sortBy(s, "name"), s = r.uniq(s, true, "name");
-        for (var d = "", u = 0; u < s.length; u++) s[u] && s[u].name && s[u].value && (d += s[u].name + "=" + s[u].value, u < s.length - 1 && (d += "&"));
-        return n = n || siteinfo.token, console.log("危情生成的" + d + "---------" + n), c = a(d + n)
-    }),
-
-    a(n, "getUrlParam_qq", function (e, t) {
+    getUrlParam_qq(e, t) {
         var i = new RegExp("(^|&)" + t + "=([^&]*)(&|$)"),
             n = e.match(i);
         return null != n ? unescape(n[2]) : null
-    }),
+    }
 
-    a(n, "getSign_qq", function (t, i, n) {
+    getSign_qq(t, i, n) {
         var r = e("underscore"),
             a = e("md5"),
             s = "",
@@ -144,9 +103,9 @@ cc.Class((a(n = {
         s = r.sortBy(s, "name"), s = r.uniq(s, true, "name");
         for (var d = "", u = 0; u < s.length; u++) s[u] && s[u].name && s[u].value && (d += s[u].name + "=" + s[u].value, u < s.length - 1 && (d += "&"));
         return n = n || siteinfo.token, console.log("QQ生成的" + d + "---------" + n), d + "&sign=" + (c = a(d + n))
-    }),
+    }
 
-    a(n, "request", function (e, t, i, n) {
+    request(e, t, i, n) {
         if (cc.log("net request enter ----------------------" + e), cc.sys.platform === cc.sys.WECHAT_GAME) {
             var r = this.getURL(e, t);
             if (!(a = this.getSign(r, i))) return void console.log("error sign");
@@ -173,9 +132,10 @@ cc.Class((a(n = {
             console.log("qq request url " + s)
         }
         cc.log("net request leave ----------------------" + e)
-    }),
+    }
 
-    a(n, "sendTakeMsg", function () { }), a(n, "requestSign", function (e) {
+    sendTakeMsg() { }
+    requestSign(e) {
         this.request("entry/wxapp/Sign", {
             m: this.COMMON_M
         }, {
@@ -187,7 +147,7 @@ cc.Class((a(n = {
                 var n = e.sign_list;
                 i._SignInitList = [];
                 for (var r = 0; r < n.length; ++r) {
-                    var a = new c;
+                    var a = new SignInitData();
                     a.signDay = n[r].id, a.signReward = n[r].type, a.signRewardNum = n[r].number, a.signStatus = n[r].sign_status, i._SignInitList.push(a)
                 }
                 if (0 == i._MyQianDaoTake) GameGlobal.UIManager.openUI(UIType.UIType_QianDao);
@@ -197,9 +157,9 @@ cc.Class((a(n = {
                 }
             }
         })
-    }),
+    }
 
-    a(n, "requestSignReward", function (e) {
+    requestSignReward(e) {
         var t = this;
         this.request("entry/wxapp/SignReward", {
             m: t.COMMON_M
@@ -211,9 +171,9 @@ cc.Class((a(n = {
             var n = GameGlobal.UIManager.getUI(UIType.UIType_QianDao);
             n && n.refreshUI(), t.requestSign(GameGlobal.WeiXinPlatform._SessionID)
         })
-    }),
+    }
 
-    a(n, "requestUserInfo", function () {
+    requestUserInfo() {
         var e = GameGlobal.localStorage.getItem("tcs_gold"),
             t = GameGlobal.DataManager;
         e && t.setCurGold(parseInt(e));
@@ -222,7 +182,7 @@ cc.Class((a(n = {
         var n = GameGlobal.localStorage.getItem("tcs_skinIndex");
         null != n && void 0 != n && (t._CurMySKinIndex = parseInt(n)), t._SKinDataArray = [];
         for (var r = 0; r < 16; ++r) {
-            (f = new h).ID = r + 1, f.IsOwn = false, f.IsUse = false, f.Price = d[r], f.Type = u[r], t._SKinDataArray.push(f)
+            (f = new SkinData()).ID = r + 1, f.IsOwn = false, f.IsUse = false, f.Price = d[r], f.Type = u[r], t._SKinDataArray.push(f)
         }
         n && n < t._SKinDataArray.length && ((f = t._SKinDataArray[n]).IsUse = true);
         var a, o = GameGlobal.localStorage.getItem("tcs_skinlist");
@@ -232,9 +192,9 @@ cc.Class((a(n = {
                 if (l && l - 1 < t._SKinDataArray.length) (f = t._SKinDataArray[l - 1]).IsOwn = true
             }
         GameGlobal.UIManager.getUI(UIType.UIType_Skin).updateSkin()
-    }),
+    }
 
-    a(n, "requestInviteCome", function (e) {
+    requestInviteCome(e) {
         var t = GameGlobal.WeiXinPlatform._SessionID;
         if (!(void 0 == t || t.length <= 0)) {
             this.request("entry/wxapp/Invite", {
@@ -246,9 +206,9 @@ cc.Class((a(n = {
                 console.log("requestInviteCome response")
             })
         }
-    }),
+    }
 
-    a(n, "requestInviteReward", function (e) {
+    requestInviteReward(e) {
         var t = GameGlobal.WeiXinPlatform._SessionID;
         if (!(void 0 == t || t.length <= 0)) {
             this.request("entry/wxapp/Invite", {
@@ -260,9 +220,9 @@ cc.Class((a(n = {
                 console.log("requestInviteCome response")
             })
         }
-    }),
+    }
 
-    a(n, "requestFriendList", function () {
+    requestFriendList() {
         var e = GameGlobal.WeiXinPlatform;
         if (e._SessionID && !(e._SessionID.length <= 0)) {
             this.request("entry/wxapp/InviteFriend", {
@@ -274,15 +234,20 @@ cc.Class((a(n = {
                 i._FriendDataList = [];
                 for (var n = 0; n < e.length; ++n) {
                     var r = e[n],
-                        a = new f;
-                    a.HeadUrl = r.avatarUrl, a.IsCanTake = 0 == r.status, a.ID = r.id, a.Reward = r.reward, a.OpenID = r.openId, i._FriendDataList.push(a)
+                        a = new FriendInviteData();
+                    a.HeadUrl = r.avatarUrl
+                    a.IsCanTake = 0 == r.status
+                    a.ID = r.id
+                    a.Reward = r.reward
+                    a.OpenID = r.openId
+                    i._FriendDataList.push(a)
                 }
                 GameGlobal.UIManager.getUI(UIType.UIType_InviteFriend).refreshList()
             })
         }
-    }),
+    }
 
-    a(n, "requestScore", function (e) {
+    requestScore(e) {
         var t = GameGlobal.WeiXinPlatform;
         if (t._SessionID && !(t._SessionID.length <= 0)) {
             var i = GameGlobal.DataManager;
@@ -296,18 +261,18 @@ cc.Class((a(n = {
                 }, function (e, t) { })
             }
         }
-    }),
+    }
 
-    a(n, "requestScoreGold", function (e) {
+    requestScoreGold(e) {
         var t = Math.ceil(e / 1e3);
         GameGlobal.UIManager.getUI(UIType.UIType_GameEnd).refreshRewardGold(t);
         var i = GameGlobal.localStorage.getItem("tcs_gold");
         console.log(" -----jinbi :  " + i);
         var n = parseInt(i) + t;
         return GameGlobal.localStorage.setItem("tcs_gold", JSON.stringify(n)), void this.requestUserInfo()
-    }),
+    }
 
-    a(n, "getZSURL", function (e, t) {
+    getZSURL(e, t) {
         if (void 0 == t.sign && (t.sign = this.getZSSign(e, t)), t) {
             var i = "",
                 n = 0;
@@ -315,9 +280,9 @@ cc.Class((a(n = {
             e += "?" + i
         }
         return e
-    }),
+    }
 
-    a(n, "getZSSign", function (t, i) {
+    getZSSign(t, i) {
         var n = e("underscore"),
             r = require('md5-2'),
             a = "";
@@ -334,10 +299,18 @@ cc.Class((a(n = {
         c += "u9GUhTZ8DzV2f5ko", console.log("getZSSign before ", c);
         var h = r(c).toLowerCase();
         return console.log("getZSSign", h, c), h
-    }),
-    a(n, "requestZSShare", function () { }),
-    a(n, "requestZSAd", function (e) { }),
-    a(n, "requestZSAdCollect", function (e) { }),
-    a(n, "requestZSTest", function () { }),
-    n
-))
+    }
+
+    requestZSShare() {
+
+    }
+    requestZSAd(e) {
+
+    }
+    requestZSAdCollect(e) {
+
+    }
+    requestZSTest() {
+
+    }
+}
