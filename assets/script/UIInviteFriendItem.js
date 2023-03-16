@@ -45,7 +45,6 @@ cc.Class({
 
     onFriendTake: function (e) {
         e.stopPropagation();
-        cc.log("onFriendTake", this._Index);
         const btn = e.target.getComponent(cc.Button);
         if (btn == null || btn.interactable == false) return
 
@@ -60,7 +59,6 @@ cc.Class({
             srcOpenID: item.OpenID,
             reward: item.Reward
         }, (e, t) => {
-            console.log("response InviteReward")
             e.diamond && GameGlobal.DataManager.setDiamond(e.diamond)
             GameGlobal.UIManager.showMessage("领取成功")
             GameGlobal.UIManager.RefreshCoin()

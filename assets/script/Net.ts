@@ -105,10 +105,11 @@ export default class extends cc.Component {
     }
 
     request(e, t, i, n) {
-        if (cc.log("net request enter ----------------------" + e), cc.sys.platform === cc.sys.WECHAT_GAME) {
+        if (cc.sys.platform === cc.sys.WECHAT_GAME) {
             var r = this.getURL(e, t);
-            if (!(a = this.getSign(r, i))) return void console.log("error sign");
-            if (r = r + "&sign=" + a, console.log("wx request ", r), void 0 == window.wx) return;
+            if (!(a = this.getSign(r, i))) return
+            r = r + "&sign=" + a
+            if (window.wx == null) return;
             wx.request({
                 url: r,
                 data: i,
@@ -116,21 +117,18 @@ export default class extends cc.Component {
                     "content-type": "application/x-www-form-urlencoded"
                 },
                 success: function (e) {
-                    console.log("response: ", e), 0 != e.data.errno && e.data.message && GameGlobal.UIManager.showMessage(e.data.message), n(e.data.data, e.data.errno)
+                    0 != e.data.errno && e.data.message && GameGlobal.UIManager.showMessage(e.data.message), n(e.data.data, e.data.errno)
                 },
                 fail: function (e) {
-                    console.log("request fail----------------")
                 }
             })
         } else if (cc.sys.platform === cc.sys.QQ_PLAY) {
             var a;
             r = this.getUrl_qq(e, t);
-            if (!(a = this.getSign_qq(r, i))) return void console.log("error sign");
-            r += a, console.log("url = " + siteinfo.siteroot);
-            var s = siteinfo.siteroot + "?" + r;
-            console.log("qq request url " + s)
+            if (!(a = this.getSign_qq(r, i))) return
+
+            r += a;
         }
-        cc.log("net request leave ----------------------" + e)
     }
 
     sendTakeMsg() { }
@@ -140,7 +138,6 @@ export default class extends cc.Component {
         }, {
             session3rd: e
         }, function (e, t) {
-            console.log("requestSign callback----------", t);
             var i = GameGlobal.DataManager;
             if (i._MyQianDaoTake = 0 === e.sign_status, void 0 != e.sign_list) {
                 var n = e.sign_list;
@@ -166,7 +163,7 @@ export default class extends cc.Component {
             session3rd: GameGlobal.WeiXinPlatform._SessionID,
             id: e
         }, function (e, i) {
-            console.log("requestSignReward callback----------", i), GameGlobal.UIManager.showMessage("领取成功"), GameGlobal.DataManager.setCurGold(e.gold), GameGlobal.DataManager.setDiamond(e.diamond), GameGlobal.DataManager._MyQianDaoTake = true, GameGlobal.UIManager.RefreshCoin();
+            GameGlobal.UIManager.showMessage("领取成功"), GameGlobal.DataManager.setCurGold(e.gold), GameGlobal.DataManager.setDiamond(e.diamond), GameGlobal.DataManager._MyQianDaoTake = true, GameGlobal.UIManager.RefreshCoin();
             var n = GameGlobal.UIManager.getUI(UIType.UIType_QianDao);
             n && n.refreshUI(), t.requestSign(GameGlobal.WeiXinPlatform._SessionID)
         })
@@ -202,7 +199,6 @@ export default class extends cc.Component {
                 session3rd: t,
                 srcOpenID: e
             }, function (e, t) {
-                console.log("requestInviteCome response")
             })
         }
     }
@@ -216,7 +212,6 @@ export default class extends cc.Component {
                 session3rd: t,
                 srcOpenID: srcOpenID
             }, function (e, t) {
-                console.log("requestInviteCome response")
             })
         }
     }
@@ -266,7 +261,6 @@ export default class extends cc.Component {
         var t = Math.ceil(e / 1e3);
         GameGlobal.UIManager.getUI(UIType.UIType_GameEnd).refreshRewardGold(t);
         var i = GameGlobal.localStorage.getItem("tcs_gold");
-        console.log(" -----jinbi :  " + i);
         var n = parseInt(i) + t;
         return GameGlobal.localStorage.setItem("tcs_gold", JSON.stringify(n)), void this.requestUserInfo()
     }

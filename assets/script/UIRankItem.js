@@ -33,7 +33,7 @@ cc.Class({
 
     createImage: function (url) {
         if (cc.sys.platform === cc.sys.WECHAT_GAME) {
-            if (window.wx == null) return void console.log("createImage wx undefined");
+            if (window.wx == null) return
             try {
                 const image = wx.createImage();
                 image.src = url
@@ -44,12 +44,10 @@ cc.Class({
                         texture.handleLoadedTexture()
                         this.HeadImageSprite.spriteFrame = new cc.SpriteFrame(texture)
                     } catch (e) {
-                        console.log(e)
                         this.HeadImageSprite.node.active = false
                     }
                 }
             } catch (e) {
-                console.log(e)
                 this.HeadImageSprite.node.active = false
             }
         } else if (cc.sys.platform === cc.sys.QQ_PLAY){
@@ -63,12 +61,10 @@ cc.Class({
                         texture.handleLoadedTexture()
                         this.HeadImageSprite.spriteFrame = new cc.SpriteFrame(texture)
                     } catch (e) {
-                        console.log(e)
                         this.HeadImageSprite.node.active = false
                     }
                 }
             } catch (e) {
-                console.log(e)
                 this.HeadImageSprite.node.active = false
             }
         }

@@ -111,14 +111,12 @@ cc.Class({
     },
 
     onLoad: function () {
-        cc.log("UIHall onLoad----------------------------")
         window.mainhall = this
         this._Texture = new cc.Texture2D
         this._GameClubBtn = null
     },
 
     onEnable: function () {
-        cc.log("UIHall onEnable  enter------------------------")
         window.wx && wx.postMessage({ msgType: 4 })
         this.VersionLabel && (this.VersionLabel.string = GameGlobal.GameVersion)
         this.SubContentSprite.node.active = false
@@ -130,19 +128,15 @@ cc.Class({
         window.wx && wx.postMessage({ msgType: 2 })
         this.updateMyInfo()
         cc.sys.platform === cc.sys.QQ_PLAY && (this._IsAdPause = false, this.refreshAd(), this.schedule(this.refreshAd, 20))
-        cc.log("UIHall onEnable  leave------------------------")
     },
 
     onDisable: function () {
-        cc.log("UIHall onDisable enter ----------------------------")
         void 0 != window.wx && null != this._GameClubBtn && this._GameClubBtn.hide()
         cc.sys.platform === cc.sys.QQ_PLAY && (this._QQAd && this._QQAd.destory(), this._QQAd = null, this.unscheduleAllCallbacks())
-        cc.log("UIHall onDisable leave ----------------------------")
     },
 
     refreshAd: function () {
         if (1 != this._IsAdPause && cc.sys.platform === cc.sys.QQ_PLAY) {
-            cc.log("UIHall refreshAd --------------------------");
             this._QQAd && this._QQAd.destory();
             this._QQAd = null
             this._QQAd = BK.Advertisement.createBannerAd({ viewId: 1001 })
@@ -150,17 +144,14 @@ cc.Class({
                 e.msg, e.code
             })
             this._QQAd.show()
-            cc.log("UIHall refreshAd finish--------------------------")
         }
     },
 
     pauseAdShow: function () {
         if (cc.sys.platform === cc.sys.QQ_PLAY) {
-            cc.log("UIHall pauseAdShow enter --------------------------------")
             this._QQAd && this._QQAd.destory()
             this._QQAd = null
             this._IsAdPause = true
-            cc.log("UIHall pauseAdShow leave --------------------------------")
         }
     },
 
@@ -169,7 +160,6 @@ cc.Class({
     },
 
     start: function () {
-        cc.log("UIHall   start enter ------------------------")
         this.TimeModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onTimeModeBtn, this)
         this.WuXianModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onWuXianModeBtn, this)
         this.TuanZhanModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onTuanZhanBtn, this)
@@ -188,7 +178,6 @@ cc.Class({
 
         const mgr = GameGlobal.DataManager;
         GameGlobal.Net.request("entry/wxapp/SysInfo", { m: GameGlobal.Net.COMMON_M }, null, (i, n) => {
-            console.log("SysInfo ------------")
             const info = i.sysInfo
             if (info == null) return
 
@@ -203,7 +192,6 @@ cc.Class({
         })
 
         if (cc.sys.platform === cc.sys.WECHAT_GAME && window.wx) {
-            console.log("showShareMenu call ")
             wx.showShareMenu({
                 withShareTicket: true,
                 success: function () { },
@@ -215,7 +203,6 @@ cc.Class({
         }
 
         this.updateMyInfo()
-        cc.log("UIHall   start leave ------------------------")
     },
 
     updateMyInfo: function () {
@@ -223,7 +210,6 @@ cc.Class({
 
         if (cc.sys.platform === cc.sys.WECHAT_GAME) {
             cc.loader.load({ url: GameGlobal.DataManager._MyAvatarURL, type: "png" }, (t, asset) => {
-                cc.log("load url", t)
                 if (asset instanceof cc.Texture2D) {
                     this.MyPhotoSprite.spriteFrame = new cc.SpriteFrame(asset)
                 }
@@ -269,7 +255,6 @@ cc.Class({
             GameGlobal.DataManager._LinkIconURL.length > 0) return
 
         cc.loader.load({ url: GameGlobal.DataManager._LinkIconURL, type: "png" }, (t, asset) => {
-            cc.log("load url", t)
             if (asset instanceof cc.Texture2D) {
                 this.LinkBtn.getComponent(cc.Sprite).spriteFrame = new cc.SpriteFrame(asset)
             }

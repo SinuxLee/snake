@@ -14,17 +14,12 @@ export default class extends cc.Component {
     private _SoundVolume = 1;
     private _CurPlayMusic = -1;
 
-    onLoad() {
-        cc.log("SoundManager onLoad----------------------------------")
-    }
-
     start() {
-        cc.log("SoundManager start-------------------------")
         this.playSound(SoundType.SoundType_Bg)
     }
 
     playSound(soundType: { ID: number, IsLoop: boolean }) {
-        if (soundType.ID >= this.SoundList.length) return cc.log("playSound resIndex invalid ");
+        if (soundType.ID >= this.SoundList.length) return cc.error("playSound resIndex invalid ");
         
         if (!soundType.IsLoop) {
             const audioId = cc.audioEngine.play(this.SoundList[soundType.ID], soundType.IsLoop, 0);

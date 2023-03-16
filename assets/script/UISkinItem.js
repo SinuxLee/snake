@@ -49,7 +49,6 @@ cc.Class({
     onSkinClick: function (e) {
         e.stopPropagation();
         const tag = e.target.taggame;
-        cc.log("onSkinClick", tag);
 
         const skin = GameGlobal.UIManager.getUI(UIType.UIType_Skin);
         if(skin) skin.setCurSelectSkin(tag)

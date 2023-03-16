@@ -42,7 +42,7 @@ cc.Class({
         if (void 0 != wx._WXOpenID && 0 != wx._WXOpenID.length) {
             wx._WXOpenID, GameGlobal.DataManager;
             GameGlobal.WeiXinPlatform.showShare(function () { }, function () { })
-        } else console.log("onFriendInvite invalid openID")
+        }
     },
 
     onClose: function (e) {

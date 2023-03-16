@@ -39,15 +39,14 @@ cc.Class({
         wx.shareAppMessage({
             title: mgr.getShareTitle(),
             imageUrl: mgr.getShareImage(),
-            success: function (e) {
-                console.log("shareAppMessage success"), wx.showToast({
+            success: function (e) { 
+                wx.showToast({
                     title: "分享成功",
                     icon: "success",
                     duration: 1500
                 })
             },
             fail: function (e) {
-                console.log("shareAppMessage fail")
             }
         })
     },

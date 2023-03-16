@@ -38,7 +38,6 @@ cc.Class({
 
     refreshUI: function () {
         const mgr = GameGlobal.DataManager;
-        cc.log("DataManager._SignInitList ", mgr._SignInitList.length);
         for (let t = 0; t < this.QianDaoItem.length - 1; ++t) {
             if (t + 1 < mgr._SignInitList.length) {
                 const item = mgr._SignInitList[t];

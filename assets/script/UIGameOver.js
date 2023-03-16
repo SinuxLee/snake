@@ -43,15 +43,18 @@ cc.Class({
     },
 
     onEnable: function () {
-        cc.log("UIGameOver onEnable enter-----------------------------"),
-            this._CurTimeCount = 10
-        this.TimerLabel.string = this._CurTimeCount + ""
+        this._CurTimeCount = 10;
+        this.TimerLabel.string = this._CurTimeCount.toString();
         this.schedule(this.onTimer, 1)
         null == this._CurVideoAd && void 0 != window.wx && (this._CurVideoAd = wx.createRewardedVideoAd({
             adUnitId: GameGlobal.DataManager.VideoAdid
-        })), this.AgainBtn.node.active = false, this.BackBtn.node.active = false;
+        }))
+        this.AgainBtn.node.active = false
+        this.BackBtn.node.active = false;
         var e = GameGlobal.DataManager;
-        e._CurShareReliveCount >= e._ShareReliveCount ? (this.VideoReliveBtn.node.active = true, this.ReliveBtn.node.active = false) : (this.VideoReliveBtn.node.active = false, this.ReliveBtn.node.active = true), this._IsPause = false, this.refreshAd(), cc.log("UIGameOver onEnable leave-----------------------------")
+        e._CurShareReliveCount >= e._ShareReliveCount ? (this.VideoReliveBtn.node.active = true, this.ReliveBtn.node.active = false) : (this.VideoReliveBtn.node.active = false, this.ReliveBtn.node.active = true)
+        this._IsPause = false
+        this.refreshAd()
     },
 
     onDisable: function () {
@@ -142,7 +145,6 @@ cc.Class({
     },
 
     refreshAd: function () {
-        cc.log("UIGameOver refreshAd enter ----------------------------------------")
         if (cc.sys.platform === cc.sys.QQ_PLAY) {
             this._QQAd && this._QQAd.destory();
             this._QQAd = null, this._QQAd = BK.Advertisement.createBannerAd({
@@ -151,6 +153,5 @@ cc.Class({
                 e.msg, e.code
             }), this._QQAd.show()
         }
-        cc.log("UIGameOver refreshAd leave ----------------------------------------")
     }
 })

@@ -69,8 +69,6 @@ export default class extends cc.Component {
         if (this._CurBodyIndex == 0) return pos.add(moveVec.mul(this.node.width / 3));
 
         const node = bodyList[this._CurBodyIndex - 1];
-        if (node == null) cc.log("lastBody == undefined");
-
         const body = node.getComponent(SnakeBody);
         return body._lastPos.add(body._lastMoveVec.mul(-this.node.width / 2))
     }
@@ -91,7 +89,6 @@ export default class extends cc.Component {
         this._CurMoveDistance = vecLen
         this._MoveStartPos = this._lastPos
         this._moveVec = newPos.normalize()
-        cc.pDistance(this.node.position, this._MoveStartPos) > this._CurMoveDistance && console.log("invalid distance------------------")
         this.node.position = this.node.position.add(this._moveVec.mul(this._moveSpeed * dt))
     }
 }

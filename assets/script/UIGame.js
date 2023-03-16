@@ -118,7 +118,7 @@ var c = [
         },
 
         onEnable: function () {
-            (this.NewerSprite.node.active = false, this._DataMgr._GameStartTime = (new Date).getTime(), this._DataMgr._CurShareReliveCount = 0, window.wx) && (console.log("uigame onEnable------------------"), wx.getStorageSync("isPlay") || (wx.setStorageSync("isPlay", true), this._IsFirstPause = true, this.NewerSprite.node.active = true));
+            (this.NewerSprite.node.active = false, this._DataMgr._GameStartTime = (new Date).getTime(), this._DataMgr._CurShareReliveCount = 0, window.wx) && (wx.getStorageSync("isPlay") || (wx.setStorageSync("isPlay", true), this._IsFirstPause = true, this.NewerSprite.node.active = true));
 
             this._SoundMgr = GameGlobal.SoundManager
             this._SoundMgr.stopAll()
@@ -244,7 +244,8 @@ var c = [
             e.stopPropagation();
             var t = e.detail.killed,
                 i = e.detail.beKilled;
-            if (t.addKillCount(), t === this._SnakeList[0] && this.updateSelfSnakeInfo(), null != i) {
+                t.addKillCount()
+            if (t === this._SnakeList[0] && this.updateSelfSnakeInfo(), null != i) {
                 this.KillSprite.node.active = true
                 this.KillCountLabel.string = t._KillCount
                 this.KillNameLabel.string = t._PlayerName
@@ -255,7 +256,7 @@ var c = [
                 var n = this._SnakeList.indexOf(i);
                 this._SnakeList.splice(n, 1)
                 this.onOtherRelive(i._HeadType, i._BodyTypeList, i._PlayerName)
-            } else cc.log("onOtherBeKilled beSnake = null")
+            }
         },
 
         onOtherRelive: function (e, t, i) {

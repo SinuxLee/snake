@@ -91,19 +91,16 @@ export default class extends cc.Component {
         wx.getStorage({
             key: "wxData",
             success: (t) => {
-                console.log("getStorage user success ", t)
                 this._MyAvatarURL = t.data.avaUrl
                 this._MyNickName = t.data.nick
                 GameGlobal.UIManager.getUI(UIType.UIType_Hall).updateMyInfo()
             },
             fail: () => {
-                console.log("getStorage wxData fail ")
             }
         })
     }
 
     start() {
-        cc.log("DataManager start")
         this._CurSelectMode = 0
     }
 

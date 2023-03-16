@@ -16,7 +16,6 @@ cc.Class({
     },
 
     onEnable: function () {
-        cc.log("UILoading onEnable enter--------------------------------------")
         this.LoadingProgress.progress = 0
         if (this.GuangSprite && (this.GuangSprite.node.x = this.LoadingProgress.barSprite.node.x), this._needUpdate = true, cc.sys.platform === cc.sys.WECHAT_GAME) {
             if (void 0 != window.wx) {
@@ -30,7 +29,6 @@ cc.Class({
                 }), this._MatchAd.show();
 
                 this._MatchAd.onResize((t) => {
-                    console.log(t.width, t.height), console.log(this._MatchAd.style.realWidth, this._MatchAd.style.realHeight);
                     const info = wx.getSystemInfoSync();
                     this._MatchAd.style.left = info.screenWidth - this._MatchAd.style.realWidth
                     this._MatchAd.style.top = info.screenHeight - this._MatchAd.style.realHeight
@@ -47,7 +45,6 @@ cc.Class({
             
             this._MatchAd.show()
         }
-        cc.log("UILoading onEnable leave--------------------------------------")
     },
     onDisable: function () {
         this._needUpdate = false

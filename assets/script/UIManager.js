@@ -38,7 +38,7 @@ cc.Class({
     },
 
     openUI: function (e) {
-        if (e == UIType.UIType_Hall && (this.camera.node.x = 0, this.camera.node.y = 0, console.log("back --------------")), e >= this.UIList.length) cc.log("openUI invalid uiType, please check UIList");
+        if (e == UIType.UIType_Hall && (this.camera.node.x = 0, this.camera.node.y = 0), e >= this.UIList.length) return
         else if (null != this.UIList[e] && void 0 != this.UIList[e]) {
             const node = this.UIList[e];
             node.active = true
@@ -55,11 +55,11 @@ cc.Class({
                 const hallUI = this.getUI(UIType.UIType_Hall);
                 hallUI && hallUI.node.active && hallUI.pauseAdShow()
             }
-        } else cc.log("openUI invalid uiType, object null")
+        }
     },
 
     closeUI: function (e) {
-        if (e >= this.UIList.length) return cc.log("closeUI invalid uiType, please check UIList");
+        if (e >= this.UIList.length) return cc.error("closeUI invalid uiType, please check UIList");
 
         if (this.isPopUI(e) ? (this.BgMaskSprite.node.active = false, this.UIList[e].active = false) : this.UIList[e].active = false, this.isPopUI(e) || e == UIType.UIType_Skin) {
             const hallUI = this.getUI(UIType.UIType_Hall);
