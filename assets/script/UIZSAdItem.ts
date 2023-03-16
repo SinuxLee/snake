@@ -1,59 +1,60 @@
-cc.Class({
-    extends: cc.Component,
-    properties: {
-        AdSprite: cc.Sprite,
-        _Index: 0,
-        _IsBorderAd: false
-    },
+const { ccclass, property } = cc._decorator;
 
-    start: function () {
-        this.AdSprite.node.on(cc.Node.EventType.TOUCH_END, this.onAdItemClick, this)
-    },
+@ccclass
+export default class extends cc.Component {
+    private _AdSprite: cc.Sprite = null;
+    private _Index =  0;
+    private _IsBorderAd = false;
 
-    initAd: function (e) {
-        this._Index = e;
+    start () {
+        this._AdSprite = this.node.getChildByName('UIZSAdItem').getComponent(cc.Sprite);
+        this._AdSprite.node.on(cc.Node.EventType.TOUCH_END, this.onAdItemClick, this)
+    }
+
+    initAd (idx:number) {
+        this._Index = idx;
         this._IsBorderAd = false;
         const adData = GameGlobal.DataManager._CurZSAdData
         if (this._Index >= adData.app_link_list.length) return
 
         this.node.active = true
-        this.AdSprite.node.active = false
+        this._AdSprite.node.active = false
         const link = adData.app_link_list[this._Index]
         if (link.app_icon == null) return
 
         cc.loader.load({ url: adData.app_icon, type: "png" }, (e, asset) => {
             if (asset instanceof cc.Texture2D) {
-                this.AdSprite.node.active = true;
-                this.AdSprite.spriteFrame = new cc.SpriteFrame(asset);
+                this._AdSprite.node.active = true;
+                this._AdSprite.spriteFrame = new cc.SpriteFrame(asset);
             }
         })
-    },
+    }
 
-    initBorderAd: function (e) {
+    initBorderAd (e) {
         this._IsBorderAd = true;
         this._Index = e;
         const adData = GameGlobal.DataManager._CurZSAdData;
         if (this._Index >= adData.app_cb_list.length) return
 
         this.node.active = true
-        this.AdSprite.node.active = false
+        this._AdSprite.node.active = false
         const link = adData.app_cb_list[this._Index]
         if (link.app_icon == null) return
 
         cc.loader.load({ url: link.app_icon, type: "png" }, (e, asset) => {
             if (asset instanceof cc.Texture2D) {
-                this.AdSprite.node.active = true;
-                this.AdSprite.spriteFrame = new cc.SpriteFrame(asset)
+                this._AdSprite.node.active = true;
+                this._AdSprite.spriteFrame = new cc.SpriteFrame(asset)
             }
         })
-    },
+    }
 
-    onAdItemClick: function (e) {
+    onAdItemClick (e) {
         e.stopPropagation()
         if (window.wx == null) return;
 
         const adData = GameGlobal.DataManager._CurZSAdData;
-        if (0 == this._IsBorderAd) {
+        if (false == this._IsBorderAd) {
             if (this._Index < adData.app_link_list.length) (adData = adData.app_link_list[this._Index]).appid && adData.link_path && (wx.navigateToMiniProgram({
                 appId: adData.appid,
                 path: adData.link_path
@@ -63,4 +64,4 @@ cc.Class({
             path: adData.link_path
         }), GameGlobal.Net.requestZSAdCollect(adData.app_id))
     }
-})
+}

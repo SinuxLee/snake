@@ -26,6 +26,8 @@ export default class extends cc.Component {
     private GameVersion = "1.0.0";
 
     onLoad() {
+        window.GameGlobal = this;
+        
         this.DataManager = cc.find("DataManager").getComponent("DataManager")
         this.SoundManager = cc.find("SoundManager").getComponent("SoundManager")
         this.UIManager = cc.find("Canvas/UIManager").getComponent("UIManager")
@@ -86,13 +88,10 @@ export default class extends cc.Component {
             "橘温茶暖", "柠栀", "清晨的小鹿", "王厚磊", "掌心温差", "萌爹爹", "徒留一场笑谈一场心伤", "Twisted Fate", "玫瑰香旳誘惑", "女王(Queen)ゆ性",
             "爱情有保质期", "魔力小王子", "王欣"
         ]
-
-        window.GameGlobal = this
     }
 
     getRandomNameList(num: number, t: string[]) {
         const len = this.NameList.length;
-
         const n = Math.floor(len / num)
         for (let r = 0; r < num; ++r) {
             const idx = Math.floor(n * r + Math.random() * n);

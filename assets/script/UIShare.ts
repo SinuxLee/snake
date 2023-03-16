@@ -1,37 +1,38 @@
 import { UIType } from './UIType';
 
-cc.Class({
-    extends: cc.Component,
-    properties: {
-        InviteBtn: {
-            default: null,
-            type: cc.Button
-        },
-        VideoBtn: {
-            default: null,
-            type: cc.Button
-        },
-        CloseBtn: {
-            default: null,
-            type: cc.Button
-        },
-        _MatchAd: null,
-        _CurVideoAd: null
-    },
+const { ccclass, property } = cc._decorator;
 
-    start: function () {
-        this.node.on(cc.Node.EventType.TOUCH_END, this.onPanelClick, this), this.InviteBtn.node.on(cc.Node.EventType.TOUCH_END, this.onInviteBtn, this), this.CloseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onCloseBtn, this), this.VideoBtn.node.on(cc.Node.EventType.TOUCH_END, this.onVideoBtn, this)
-    },
+@ccclass
+export default class extends cc.Component {
+    private _MatchAd = null;
+    private _CurVideoAd = null;
 
-    onDisable: function () {
-        this._needUpdate = false, void 0 != window.wx && this._MatchAd && this._MatchAd.hide()
-    },
+    private InviteBtn: cc.Button = null;
+    private VideoBtn: cc.Button = null;
+    private CloseBtn: cc.Button = null;
 
-    onPanelClick: function (e) {
+    onLoad(){
+        this.InviteBtn = this.node.getChildByName('btnInvite').getComponent(cc.Button);
+        this.VideoBtn = this.node.getChildByName('btnVideo').getComponent(cc.Button);
+        this.CloseBtn = this.node.getChildByName('btnClose').getComponent(cc.Button);
+    }
+
+    start () {
+        this.node.on(cc.Node.EventType.TOUCH_END, this.onPanelClick, this)
+        this.InviteBtn.node.on(cc.Node.EventType.TOUCH_END, this.onInviteBtn, this)
+        this.CloseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onCloseBtn, this)
+        this.VideoBtn.node.on(cc.Node.EventType.TOUCH_END, this.onVideoBtn, this)
+    }
+
+    onDisable () {
+        window.wx && this._MatchAd && this._MatchAd.hide()
+    }
+
+    onPanelClick (e) {
         e.stopPropagation()
-    },
+    }
 
-    onInviteBtn: function (e) {
+    onInviteBtn (e) {
         e.stopPropagation();
         if (window.wx == null) return
 
@@ -49,9 +50,9 @@ cc.Class({
             fail: function (e) {
             }
         })
-    },
+    }
 
-    onVideoBtn: function () {
+    onVideoBtn () {
         if (this._CurVideoAd == null) return
         
         this._CurVideoAd.onLoad(() =>{
@@ -71,10 +72,10 @@ cc.Class({
                 duration: 1500
             })
         })
-    },
+    }
 
-    onCloseBtn: function (e) {
+    onCloseBtn (e) {
         e.stopPropagation()
         GameGlobal.UIManager.closeUI(UIType.UIType_HallInvite)
     }
-})
+}

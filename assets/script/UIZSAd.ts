@@ -1,13 +1,17 @@
-const UIZSAdItem = require('UIZSAdItem');
-cc.Class({
-    extends: cc.Component,
-    properties: {
-        AdItemArray: [UIZSAdItem],
-        AdItemLeft: UIZSAdItem,
-        AdItemRight: UIZSAdItem
-    },
+import UIZSAdItem from './UIZSAdItem';
+const { ccclass, property } = cc._decorator;
 
-    onEnable: function () {
+@ccclass
+export default class extends cc.Component {
+    @property([UIZSAdItem])
+    AdItemArray: UIZSAdItem[] = []
+
+    @property(UIZSAdItem)
+    AdItemLeft: UIZSAdItem = null;
+    @property(UIZSAdItem)
+    AdItemRight: UIZSAdItem = null;
+
+    onEnable () {
         for (let e = this, t = 0; t < this.AdItemArray.length; ++t) this.AdItemArray[t].node.active = false;
 
         this.AdItemLeft.node.stopAllActions()
@@ -24,15 +28,17 @@ cc.Class({
         actSeq = cc.sequence(rotate1, rotate2);
         this.AdItemRight.node.runAction(actSeq.repeatForever())
 
-        GameGlobal.Net.requestZSAd(function () {
-            for (let t = 0; t < e.AdItemArray.length; ++t) e.AdItemArray[t].initAd(t);
-            e.AdItemLeft.initBorderAd(0)
-            e.AdItemRight.initBorderAd(1)
+        GameGlobal.Net.requestZSAd(() =>{
+            for (let t = 0; t < this.AdItemArray.length; ++t) {
+                this.AdItemArray[t].initAd(t)
+            }
+            this.AdItemLeft.initBorderAd(0)
+            this.AdItemRight.initBorderAd(1)
         })
-    },
+    }
 
-    onDisable: function () {
+    onDisable () {
         this.AdItemLeft.node.stopAllActions()
         this.AdItemRight.node.stopAllActions()
     }
-})
+}
