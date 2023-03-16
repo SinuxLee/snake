@@ -1,20 +1,23 @@
+import Snake from "./Snake";
+import SnakeBody from './SnakeBody'
+
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class Food extends cc.Component {
+export default class extends cc.Component {
     @property(cc.SpriteAtlas)
     public Atlas: cc.SpriteAtlas = null;
 
-    public _Snake = null;
+    public _Snake: Snake = null;
 
-    private _lastMoveVec = cc.v2(1, 0);
-    private _moveVec = cc.v2(1, 0);
+    private _lastMoveVec = cc.v3(1, 0);
+    private _moveVec = cc.v3(1, 0);
     private _moveSpeed = 0;
     private _IsFirstUpdate = true;
-    private _CurStartPos = cc.v2(0, 0);
+    private _CurStartPos = cc.v3(0, 0);
     private _CurMoveDistance = 0;
     private _CurBodyIndex = -1;
-    private _MoveStartPos = cc.v2(0, 0);
+    private _MoveStartPos = cc.v3(0, 0);
     private _lastPos = cc.v3(0, 0);
 
     start() {
@@ -29,16 +32,17 @@ export default class Food extends cc.Component {
         frame && (sprite.spriteFrame = frame)
     }
 
-    setSnake(e) {
-        this._Snake = e
+    setSnake(snake: Snake) {
+        this._Snake = snake
     }
 
-    setInitMoveDir(e: cc.Vec2) {
-        this._lastMoveVec = e
-        this._moveVec = e
+    setInitMoveDir(pos: cc.Vec3) {
+        this._lastMoveVec = pos
+        this._moveVec = pos
     }
 
     setMoveDir() { }
+    
     getMoveDir() {
         return this._moveVec
     }
@@ -47,12 +51,12 @@ export default class Food extends cc.Component {
         return this._lastMoveVec
     }
 
-    setMoveSpeed(e: number) {
-        this._moveSpeed = e
+    setMoveSpeed(speed: number) {
+        this._moveSpeed = speed
     }
 
-    setBodyIndex(e: number) {
-        this._CurBodyIndex = e
+    setBodyIndex(idx: number) {
+        this._CurBodyIndex = idx
     }
 
     reset() {
@@ -61,33 +65,33 @@ export default class Food extends cc.Component {
         this.node.height = 30
     }
 
-    getBodyPrePos(e, t, i, n, r, a) {
-        if (0 == this._CurBodyIndex) return a.add(n.mul(this.node.width / 3));
+    getBodyPrePos(bodyList: cc.Node[], moveVec: cc.Vec3, pos: cc.Vec3): cc.Vec3 {
+        if (this._CurBodyIndex == 0) return pos.add(moveVec.mul(this.node.width / 3));
 
-        const node = i[this._CurBodyIndex - 1];
-        if(node == null) cc.log("lastBody == undefined");
+        const node = bodyList[this._CurBodyIndex - 1];
+        if (node == null) cc.log("lastBody == undefined");
 
-        const body = node.getComponent("SnakeBody");
+        const body = node.getComponent(SnakeBody);
         return body._lastPos.add(body._lastMoveVec.mul(-this.node.width / 2))
     }
 
-    updateBody(e, t, i, n, r, a) {
+    updateBody(dt: number, bodyList: cc.Node[], moveVec: cc.Vec3, headPos: cc.Vec3) {
         this._lastMoveVec = this._moveVec;
         this._lastPos = this.node.position;
-        const bodyPos = this.getBodyPrePos(e, t, i, n, this._IsFirstUpdate, r);
+        const bodyPos = this.getBodyPrePos(bodyList, moveVec, headPos);
         this._IsFirstUpdate = false;
 
         let newPos = bodyPos.sub(this.node.position);
         let vecLen = newPos.mag();
-        if(vecLen < 1) {
+        if (vecLen < 1) {
             newPos = this._moveVec
             vecLen = this.node.width / 2
         }
-        
+
         this._CurMoveDistance = vecLen
         this._MoveStartPos = this._lastPos
         this._moveVec = newPos.normalize()
         cc.pDistance(this.node.position, this._MoveStartPos) > this._CurMoveDistance && console.log("invalid distance------------------")
-        this.node.position = this.node.position.add(this._moveVec.mul(this._moveSpeed * e))
+        this.node.position = this.node.position.add(this._moveVec.mul(this._moveSpeed * dt))
     }
 }

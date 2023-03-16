@@ -1,7 +1,7 @@
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class Food extends cc.Component {
+export default class extends cc.Component {
     @property(cc.Component)
     public DataManager = null;
 
@@ -90,7 +90,7 @@ export default class Food extends cc.Component {
         window.GameGlobal = this
     }
 
-    getRandomNameList(num:number, t:string[]) {
+    getRandomNameList(num: number, t: string[]) {
         const len = this.NameList.length;
 
         const n = Math.floor(len / num)

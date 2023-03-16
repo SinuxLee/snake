@@ -19,12 +19,16 @@ export default class Game extends cc.Component {
 
     private _SnakeHeadUseList: cc.Node[] = [];
     private _SnakeHeadFreeList: cc.Node[] = [];
+
     private _SnakeBodyUseList: cc.Node[] = [];
     private _SnakeBodyFreeList: cc.Node[] = [];
+
     private _SnakeFoodUseList: cc.Node[] = [];
     private _SnakeFoodFreeList: cc.Node[] = [];
+
     private _SnakeNameFreeList: cc.Node[] = [];
     private _SnakeNameUseList: cc.Node[] = [];
+
     private _SnakeGodSpriteList: cc.Node[] = [];
     private _SnakeGoldUseList: cc.Node[] = [];
 
@@ -46,7 +50,10 @@ export default class Game extends cc.Component {
     start() {
         if (!window.wx) return
         const cvs = wx.getOpenDataContext().canvas;
-        cvs && (cvs.width = 2 * cc.game.canvas.width, cvs.height = 2 * cc.game.canvas.height)
+
+        if (!cvs) return
+        cvs.width = 2 * cc.game.canvas.width
+        cvs.height = 2 * cc.game.canvas.height
     }
 
     GetFreeHead() {
@@ -98,13 +105,14 @@ export default class Game extends cc.Component {
         this._SnakeFoodUseList.splice(0, len)
     }
 
-    GetFree(freeList: cc.Node[], usedList: cc.Node[], prefab: cc.Prefab) {
+    GetFree(freeList: cc.Node[], usedList: cc.Node[], prefab: cc.Prefab): cc.Node {
         let item = freeList.pop();
         if (item == null) item = cc.instantiate(prefab);
-        return usedList.push(item), item
+        usedList.push(item);
+        return item
     }
 
-    DelUse(freeList: cc.Node[], usedList: cc.Node[], node: cc.Node) {
+    DelUse(freeList: cc.Node[], usedList: cc.Node[], node: cc.Node): boolean {
         node.parent = null;
         const idx = usedList.indexOf(node);
         if (idx < 0 || idx >= usedList.length) return false;

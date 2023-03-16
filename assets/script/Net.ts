@@ -1,7 +1,7 @@
 import { SignInitData, FriendInviteData, SkinData } from './DataManager'
 
 import siteinfo from './siteinfo';
-import {UIType} from './UIType';
+import { UIType } from './UIType';
 
 const d = [0, 5e3, 8e3, 12e3, 100, 300, 600, 1e3, 2e3, 3e3, 4e3, 5e3, 6e3, 7e3, 8e3, 9e3, 1e4];
 const u = [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];

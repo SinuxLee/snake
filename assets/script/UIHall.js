@@ -369,7 +369,7 @@ cc.Class({
         this._Texture && window.sharedCanvas && 0 != this.SubContentSprite.node.active && (this._Texture.initWithElement(window.sharedCanvas), this._Texture.handleLoadedTexture(), this.SubContentSprite.spriteFrame = new cc.SpriteFrame(this._Texture))
     },
 
-    update: function (e) {
-        this._ShowSnake && this._ShowSnake.updateShow(e)
+    update: function (dt) {
+        if(this._ShowSnake) this._ShowSnake.updateShow(dt);
     }
 })

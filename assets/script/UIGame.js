@@ -2,9 +2,9 @@ import { UIType } from './UIType';
 import Snake from './Snake';
 import Food from './Food';
 import SoundType from './SoundType';
+import GameJoystick from './GameJoystick';
 
-var GameJoystick = require('GameJoystick'),
-    c = [
+var c = [
         cc.v2(-120, -120), cc.v2(600, 600), cc.v2(-500, -800), cc.v2(200, 800),
         cc.v2(-800, 1200), cc.v2(500, -800), cc.v2(-300, 500), cc.v2(500, -400),
         cc.v2(-200, 400)

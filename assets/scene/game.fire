@@ -7456,15 +7456,8 @@
     "dot": {
       "__id__": 145
     },
-    "callBackObj": null,
-    "_joyCom": null,
-    "_playerNode": null,
     "_angle": null,
     "_radian": null,
-    "_speed": 0,
-    "_speed1": 1,
-    "_speed2": 1,
-    "_opacity": 0,
     "_id": "65g8VPI1BEM7+LZMqH+uxG"
   },
   {
@@ -7609,8 +7602,6 @@
     "touchType": 0,
     "directionType": 0,
     "sprite": null,
-    "_stickPos": null,
-    "_touchLocation": null,
     "_id": "701YIzTylF+r61QUbr95g0"
   },
   {
