@@ -77,9 +77,6 @@
       "enable": false
     }
   },
-  "migrate-history": [
-    "cloud-function"
-  ],
   "preview-port": 7456,
   "clear-simulator-cache": true
 }

@@ -28,12 +28,12 @@ export default class extends cc.Component {
         window.wx && this._MatchAd && this._MatchAd.hide()
     }
 
-    onPanelClick (e) {
-        e.stopPropagation()
+    onPanelClick (event: cc.Event.EventTouch) {
+        event.stopPropagation()
     }
 
-    onInviteBtn (e) {
-        e.stopPropagation();
+    onInviteBtn (event: cc.Event.EventTouch) {
+        event.stopPropagation();
         if (window.wx == null) return
 
         const mgr = GameGlobal.DataManager;
@@ -74,8 +74,8 @@ export default class extends cc.Component {
         })
     }
 
-    onCloseBtn (e) {
-        e.stopPropagation()
+    onCloseBtn (event: cc.Event.EventTouch) {
+        event.stopPropagation()
         GameGlobal.UIManager.closeUI(UIType.UIType_HallInvite)
     }
 }

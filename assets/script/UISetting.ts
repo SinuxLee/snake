@@ -40,19 +40,19 @@ export default class extends cc.Component {
     onBlock(event: cc.Event.EventTouch) {
     }
 
-    onBgMusicCheck(e) {
+    onBgMusicCheck() {
         GameGlobal.SoundManager.enableBgMusic(this._bgMusicCheck.isChecked)
     }
 
-    onSoundCheck(e) {
+    onSoundCheck() {
         GameGlobal.SoundManager.enableSound(this._soundCheck.isChecked)
     }
 
-    onMusicSlider(e) {
+    onMusicSlider() {
         GameGlobal.SoundManager.setMusicVolume(this._bgMusicVolSlider.progress)
     }
 
-    onSoundSlider(e) {
+    onSoundSlider() {
         GameGlobal.SoundManager.setSoundVolume(this._soundVolSlider.progress)
     }
 }

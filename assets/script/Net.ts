@@ -257,12 +257,14 @@ export default class extends cc.Component {
         }
     }
 
-    requestScoreGold(e) {
-        var t = Math.ceil(e / 1e3);
-        GameGlobal.UIManager.getUI(UIType.UIType_GameEnd).refreshRewardGold(t);
-        var i = GameGlobal.localStorage.getItem("tcs_gold");
-        var n = parseInt(i) + t;
-        return GameGlobal.localStorage.setItem("tcs_gold", JSON.stringify(n)), void this.requestUserInfo()
+    requestScoreGold(len: number) {
+        const score = Math.ceil(len / 1e3);
+        GameGlobal.UIManager.getUI(UIType.UIType_GameEnd).refreshRewardGold(score);
+
+        let totalGold = parseInt(GameGlobal.localStorage.getItem("tcs_gold"));
+        totalGold += score;
+        GameGlobal.localStorage.setItem("tcs_gold", JSON.stringify(totalGold))
+        this.requestUserInfo()
     }
 
     requestZSShare() {

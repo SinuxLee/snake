@@ -15,7 +15,7 @@ export default class Snake {
     private _BodyWidth: number = 0;
     private _GrowingWeight: number = 0;
     private _Camera: cc.Camera = null;
-    private _PlayerSelf = false;
+    public _PlayerSelf = false;
     private _PlayerName = "";
     private _MapWidth: number = 0;
     private _MapHeight: number = 0;
@@ -28,7 +28,7 @@ export default class Snake {
     private _CurTargetDestDir: cc.Vec3 = cc.v3(1, 0);
     private _CurTargetChangeDir: cc.Vec3 = cc.v3(0, 0);
     private _CurAITurnSpeed: number = 3.14;
-    private _State: number = 0;
+    public _State: number = 0;
     private _StateTimer: number = 3;
     private _AttachLabel: cc.Node = null;
     private _CurShowMoveDistance: number = 0;

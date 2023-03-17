@@ -15,7 +15,7 @@ export default class Food extends cc.Component {
     }
 
     setType(type: number) {
-        if (type <= 0 || type >= Food._atlasLen) type = 1;
+        if (type <= 0 || type > Food._atlasLen) type = 1;
 
         this._type = type;
         const sprite = this.node.getComponent(cc.Sprite)

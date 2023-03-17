@@ -7979,20 +7979,14 @@
     "_id": "90E+JBnt5IH4ezNU+MGDbT"
   },
   {
-    "__type__": "10c2a9/4chIVJoznTgA8ZPu",
+    "__type__": "1b62bbkm/dC0rw40nx0V1Gx",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 155
     },
     "_enabled": true,
-    "LoadingProgress": {
-      "__id__": 162
-    },
-    "GuangSprite": null,
-    "_needUpdate": true,
-    "_MatchAd": null,
-    "_id": "ec9NtszUVH4ph7cnI5UJgO"
+    "_id": "78TheyrEdHqK9T2unTRle1"
   },
   {
     "__type__": "cc.Node",
@@ -16701,37 +16695,14 @@
     "_id": "c5vBjmAdxJnozqyVLwo3TW"
   },
   {
-    "__type__": "dea4eVuHVxFmLfV+t9BiV0b",
+    "__type__": "6b977vPD25HSrefab9/ZylZ",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 346
     },
     "_enabled": true,
-    "TimerLabel": {
-      "__id__": 354
-    },
-    "ReliveBtn": {
-      "__id__": 357
-    },
-    "BackBtn": {
-      "__id__": 363
-    },
-    "AgainBtn": {
-      "__id__": 366
-    },
-    "VideoReliveBtn": {
-      "__id__": 360
-    },
-    "CloseBtn": {
-      "__id__": 369
-    },
-    "_CurTimeCount": 10,
-    "_CurVideoAd": null,
-    "_IsPause": false,
-    "_ShareCount": 0,
-    "_QQAd": null,
-    "_id": "7anGUUfz5FvZ4q7C4bjIxl"
+    "_id": "08cwsmXIJNvo8yNbHa0e+i"
   },
   {
     "__type__": "cc.Node",
@@ -18773,35 +18744,14 @@
     "_id": "114suExKhLCaJBlP4dE0Fg"
   },
   {
-    "__type__": "eab99p0B3VLSplqXEfik5Sm",
+    "__type__": "3293afRVOtEjYKb7DLVRad6",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 371
     },
     "_enabled": true,
-    "BackBtn": {
-      "__id__": 400
-    },
-    "AgainBtn": {
-      "__id__": 403
-    },
-    "ShareBtn": {
-      "__id__": 406
-    },
-    "CloseBtn": {
-      "__id__": 409
-    },
-    "LenLabel": {
-      "__id__": 386
-    },
-    "KillLabel": {
-      "__id__": 388
-    },
-    "RewardGoldLabel": {
-      "__id__": 395
-    },
-    "_id": "02b0AW3KBG8rEu0o4ij1FG"
+    "_id": "dcSYhiym9B9bf/iQF8eDdB"
   },
   {
     "__type__": "cc.Node",
@@ -38059,20 +38009,14 @@
     "_id": "2bX26YeWxJ6oE9w0vzUeLq"
   },
   {
-    "__type__": "4b560gUXxJOE71/O6QLZYqm",
+    "__type__": "30d45zgAW9EQZZyiQ7D8F9D",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 861
     },
     "_enabled": true,
-    "showBg": {
-      "__id__": 863
-    },
-    "showLabel": {
-      "__id__": 865
-    },
-    "_id": "c3HQqLfvVPTbQsQfxBE1E7"
+    "_id": "7cKAfpwq9EfqpuJ3h+/T7g"
   },
   {
     "__type__": "9e81bwDcz9OS7QqZhM8Qxq+",

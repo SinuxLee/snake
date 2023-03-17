@@ -7,25 +7,25 @@ import { UIType } from './UIType'
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class extends cc.Component {
+export default class SnakeHead extends cc.Component {
     @property(cc.SpriteAtlas)
     public Atlas: cc.SpriteAtlas = null;
+
+    private static _atlasLen = -1;
 
     private _Snake: Snake = null;
     private _Game: Game = null;
 
-    start() {
+    onLoad() {
+        if(SnakeHead._atlasLen < 0) SnakeHead._atlasLen = this.Atlas.getSpriteFrames.length;
         this._Game = GameGlobal.Game
     }
 
     setType(type: number) {
-        if (type < 1 || type > 16) (type = 1);
-        this.headType1 = type;
+        if (type <= 0 || type > SnakeHead._atlasLen) (type = 1);
 
         const sprite = this.node.getComponent(cc.Sprite);
-        const name = "biaoqing_" + type;
-        const frame = this.Atlas.getSpriteFrame(name);
-
+        const frame = this.Atlas.getSpriteFrame(`biaoqing_${type}`);
         frame && (sprite.spriteFrame = frame)
     }
 
@@ -73,7 +73,7 @@ export default class extends cc.Component {
                     if (100 * Math.random() > 85) return;
                     this._Snake.changeAI(6)
                 }
-            } else if("food" == group && false == this._Snake._PlayerSelf) this._Snake.changeAI(7, other.node.position)
+            } else if ("food" == group && false == this._Snake._PlayerSelf) this._Snake.changeAI(7, other.node.position)
         }
     }
 }

@@ -20,7 +20,7 @@ export default class extends cc.Component {
 
     playSound(soundType: { ID: number, IsLoop: boolean }) {
         if (soundType.ID >= this.SoundList.length) return cc.error("playSound resIndex invalid ");
-        
+
         if (!soundType.IsLoop) {
             const audioId = cc.audioEngine.play(this.SoundList[soundType.ID], soundType.IsLoop, 0);
             cc.audioEngine.setVolume(audioId, this._SoundVolume)
@@ -42,17 +42,20 @@ export default class extends cc.Component {
         cc.audioEngine.stopAll()
     }
 
-    enableBgMusic(e) {
-        this._BgVolume = e ? this._OldVolume : 0, -1 != this._CurPlayMusic && cc.audioEngine.setVolume(this._CurPlayMusic, this._BgVolume)
+    enableBgMusic(isChecked: boolean) {
+        this._BgVolume = 0;
+        if (isChecked) this._BgVolume = this._OldVolume;
+        if (this._CurPlayMusic > 0) cc.audioEngine.setVolume(this._CurPlayMusic, this._BgVolume)
     }
 
-    enableSound(e) {
-        this._SoundVolume = e ? this._OldSoundVolume : 0
+    enableSound(isChecked: boolean) {
+        this._SoundVolume = 0;
+        if (isChecked) this._SoundVolume = this._OldSoundVolume;
     }
 
     setMusicVolume(vol: number) {
         this._OldVolume = vol;
-        -1 != this._CurPlayMusic && cc.audioEngine.setVolume(this._CurPlayMusic, vol)
+        if (this._CurPlayMusic > 0) cc.audioEngine.setVolume(this._CurPlayMusic, vol)
     }
 
     setSoundVolume(vol: number) {

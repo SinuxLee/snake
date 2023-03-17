@@ -1,13 +1,13 @@
 import Snake from "./Snake";
-import SnakeBody from './SnakeBody'
 
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class extends cc.Component {
+export default class SnakeBody extends cc.Component {
     @property(cc.SpriteAtlas)
     public Atlas: cc.SpriteAtlas = null;
 
+    public static _atlasLen = -1;
     public _Snake: Snake = null;
 
     private _lastMoveVec = cc.v3(1, 0);
@@ -21,11 +21,13 @@ export default class extends cc.Component {
     private _lastPos = cc.v3(0, 0);
 
     start() {
+        // if (SnakeBody._atlasLen < 0) SnakeBody._atlasLen = this.Atlas.getSpriteFrames().length;
         this._IsFirstUpdate = true
     }
 
     setType(type: number) {
-        if (type < 1 || type > 16) type = 1;
+        if (SnakeBody._atlasLen < 0) SnakeBody._atlasLen = this.Atlas.getSpriteFrames().length;
+        if (type <= 0 || type > SnakeBody._atlasLen) type = 1;
 
         const sprite = this.node.getComponent(cc.Sprite);
         const frame = this.Atlas.getSpriteFrame(`body_${type}`);
@@ -42,7 +44,7 @@ export default class extends cc.Component {
     }
 
     setMoveDir() { }
-    
+
     getMoveDir() {
         return this._moveVec
     }

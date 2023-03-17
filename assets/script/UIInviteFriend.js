@@ -1,6 +1,5 @@
 import { UIType } from './UIType';
 const UIInviteFriendItem = require('UIInviteFriendItem');
-require('DataManager').FriendInviteData;
 
 cc.Class({
     extends: cc.Component,

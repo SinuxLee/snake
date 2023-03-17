@@ -1,6 +1,5 @@
 import { UIType } from './UIType';
 import SoundType from './SoundType';
-import Snake from './Snake';
 
 cc.Class({
     extends: cc.Component,
@@ -98,7 +97,6 @@ cc.Class({
             type: cc.Label
         },
         _GameClubBtn: null,
-        // _Texture: cc.Texture2D,
         _Texture: {
             type: cc.Texture2D, // use 'type:' to define Texture2D object directly
             default: null,     // object's default value is null
@@ -112,7 +110,7 @@ cc.Class({
 
     onLoad: function () {
         window.mainhall = this
-        this._Texture = new cc.Texture2D
+        this._Texture = new cc.Texture2D();
         this._GameClubBtn = null
     },
 
@@ -127,12 +125,19 @@ cc.Class({
         this.RankCloseBtn.node.active = false;
         window.wx && wx.postMessage({ msgType: 2 })
         this.updateMyInfo()
-        cc.sys.platform === cc.sys.QQ_PLAY && (this._IsAdPause = false, this.refreshAd(), this.schedule(this.refreshAd, 20))
+        if(cc.sys.platform === cc.sys.QQ_PLAY) {
+            this._IsAdPause = false, this.refreshAd()
+            this.schedule(this.refreshAd, 20)
+        }
     },
 
     onDisable: function () {
-        void 0 != window.wx && null != this._GameClubBtn && this._GameClubBtn.hide()
-        cc.sys.platform === cc.sys.QQ_PLAY && (this._QQAd && this._QQAd.destory(), this._QQAd = null, this.unscheduleAllCallbacks())
+        if(window.wx && this._GameClubBtn) this._GameClubBtn.hide();
+        if(cc.sys.platform === cc.sys.QQ_PLAY) {
+            this._QQAd && this._QQAd.destory()
+            this._QQAd = null
+            this.unscheduleAllCallbacks()
+        }
     },
 
     refreshAd: function () {
@@ -140,9 +145,7 @@ cc.Class({
             this._QQAd && this._QQAd.destory();
             this._QQAd = null
             this._QQAd = BK.Advertisement.createBannerAd({ viewId: 1001 })
-            this._QQAd.onError(function (e) {
-                e.msg, e.code
-            })
+            this._QQAd.onError((e) => {e.msg, e.code})
             this._QQAd.show()
         }
     },
@@ -194,12 +197,10 @@ cc.Class({
         if (cc.sys.platform === cc.sys.WECHAT_GAME && window.wx) {
             wx.showShareMenu({
                 withShareTicket: true,
-                success: function () { },
-                fail: function () { }
+                success: () => { },
+                fail: () => { }
             })
-            wx.postMessage({
-                msgType: 2
-            })
+            wx.postMessage({msgType: 2})
         }
 
         this.updateMyInfo()
@@ -297,7 +298,11 @@ cc.Class({
     onRankBtn: function (e) {
         e.stopPropagation()
         GameGlobal.UIManager.openUI(UIType.UIType_RankQQ)
-        cc.sys.platform === cc.sys.WECHAT_GAME ? (this.SubContentSprite.node.active = true, this.SubMaskSprite.node.active = true, this.RankCloseBtn.node.active = true) : cc.sys.platform === cc.sys.QQ_PLAY && GameGlobal.UIManager.openUI(UIType.UIType_RankQQ)
+        if(cc.sys.platform === cc.sys.WECHAT_GAME) {
+            this.SubContentSprite.node.active = true
+            this.SubMaskSprite.node.active = true
+            this.RankCloseBtn.node.active = true
+         }
     },
 
     onRankCloseBtn: function (e) {
@@ -351,7 +356,11 @@ cc.Class({
     },
 
     _updateSubDomainCanvas: function () {
-        this._Texture && window.sharedCanvas && 0 != this.SubContentSprite.node.active && (this._Texture.initWithElement(window.sharedCanvas), this._Texture.handleLoadedTexture(), this.SubContentSprite.spriteFrame = new cc.SpriteFrame(this._Texture))
+        if(this._Texture && window.sharedCanvas && this.SubContentSprite.node.active) {
+            this._Texture.initWithElement(window.sharedCanvas)
+            this._Texture.handleLoadedTexture()
+            this.SubContentSprite.spriteFrame = new cc.SpriteFrame(this._Texture)
+        }
     },
 
     update: function (dt) {

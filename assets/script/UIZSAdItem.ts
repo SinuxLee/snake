@@ -3,15 +3,15 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class extends cc.Component {
     private _AdSprite: cc.Sprite = null;
-    private _Index =  0;
+    private _Index = 0;
     private _IsBorderAd = false;
 
-    start () {
+    start() {
         this._AdSprite = this.node.getChildByName('UIZSAdItem').getComponent(cc.Sprite);
         this._AdSprite.node.on(cc.Node.EventType.TOUCH_END, this.onAdItemClick, this)
     }
 
-    initAd (idx:number) {
+    initAd(idx: number) {
         this._Index = idx;
         this._IsBorderAd = false;
         const adData = GameGlobal.DataManager._CurZSAdData
@@ -30,7 +30,7 @@ export default class extends cc.Component {
         })
     }
 
-    initBorderAd (e) {
+    initBorderAd(e) {
         this._IsBorderAd = true;
         this._Index = e;
         const adData = GameGlobal.DataManager._CurZSAdData;
@@ -49,19 +49,25 @@ export default class extends cc.Component {
         })
     }
 
-    onAdItemClick (e) {
-        e.stopPropagation()
+    onAdItemClick(event: cc.Event.EventTouch) {
+        event.stopPropagation()
         if (window.wx == null) return;
 
         const adData = GameGlobal.DataManager._CurZSAdData;
         if (false == this._IsBorderAd) {
-            if (this._Index < adData.app_link_list.length) (adData = adData.app_link_list[this._Index]).appid && adData.link_path && (wx.navigateToMiniProgram({
-                appId: adData.appid,
-                path: adData.link_path
-            }), GameGlobal.Net.requestZSAdCollect(adData.app_id))
-        } else if (this._Index < adData.app_cb_list.length) (adData = adData.app_cb_list[this._Index]).appid && adData.link_path && (wx.navigateToMiniProgram({
-            appId: adData.appid,
-            path: adData.link_path
-        }), GameGlobal.Net.requestZSAdCollect(adData.app_id))
+            if (this._Index < adData.app_link_list.length) {
+                const item = adData.app_link_list[this._Index]
+                if (item.appid && item.link_path) {
+                    wx.navigateToMiniProgram({ appId: adData.appid, path: adData.link_path })
+                    GameGlobal.Net.requestZSAdCollect(adData.app_id)
+                }
+            }
+        } else if (this._Index < adData.app_cb_list.length) {
+            const item = adData.app_cb_list[this._Index]
+            if (item.appid && item.link_path) {
+                wx.navigateToMiniProgram({ appId: adData.appid, path: adData.link_path })
+                GameGlobal.Net.requestZSAdCollect(adData.app_id)
+            }
+        }
     }
 }
