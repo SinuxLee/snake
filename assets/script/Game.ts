@@ -102,7 +102,8 @@ export default class Game extends cc.Component {
             this._SnakeFoodFreeList.push(this._SnakeFoodUseList[idx])
             this._SnakeFoodUseList[idx].parent = null;
         }
-        this._SnakeFoodUseList.splice(0, len)
+        
+        this._SnakeFoodUseList.splice(0)
     }
 
     GetFree(freeList: cc.Node[], usedList: cc.Node[], prefab: cc.Prefab): cc.Node {

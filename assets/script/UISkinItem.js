@@ -13,6 +13,10 @@ cc.Class({
         CostIcon: cc.Sprite
     },
 
+    onLoad(){
+        // this.SkinSprite = this.node.getChildByName('UIZSAdItem').getComponent(cc.Sprite);
+    },
+
     start: function () {
         this.node.on(cc.Node.EventType.TOUCH_END, this.onSkinClick, this)
     },
@@ -29,17 +33,26 @@ cc.Class({
         this.UseSprite.node.active = false
     },
 
-    setCostType: function (e) {
-        e == GameRewardType.RT_GOLD ? this.CostIcon.spriteFrame = this.ResAtlas.getSpriteFrame("jinbi") : e == GameRewardType.RT_DIAMOND ? this.CostIcon.spriteFrame = this.ResAtlas.getSpriteFrame("zuan") : e == GameRewardType.RT_FLOWER && (this.CostIcon.spriteFrame = this.ResAtlas.getSpriteFrame("hua"))
+    setCostType: function (type) {
+        let frame = ""
+        if (type == GameRewardType.RT_GOLD) {
+            frame = "jinbi";
+        } else if (type == GameRewardType.RT_DIAMOND) {
+            frame = "zuan";
+        } else if (type == GameRewardType.RT_FLOWER) {
+            frame = "hua";
+        }
+
+        this.CostIcon.spriteFrame = this.ResAtlas.getSpriteFrame(frame)
     },
 
     setPrice: function (e) {
         this.GoldLabel.string = e
     },
 
-    setIsOwn: function (e) {
-        this.LockSprite.node.active = !e
-        this.GoldBgSprite.node.active = !e
+    setIsOwn: function (isOwn) {
+        this.LockSprite.node.active = !isOwn
+        this.GoldBgSprite.node.active = !isOwn
     },
 
     setIsUse: function (e) {
@@ -51,6 +64,6 @@ cc.Class({
         const tag = e.target.taggame;
 
         const skin = GameGlobal.UIManager.getUI(UIType.UIType_Skin);
-        if(skin) skin.setCurSelectSkin(tag)
+        if (skin) skin.setCurSelectSkin(tag)
     }
 })

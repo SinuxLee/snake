@@ -3,8 +3,8 @@ import { SignInitData, FriendInviteData, SkinData } from './DataManager'
 import siteinfo from './siteinfo';
 import { UIType } from './UIType';
 
-const d = [0, 5e3, 8e3, 12e3, 100, 300, 600, 1e3, 2e3, 3e3, 4e3, 5e3, 6e3, 7e3, 8e3, 9e3, 1e4];
-const u = [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+const skinPrice = [0, 5e3, 8e3, 12e3, 100, 300, 600, 1e3, 2e3, 3e3, 4e3, 5e3, 6e3, 7e3, 8e3, 9e3, 1e4];
+const skinType = [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
 const { ccclass, property } = cc._decorator;
 
@@ -21,15 +21,15 @@ export default class extends cc.Component {
         this.requestUserInfo()
     }
 
-    getURL(e, t) {
-        var i = siteinfo.siteroot + "?i=" + siteinfo.uniacid + "&t=" + siteinfo.multiid + "&v=" + siteinfo.version + "&from=wxapp&";
-        if (e && ((e = e.split("/"))[0] &&
-            (i += "c=" + e[0] + "&"), e[1] &&
-            (i += "a=" + e[1] + "&"), e[2] &&
-            (i += "do=" + e[2] + "&")), t &&
+    getURL(url:string, t) {
+        let reqPath = siteinfo.siteroot + "?i=" + siteinfo.uniacid + "&t=" + siteinfo.multiid + "&v=" + siteinfo.version + "&from=wxapp&";
+        if (url && ((url = url.split("/"))[0] &&
+            (reqPath += "c=" + url[0] + "&"), url[1] &&
+            (reqPath += "a=" + url[1] + "&"), url[2] &&
+            (reqPath += "do=" + url[2] + "&")), t &&
             "object" === (void 0 === t ? "undefined" : r(t)))
-            for (var n in t) n && t.hasOwnProperty(n) && t[n] && (i += n + "=" + t[n] + "&");
-        return i
+            for (var n in t) n && t.hasOwnProperty(n) && t[n] && (reqPath += n + "=" + t[n] + "&");
+        return reqPath
     }
 
     getUrl_qq(e, t) {
@@ -104,28 +104,28 @@ export default class extends cc.Component {
         return n = n || siteinfo.token, console.log("QQ生成的" + d + "---------" + n), d + "&sign=" + (c = a(d + n))
     }
 
-    request(e, t, i, n) {
+    request(url:string, t, data:object, callback:Function) {
         if (cc.sys.platform === cc.sys.WECHAT_GAME) {
-            var r = this.getURL(e, t);
-            if (!(a = this.getSign(r, i))) return
+            var r = this.getURL(url, t);
+            if (!(a = this.getSign(r, data))) return
             r = r + "&sign=" + a
             if (window.wx == null) return;
             wx.request({
                 url: r,
-                data: i,
+                data: data,
                 header: {
                     "content-type": "application/x-www-form-urlencoded"
                 },
                 success: function (e) {
-                    0 != e.data.errno && e.data.message && GameGlobal.UIManager.showMessage(e.data.message), n(e.data.data, e.data.errno)
+                    0 != e.data.errno && e.data.message && GameGlobal.UIManager.showMessage(e.data.message), callback(e.data.data, e.data.errno)
                 },
                 fail: function (e) {
                 }
             })
         } else if (cc.sys.platform === cc.sys.QQ_PLAY) {
             var a;
-            r = this.getUrl_qq(e, t);
-            if (!(a = this.getSign_qq(r, i))) return
+            r = this.getUrl_qq(url, t);
+            if (!(a = this.getSign_qq(r, data))) return
 
             r += a;
         }
@@ -155,86 +155,102 @@ export default class extends cc.Component {
         })
     }
 
-    requestSignReward(e) {
-        var t = this;
-        this.request("entry/wxapp/SignReward", {
-            m: t.COMMON_M
-        }, {
+    requestSignReward(openId) {
+        const data = {
             session3rd: GameGlobal.WeiXinPlatform._SessionID,
-            id: e
-        }, function (e, i) {
-            GameGlobal.UIManager.showMessage("领取成功"), GameGlobal.DataManager.setCurGold(e.gold), GameGlobal.DataManager.setDiamond(e.diamond), GameGlobal.DataManager._MyQianDaoTake = true, GameGlobal.UIManager.RefreshCoin();
-            var n = GameGlobal.UIManager.getUI(UIType.UIType_QianDao);
-            n && n.refreshUI(), t.requestSign(GameGlobal.WeiXinPlatform._SessionID)
+            id: openId
+        }
+        this.request("entry/wxapp/SignReward", {m: this.COMMON_M}, data, function (e, i) {
+            GameGlobal.UIManager.showMessage("领取成功")
+            GameGlobal.DataManager.setCurGold(e.gold)
+            GameGlobal.DataManager.setDiamond(e.diamond)
+            GameGlobal.DataManager._MyQianDaoTake = true
+            GameGlobal.UIManager.RefreshCoin();
+            const uiSign = GameGlobal.UIManager.getUI(UIType.UIType_QianDao);
+            uiSign && uiSign.refreshUI()
+            this.requestSign(GameGlobal.WeiXinPlatform._SessionID)
         })
     }
 
     requestUserInfo() {
-        var e = GameGlobal.localStorage.getItem("tcs_gold"),
-            t = GameGlobal.DataManager;
-        e && t.setCurGold(parseInt(e));
-        var i = GameGlobal.localStorage.getItem("tcs_diamond");
-        i && t.setDiamond(parseInt(i)), GameGlobal.UIManager.RefreshCoin();
-        var n = GameGlobal.localStorage.getItem("tcs_skinIndex");
-        null != n && void 0 != n && (t._CurMySKinIndex = parseInt(n)), t._SKinDataArray = [];
+        const gold = GameGlobal.localStorage.getItem("tcs_gold");
+        const mgr = GameGlobal.DataManager;
+        gold && mgr.setCurGold(parseInt(gold));
+
+        const diamond = GameGlobal.localStorage.getItem("tcs_diamond");
+        diamond && mgr.setDiamond(parseInt(diamond))
+        GameGlobal.UIManager.RefreshCoin();
+
+        const skinIdx = GameGlobal.localStorage.getItem("tcs_skinIndex");
+        if(skinIdx) mgr._CurMySKinIndex = parseInt(skinIdx)
+        mgr._SKinDataArray = [];
+
         for (var r = 0; r < 16; ++r) {
-            (f = new SkinData()).ID = r + 1, f.IsOwn = false, f.IsUse = false, f.Price = d[r], f.Type = u[r], t._SKinDataArray.push(f)
+            const newSkin = new SkinData()
+            newSkin.ID = r + 1
+            newSkin.IsOwn = false
+            newSkin.IsUse = false
+            newSkin.Price = skinPrice[r]
+            newSkin.Type = skinType[r]
+            mgr._SKinDataArray.push(newSkin)
         }
-        n && n < t._SKinDataArray.length && ((f = t._SKinDataArray[n]).IsUse = true);
-        var a, o = GameGlobal.localStorage.getItem("tcs_skinlist");
-        if (o || (o = '{"skin_list":[1]}'), (a = JSON.parse(o).skin_list) && a.length > 0)
-            for (var c = 0; c < a.length; ++c) {
-                var f, l = a[c];
-                if (l && l - 1 < t._SKinDataArray.length) (f = t._SKinDataArray[l - 1]).IsOwn = true
+
+        if(skinIdx && skinIdx < mgr._SKinDataArray.length) {
+            const skinData = mgr._SKinDataArray[skinIdx]
+            skinData.IsUse = true
+        }
+
+        let skinJSON = GameGlobal.localStorage.getItem("tcs_skinlist");
+        if(skinJSON) skinJSON = skinJSON = '{"skin_list":[1]}';
+        const skinList = JSON.parse(skinJSON).skin_list;
+
+        for (let c = 0; c < skinList.length; ++c) {
+            const idx = skinList[c];
+            if (idx && idx - 1 < mgr._SKinDataArray.length) {
+                const skin = mgr._SKinDataArray[idx - 1]
+                skin.IsOwn = true
             }
+        }
+            
         GameGlobal.UIManager.getUI(UIType.UIType_Skin).updateSkin()
     }
 
-    requestInviteCome(e) {
-        var t = GameGlobal.WeiXinPlatform._SessionID;
-        if (!(void 0 == t || t.length <= 0)) {
-            this.request("entry/wxapp/Invite", {
-                m: this.COMMON_M
-            }, {
-                session3rd: t,
-                srcOpenID: e
-            }, function (e, t) {
-            })
-        }
+    requestInviteCome(openId) {
+        const session = GameGlobal.WeiXinPlatform._SessionID;
+        if(!session) return
+
+        const data = {session3rd: session,srcOpenID: openId}
+        this.request("entry/wxapp/Invite", {m: this.COMMON_M}, data, (e, t) => {
+
+        })
     }
 
-    requestInviteReward(e) {
-        var t = GameGlobal.WeiXinPlatform._SessionID;
-        if (!(void 0 == t || t.length <= 0)) {
-            this.request("entry/wxapp/Invite", {
-                m: this.COMMON_M
-            }, {
-                session3rd: t,
-                srcOpenID: srcOpenID
-            }, function (e, t) {
-            })
+    requestInviteReward(openId) {
+        const session = GameGlobal.WeiXinPlatform._SessionID;
+        if(!session) return
+        const data = {
+            session3rd: session,
+            srcOpenID: openId
         }
+        this.request("entry/wxapp/Invite", {m: this.COMMON_M}, data, (e, t) => {
+
+        })
     }
 
     requestFriendList() {
-        var e = GameGlobal.WeiXinPlatform;
-        if (e._SessionID && !(e._SessionID.length <= 0)) {
-            this.request("entry/wxapp/InviteFriend", {
-                m: this.COMMON_M
-            }, {
-                session3rd: e._SessionID
-            }, function (e, t) {
-                var i = GameGlobal.DataManager;
-                i._FriendDataList = [];
-                for (var n = 0; n < e.length; ++n) {
-                    var r = e[n],
-                        a = new FriendInviteData();
-                    a.HeadUrl = r.avatarUrl
-                    a.IsCanTake = 0 == r.status
-                    a.ID = r.id
-                    a.Reward = r.reward
-                    a.OpenID = r.openId
-                    i._FriendDataList.push(a)
+        const wxp = GameGlobal.WeiXinPlatform;
+        if (wxp._SessionID && !(wxp._SessionID.length <= 0)) {
+            this.request("entry/wxapp/InviteFriend", {m: this.COMMON_M}, {session3rd: wxp._SessionID}, (e, t) => {
+                const mgr = GameGlobal.DataManager;
+                mgr._FriendDataList = [];
+                for (let n = 0; n < e.length; ++n) {
+                    const r = e[n],data = new FriendInviteData();
+                    data.HeadUrl = r.avatarUrl
+                    data.IsCanTake = 0 == r.status
+                    data.ID = r.id
+                    data.Reward = r.reward
+                    data.OpenID = r.openId
+                    mgr._FriendDataList.push(data)
                 }
                 GameGlobal.UIManager.getUI(UIType.UIType_InviteFriend).refreshList()
             })
@@ -242,17 +258,15 @@ export default class extends cc.Component {
     }
 
     requestScore(e) {
-        var t = GameGlobal.WeiXinPlatform;
-        if (t._SessionID && !(t._SessionID.length <= 0)) {
-            var i = GameGlobal.DataManager;
-            if (!(Number(i._CurRecord) >= Number(e))) {
-                i._CurRecord = Number(e);
-                this.request("entry/wxapp/Record", {
-                    m: this.COMMON_M
-                }, {
-                    session3rd: t._SessionID,
+        const wxp = GameGlobal.WeiXinPlatform;
+        if (wxp._SessionID && !(wxp._SessionID.length <= 0)) {
+            const mgr = GameGlobal.DataManager;
+            if (!(Number(mgr._CurRecord) >= Number(e))) {
+                mgr._CurRecord = Number(e);
+                this.request("entry/wxapp/Record", {m: this.COMMON_M}, {
+                    session3rd: wxp._SessionID,
                     record: e
-                }, function (e, t) { })
+                }, (e, t) => { })
             }
         }
     }

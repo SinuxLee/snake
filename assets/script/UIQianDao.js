@@ -41,7 +41,11 @@ cc.Class({
         for (let t = 0; t < this.QianDaoItem.length - 1; ++t) {
             if (t + 1 < mgr._SignInitList.length) {
                 const item = mgr._SignInitList[t];
-                1 == item.signStatus ? this.QianDaoItem[t].setMask(true) : (this.QianDaoItem[t].setMask(false), 2 == item.signStatus && (mgr._MyQianDaoCount = item.signDay))
+                if(item.signStatus == 1) this.QianDaoItem[t].setMask(true)
+                else {
+                    this.QianDaoItem[t].setMask(false)
+                    if(item.signStatus ==2) mgr._MyQianDaoCount = item.signDay;
+                }
             }
         }
         this.TakeBtn.interactable = !mgr._MyQianDaoTake
@@ -59,6 +63,7 @@ cc.Class({
     onTake: function (e) {
         e.stopPropagation();
         const btn = e.target.getComponent(cc.Button);
-        btn && 0 == btn.interactable || GameGlobal.Net.requestSignReward(GameGlobal.DataManager._MyQianDaoCount)
+        if(btn && 0 == btn.interactable) return;
+        GameGlobal.Net.requestSignReward(GameGlobal.DataManager._MyQianDaoCount)
     }
 })

@@ -8,21 +8,23 @@ cc.Class({
         ReWardAtlas: cc.SpriteAtlas
     },
 
-    setParam: function (e, type, i) {
-        this.DayLabel.string = "第" + e + "天";
+    setParam: function (day, type, count) {
         let itemName = "";
+        let frame = "";
         if (type == GameRewardType.RT_GOLD) {
-            this.RewardSprite.spriteFrame = this.ReWardAtlas.getSpriteFrame("jinbi")
+            frame = "jinbi";
             itemName = "金币"
         } else if (type == GameRewardType.RT_DIAMOND) {
-            this.RewardSprite.spriteFrame = this.ReWardAtlas.getSpriteFrame("zuan")
+            frame = "zuan";
             itemName = "钻石"
         } else if (type == GameRewardType.RT_FLOWER) {
-            this.RewardSprite.spriteFrame = this.ReWardAtlas.getSpriteFrame("hua")
+            frame = "hua";
             itemName = "花"
         }
 
-        this.RewardLabel.string = i + itemName
+        this.DayLabel.string = `第${day}天`;
+        this.RewardSprite.spriteFrame = this.ReWardAtlas.getSpriteFrame(frame);
+        this.RewardLabel.string = count + itemName;
     },
 
     setMask: function (e) {

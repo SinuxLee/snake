@@ -38,9 +38,8 @@ cc.Class({
         e.stopPropagation();
         const wx = GameGlobal.WeiXinPlatform;
         
-        if (void 0 != wx._WXOpenID && 0 != wx._WXOpenID.length) {
-            wx._WXOpenID, GameGlobal.DataManager;
-            GameGlobal.WeiXinPlatform.showShare(function () { }, function () { })
+        if (wx._WXOpenID && wx._WXOpenID.length > 0) {
+            GameGlobal.WeiXinPlatform.showShare( () => { }, () =>{ })
         }
     },
 

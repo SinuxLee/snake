@@ -73,24 +73,29 @@ cc.Class({
 
     onBuyBtn: function (e) {
         e.stopPropagation();
-        var t = GameGlobal.DataManager;
-        if (!(this._CurSlectSkinIndex >= t._SKinDataArray.length)) {
-            if ((a = t._SKinDataArray[this._CurSlectSkinIndex]).Type == GameRewardType.RT_GOLD) {
-                if (a.Price > t.CurGold) return void GameGlobal.UIManager.showMessage("金币不足，无法购买");
-                GameGlobal.localStorage.setItem("tcs_gold", t.CurGold - a.Price)
-            } else if (a.Type == GameRewardType.RT_DIAMOND) {
-                if (a.Price > t.CurDiamond) return void GameGlobal.UIManager.showMessage("钻石不足，无法购买");
-                GameGlobal.localStorage.setItem("tcs_diamond", t.CurDiamond - a.Price)
-            }
-            for (var i = [], n = t._SKinDataArray.length, r = 0; r < n; ++r) {
-                (a = t._SKinDataArray[r]).IsOwn && i.push(r + 1)
-            }
-            i.push(this._CurSlectSkinIndex + 1);
-            var a, o = JSON.stringify({
-                skin_list: i
-            });
-            return GameGlobal.localStorage.setItem("tcs_skinlist", o), void GameGlobal.Net.requestUserInfo()
+        const mgr = GameGlobal.DataManager;
+        if (this._CurSlectSkinIndex >= mgr._SKinDataArray.length) return
+
+        let item = mgr._SKinDataArray[this._CurSlectSkinIndex]
+        if (item.Type == GameRewardType.RT_GOLD) {
+            if (item.Price > mgr.CurGold) return GameGlobal.UIManager.showMessage("金币不足，无法购买");
+            GameGlobal.localStorage.setItem("tcs_gold", mgr.CurGold - item.Price)
+        } else if (item.Type == GameRewardType.RT_DIAMOND) {
+            if (item.Price > mgr.CurDiamond) return GameGlobal.UIManager.showMessage("钻石不足，无法购买");
+            GameGlobal.localStorage.setItem("tcs_diamond", mgr.CurDiamond - item.Price)
         }
+
+        const skinList = []
+        const len = mgr._SKinDataArray.length; 
+        for (let r = 0; r < len; ++r) {
+            item = mgr._SKinDataArray[r]
+            item.IsOwn && skinList.push(r + 1)
+        }
+        skinList.push(this._CurSlectSkinIndex + 1);
+
+        const data = JSON.stringify({skin_list: skinList});
+        GameGlobal.localStorage.setItem("tcs_skinlist", data);
+        GameGlobal.Net.requestUserInfo();
     },
 
     setCurSelectSkin: function (e) {
@@ -98,21 +103,20 @@ cc.Class({
         this.updatePreview(e)
     },
 
-    updatePreview: function (e) {
-        let name = "biaoqing_" + (e + 1)
+    updatePreview: function (idx) {
+        let name = "biaoqing_" + (idx + 1)
         let frame = this.HeadAtlas.getSpriteFrame(name);
         if (frame == null) return;
-
         this.PreviewHead.spriteFrame = frame
-        name = "body_" + (e + 1)
-        frame = this.BodyAtlas.getSpriteFrame(name)
 
+        name = "body_" + (idx + 1)
+        frame = this.BodyAtlas.getSpriteFrame(name)
         for (let n = 0; n < this.PreviewBodyList.length; ++n) this.PreviewBodyList[n].spriteFrame = frame;
 
         const mgr = GameGlobal.DataManager;
-        if (e >= mgr._SKinDataArray.length) return
+        if (idx >= mgr._SKinDataArray.length) return
 
-        const skin = mgr._SKinDataArray[e];
+        const skin = mgr._SKinDataArray[idx];
         if (skin == null) return
         if (skin.IsOwn) {
             this.BuyBtn.node.active = false

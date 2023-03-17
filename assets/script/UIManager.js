@@ -18,50 +18,57 @@ cc.Class({
         this.BgMaskSprite.node.active = false
     },
 
-    getUIScriptName: function (e) {
-        return ["UIHall", "UIGame", "UIGameOver", "UILoading", "UIGameEnd", "UIShare", "UIMessageTip", "UIKeFu", "UIInviteFriend", "UIQianDao", "UISkin", "UISetting", "UIZSAd"][e]
+    getUIScriptName: function (idx) {
+        return ["UIHall", "UIGame", "UIGameOver", "UILoading", "UIGameEnd",
+            "UIShare", "UIMessageTip", "UIKeFu", "UIInviteFriend",
+            "UIQianDao", "UISkin", "UISetting", "UIZSAd"][idx]
     },
 
-    isPopUI: function (e) {
-        return e == UIType.UIType_HallInvite ||
-            e == UIType.UIType_KeFu ||
-            e == UIType.UIType_InviteFriend ||
-            e == UIType.UIType_QianDao ||
-            e == UIType.UIType_Setting ||
-            e == UIType.UIType_RankQQ ||
-            e == UIType.UIType_GameOver ||
-            e == UIType.UIType_GameEnd
+    isPopUI: function (type) {
+        return type == UIType.UIType_HallInvite ||
+            type == UIType.UIType_KeFu ||
+            type == UIType.UIType_InviteFriend ||
+            type == UIType.UIType_QianDao ||
+            type == UIType.UIType_Setting ||
+            type == UIType.UIType_RankQQ ||
+            type == UIType.UIType_GameOver ||
+            type == UIType.UIType_GameEnd
     },
 
     showMask: function (e) {
         this.BgMaskSprite.node.active = e
     },
 
-    openUI: function (e) {
-        if (e == UIType.UIType_Hall && (this.camera.node.x = 0, this.camera.node.y = 0), e >= this.UIList.length) return
-        else if (null != this.UIList[e] && void 0 != this.UIList[e]) {
-            const node = this.UIList[e];
-            node.active = true
-            if (this.isPopUI(e)) {
-                this.BgMaskSprite.node.active = true;
-                node.scale = 0
-                node.runAction(
-                    cc.scaleTo(.1, 1).
-                        easing(cc.easeSineIn())
-                )
-            }
+    openUI: function (idx) {
+        if(idx == UIType.UIType_Hall) this.camera.node.x = this.camera.node.y = 0;
+        if (idx >= this.UIList.length || this.UIList[idx] == null) return
+        
+        const node = this.UIList[idx];
+        node.active = true
+        if (this.isPopUI(idx)) {
+            this.BgMaskSprite.node.active = true;
+            node.scale = 0
+            node.runAction(
+                cc.scaleTo(.1, 1).
+                    easing(cc.easeSineIn())
+            )
+        }
 
-            if (this.isPopUI(e) || e == UIType.UIType_Skin) {
-                const hallUI = this.getUI(UIType.UIType_Hall);
-                hallUI && hallUI.node.active && hallUI.pauseAdShow()
-            }
+        if (this.isPopUI(idx) || idx == UIType.UIType_Skin) {
+            const hallUI = this.getUI(UIType.UIType_Hall);
+            hallUI && hallUI.node.active && hallUI.pauseAdShow()
         }
     },
 
-    closeUI: function (e) {
-        if (e >= this.UIList.length) return cc.error("closeUI invalid uiType, please check UIList");
+    closeUI: function (idx) {
+        if (idx >= this.UIList.length) return cc.error("closeUI invalid uiType, please check UIList");
 
-        if (this.isPopUI(e) ? (this.BgMaskSprite.node.active = false, this.UIList[e].active = false) : this.UIList[e].active = false, this.isPopUI(e) || e == UIType.UIType_Skin) {
+        if(this.isPopUI(idx)) {
+            this.BgMaskSprite.node.active = false
+            this.UIList[idx].active = false
+         } else this.UIList[idx].active = false;
+
+        if (this.isPopUI(idx) || idx == UIType.UIType_Skin) {
             const hallUI = this.getUI(UIType.UIType_Hall);
             hallUI && hallUI.node.active && hallUI.resumeAdShow()
         }
@@ -71,8 +78,8 @@ cc.Class({
         this.UIList[t].active = false
     },
 
-    getUI: function (e) {
-        if (!(e >= this.UIList.length)) return this.UIList[e].getComponent(this.getUIScriptName(e));
+    getUI: function (idx) {
+        if (idx >= 0 && idx < this.UIList.length) return this.UIList[idx].getComponent(this.getUIScriptName(idx));
         cc.log("closeUI invalid uiType, please check UIList")
     },
 
