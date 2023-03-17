@@ -85,17 +85,17 @@ export default class extends cc.Component {
         return null != n ? unescape(n[2]) : null
     }
 
-    getSign_qq(t, i, n) {
+    getSign_qq(url, data, n) {
         var r = require("../lib/underscore"),
             a = require("../lib/md5"),
             s = "",
-            c = this.getUrlParam_qq(t, "sign");
-        if (c || i && i.sign) return false;
-        if (t && (s = this.getQuery(t)), i) {
+            c = this.getUrlParam_qq(url, "sign");
+        if (c || data && data.sign) return false;
+        if (url && (s = this.getQuery(url)), data) {
             var f = [];
-            for (var h in i) h && i[h] && (f = f.concat({
+            for (var h in data) h && data[h] && (f = f.concat({
                 name: h,
-                value: i[h]
+                value: data[h]
             }));
             s = s.concat(f)
         }
@@ -107,8 +107,8 @@ export default class extends cc.Component {
     request(url:string, t, data:object, callback:Function) {
         if (cc.sys.platform === cc.sys.WECHAT_GAME) {
             var r = this.getURL(url, t);
-            if (!(a = this.getSign(r, data))) return
-            r = r + "&sign=" + a
+            if (!(sign = this.getSign(r, data))) return
+            r = r + "&sign=" + sign
             if (window.wx == null) return;
             wx.request({
                 url: r,
@@ -123,39 +123,41 @@ export default class extends cc.Component {
                 }
             })
         } else if (cc.sys.platform === cc.sys.QQ_PLAY) {
-            var a;
-            r = this.getUrl_qq(url, t);
-            if (!(a = this.getSign_qq(r, data))) return
-
-            r += a;
+            let qqUrl = this.getUrl_qq(url, t);
+            const sign = this.getSign_qq(qqUrl, data)
+            if (!sign) return
+            qqUrl += sign;
         }
     }
 
     sendTakeMsg() { }
-    requestSign(e) {
-        this.request("entry/wxapp/Sign", {
-            m: this.COMMON_M
-        }, {
-            session3rd: e
-        }, function (e, t) {
-            var i = GameGlobal.DataManager;
-            if (i._MyQianDaoTake = 0 === e.sign_status, void 0 != e.sign_list) {
-                var n = e.sign_list;
-                i._SignInitList = [];
-                for (var r = 0; r < n.length; ++r) {
-                    var a = new SignInitData();
-                    a.signDay = n[r].id, a.signReward = n[r].type, a.signRewardNum = n[r].number, a.signStatus = n[r].sign_status, i._SignInitList.push(a)
-                }
-                if (0 == i._MyQianDaoTake) GameGlobal.UIManager.openUI(UIType.UIType_QianDao);
-                else {
-                    var o = GameGlobal.UIManager.getUI(UIType.UIType_QianDao);
-                    o && o.refreshUI()
-                }
+    requestSign(session: string) {
+        this.request("entry/wxapp/Sign", {m: this.COMMON_M}, {session3rd: session}, (e, t) =>{
+            const mgr = GameGlobal.DataManager;
+            mgr._MyQianDaoTake = (0 === e.sign_status)
+            if (e.sign_list== null) return
+
+            const signList = e.sign_list;
+            mgr._SignInitList = [];
+
+            for (let r = 0; r < signList.length; ++r) {
+                const signData = new SignInitData();
+                signData.signDay = signList[r].id
+                signData.signReward = signList[r].type
+                signData.signRewardNum = signList[r].number
+                signData.signStatus = signList[r].sign_status
+                mgr._SignInitList.push(signData)
+            }
+
+            if (0 == mgr._MyQianDaoTake) GameGlobal.UIManager.openUI(UIType.UIType_QianDao);
+            else {
+                const uiSign = GameGlobal.UIManager.getUI(UIType.UIType_QianDao);
+                uiSign && uiSign.refreshUI()
             }
         })
     }
 
-    requestSignReward(openId) {
+    requestSignReward(openId: string) {
         const data = {
             session3rd: GameGlobal.WeiXinPlatform._SessionID,
             id: openId
@@ -201,7 +203,7 @@ export default class extends cc.Component {
         }
 
         let skinJSON = GameGlobal.localStorage.getItem("tcs_skinlist");
-        if(skinJSON) skinJSON = skinJSON = '{"skin_list":[1]}';
+        if(!skinJSON) skinJSON = skinJSON = '{"skin_list":[1]}';
         const skinList = JSON.parse(skinJSON).skin_list;
 
         for (let c = 0; c < skinList.length; ++c) {

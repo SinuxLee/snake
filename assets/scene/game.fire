@@ -34251,7 +34251,7 @@
     "_id": "5aAOYuJeJPDbgge7XeeMcj"
   },
   {
-    "__type__": "591150QQA5PDrPSBryYL3rd",
+    "__type__": "1bc37y/g/hIM6+JlwPluCi1",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -34261,20 +34261,11 @@
     "SkinPrefab": {
       "__uuid__": "9c117508-6b9a-49b3-9984-1428f6073e99"
     },
-    "ViewContent": {
-      "__id__": 744
+    "HeadAtlas": {
+      "__uuid__": "49a3d1f5-6272-4b11-94c9-2004a52e4f22"
     },
-    "CloseBtn": {
-      "__id__": 751
-    },
-    "UseBtn": {
-      "__id__": 757
-    },
-    "BuyBtn": {
-      "__id__": 760
-    },
-    "PreviewHead": {
-      "__id__": 780
+    "BodyAtlas": {
+      "__uuid__": "792b95a6-f3d8-4c02-a5dd-a993cab1c4d3"
     },
     "PreviewBodyList": [
       {
@@ -34296,15 +34287,7 @@
         "__id__": 778
       }
     ],
-    "HeadAtlas": {
-      "__uuid__": "49a3d1f5-6272-4b11-94c9-2004a52e4f22"
-    },
-    "BodyAtlas": {
-      "__uuid__": "792b95a6-f3d8-4c02-a5dd-a993cab1c4d3"
-    },
-    "_SkinSpritePrefabCache": [],
-    "_CurSlectSkinIndex": 0,
-    "_id": "fb2lF/01RDKoF9oJmfHTTf"
+    "_id": "09VSJalCdPw4BBC3UsaB7X"
   },
   {
     "__type__": "cc.Node",
