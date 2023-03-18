@@ -60,15 +60,16 @@ export default class extends cc.Component {
 
     updateSkin() {
         const mgr = GameGlobal.DataManager;
-        for (let t = 0; t < 16; ++t) {
-            const skin = mgr._SKinDataArray[t]
-            if (skin == null) continue;
-            const item = this._SkinSpritePrefabCache[t].getComponent(UISkinItem);
+        this._SkinSpritePrefabCache.forEach((cache,idx)=>{
+            const skin = mgr._SKinDataArray[idx]
+            if (skin == null) return;
+            const item = cache.getComponent(UISkinItem);
             item.setIsOwn(skin.IsOwn)
             item.setIsUse(skin.IsUse)
             item.setPrice(skin.Price)
             item.setCostType(skin.Type)
-        }
+        })
+        
         this.updatePreview(this._CurSlectSkinIndex)
     }
 

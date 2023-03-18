@@ -1,23 +1,23 @@
 import { UIType } from './UIType';
+import UIRankItem from './UIRankItem';
 
-cc.Class({
-    extends: cc.Component,
-    properties: {
-        RankPrefab: {
-            default: null,
-            type: cc.Prefab
-        },
-        ScrollviewContent: {
-            default: null,
-            type: cc.Node
-        },
-        CloseBtn: {
-            default: null,
-            type: cc.Button
-        }
-    },
+const { ccclass, property } = cc._decorator;
 
-    onEnable: function () {
+@ccclass
+export default class extends cc.Component {
+    @property(cc.Prefab)
+    public RankPrefab: cc.Prefab = null;
+
+    private ScrollviewContent: cc.Node = null;
+    private CloseBtn: cc.Button = null;
+
+    onLoad(){
+        this.ScrollviewContent = cc.find('RankBg/RankView/view/content', this.node);
+        this.CloseBtn = this.node.getChildByName('hideButton').getComponent(cc.Button);
+        this.CloseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onClose, this);
+    }
+
+    onEnable () {
         if (cc.sys.platform !== cc.sys.QQ_PLAY) return
 
         this.ScrollviewContent.removeAllChildren();
@@ -29,18 +29,14 @@ cc.Class({
                 const item = rankInfo.data.ranking_list[idx];
                 const node = cc.instantiate(this.RankPrefab);
                 
-                node.getComponent("UIRankItem").init(idx, item);
+                node.getComponent(UIRankItem).init(idx, item);
                 this.ScrollviewContent.addChild(node)
             }
         })
-    },
+    }
 
-    start: function () {
-        this.CloseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onClose, this)
-    },
-
-    onClose: function (e) {
-        e.stopPropagation()
+    onClose (event: cc.Event.EventTouch) {
+        event.stopPropagation()
         GameGlobal.UIManager.closeUI(UIType.UIType_RankQQ)
     }
-})
+}

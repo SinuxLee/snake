@@ -213,11 +213,9 @@ export default class extends cc.Component {
                 skin.IsOwn = true
             }
         }
-            
-        GameGlobal.UIManager.getUI(UIType.UIType_Skin).updateSkin()
     }
 
-    requestInviteCome(openId) {
+    requestInviteCome(openId: string) {
         const session = GameGlobal.WeiXinPlatform._SessionID;
         if(!session) return
 
@@ -227,7 +225,7 @@ export default class extends cc.Component {
         })
     }
 
-    requestInviteReward(openId) {
+    requestInviteReward(openId: string) {
         const session = GameGlobal.WeiXinPlatform._SessionID;
         if(!session) return
         const data = {

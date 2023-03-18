@@ -1,32 +1,38 @@
-cc.Class({
-    extends: cc.Component,
-    properties: {
-        HeadSprite: cc.Sprite,
-        GoldSprite: cc.Sprite,
-        IndexLabel: cc.Label,
-        TakeBtn: cc.Button,
-        _Index: 0
-    },
+const { ccclass, property } = cc._decorator;
 
-    start: function () {
+@ccclass
+export default class extends cc.Component {
+    private HeadSprite: cc.Sprite = null;
+    private GoldSprite: cc.Sprite = null;
+    private IndexLabel: cc.Label = null;
+    private TakeBtn: cc.Button = null;
+    private _Index =  0;
+
+    onLoad () {
+        this.HeadSprite = cc.find('headMask/headSprite', this.node).getComponent(cc.Sprite);
+        this.GoldSprite = this.node.getChildByName('goldSprite').getComponent(cc.Sprite);
+        this.IndexLabel = this.node.getChildByName('IndexLabel').getComponent(cc.Label);
+        this.TakeBtn = this.node.getChildByName('takeBtn').getComponent(cc.Button);
+
         this.TakeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onFriendTake, this)
-    },
+    }
 
-    initIndex: function (e) {
-        this.IndexLabel.string = "", this._Index = e
-    },
+    initIndex (idx: number) {
+        this.IndexLabel.string = ""
+        this._Index = idx
+    }
 
-    resetShow: function () {
+    resetShow () {
         this.TakeBtn.interactable = false
         this.GoldSprite.node.active = true
         this.HeadSprite.node.active = false;
         const mgr = GameGlobal.DataManager;
-        this.IndexLabel.string = mgr._ShareReward * Math.pow(2, this._Index)
-    },
+        this.IndexLabel.string = (mgr._ShareReward * Math.pow(2, this._Index)).toString();
+    }
 
-    refreshUI: function () {
+    refreshUI () {
         const mgr = GameGlobal.DataManager;
-        this.IndexLabel.string = mgr._ShareReward * Math.pow(2, this._Index)
+        this.IndexLabel.string = (mgr._ShareReward * Math.pow(2, this._Index)).toString();
         if (this._Index >= mgr._FriendDataList.length) return
 
         const item = mgr._FriendDataList[this._Index];
@@ -41,11 +47,11 @@ cc.Class({
                 this.HeadSprite.spriteFrame = new cc.SpriteFrame(t)
             }
         })
-    },
+    }
 
-    onFriendTake: function (e) {
-        e.stopPropagation();
-        const btn = e.target.getComponent(cc.Button);
+    onFriendTake (event: cc.Event.EventTouch) {
+        event.stopPropagation();
+        const btn = event.target.getComponent(cc.Button);
         if (btn == null || btn.interactable == false) return
 
         const wx = GameGlobal.WeiXinPlatform;
@@ -54,15 +60,16 @@ cc.Class({
         if (this._Index >= mgr._FriendDataList.length) return
 
         const item = mgr._FriendDataList[this._Index];
-        net.request("entry/wxapp/InviteReward", {m: net.COMMON_M}, {
+        const data = {
             session3rd: wx._SessionID,
             srcOpenID: item.OpenID,
             reward: item.Reward
-        }, (e, t) => {
+        }
+        net.request("entry/wxapp/InviteReward", {m: net.COMMON_M}, data, (e, t) => {
             e.diamond && GameGlobal.DataManager.setDiamond(e.diamond)
             GameGlobal.UIManager.showMessage("领取成功")
             GameGlobal.UIManager.RefreshCoin()
             GameGlobal.Net.requestFriendList()
         })
     }
-})
+}
