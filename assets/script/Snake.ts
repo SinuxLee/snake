@@ -313,7 +313,17 @@ export default class Snake {
                 var t = new cc.Event.EventCustom("meBound", true);
                 return this._SnakeHead.dispatchEvent(t), false
             }
-        } else (Math.abs(this._SnakeHead.x) > this._MapWidth / 2 - 200 || Math.abs(this._SnakeHead.y) > this._MapHeight / 2 - 200) && (this._SnakeHead.x > this._MapWidth / 2 - 200 ? this._SnakeHead.x = this._MapWidth / 2 - 200 - 10 : this._SnakeHead.x < -(this._MapWidth / 2 - 200) && (this._SnakeHead.x = 10 - (this._MapWidth / 2 - 200)), this._SnakeHead.y > this._MapHeight / 2 - 200 ? this._SnakeHead.y = this._MapHeight / 2 - 200 - 10 : this._SnakeHead.y < -(this._MapHeight / 2 - 200) && (this._SnakeHead.y = 10 - (this._MapHeight / 2 - 200)), this.changeAI(10, cc.v2(-this._MoveVec.x, -this._MoveVec.y))), this.aiUpdate(dt);
+        } else if(Math.abs(this._SnakeHead.x) > this._MapWidth / 2 - 200 || Math.abs(this._SnakeHead.y) > this._MapHeight / 2 - 200) {
+            if(this._SnakeHead.x > this._MapWidth / 2 - 200) this._SnakeHead.x = this._MapWidth / 2 - 200 - 10;
+            else if(this._SnakeHead.x < -(this._MapWidth / 2 - 200)) this._SnakeHead.x = 10 - (this._MapWidth / 2 - 200);
+
+            if(this._SnakeHead.y > this._MapHeight / 2 - 200) this._SnakeHead.y = this._MapHeight / 2 - 200 - 10;
+            else if(this._SnakeHead.y < -(this._MapHeight / 2 - 200)) this._SnakeHead.y = 10 - (this._MapHeight / 2 - 200);
+            
+            this.changeAI(10, cc.v3(-this._MoveVec.x, -this._MoveVec.y))
+        }
+        
+        this.aiUpdate(dt);
         this._PosUpdateTime -= dt;
         this._LastMoveVec = this._MoveVec
         this._HeadPrePositon = this._SnakeHead.position;

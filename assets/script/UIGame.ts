@@ -4,110 +4,80 @@ import Food from './Food';
 import SoundType from './SoundType';
 import GameJoystick from './GameJoystick';
 
-const birthplace = [
-    cc.v2(-120, -120), cc.v2(600, 600), cc.v2(-500, -800), cc.v2(200, 800),
-    cc.v2(-800, 1200), cc.v2(500, -800), cc.v2(-300, 500), cc.v2(500, -400),
-    cc.v2(-200, 400)
+const birthplace: cc.Vec3[] = [
+    cc.v3(-120, -120), cc.v3(600, 600), cc.v3(-500, -800), cc.v3(200, 800),
+    cc.v3(-800, 1200), cc.v3(500, -800), cc.v3(-300, 500), cc.v3(500, -400),
+    cc.v3(-200, 400)
 ];
 const gameState = 2;
 const gameState3 = 3;
 const gameState4 = 4;
-class RankItem{
+class RankItem {
     IndexLabel = null;
     NameLabel = null;
     LenLabel = null;
 }
 
-cc.Class({
-    extends: cc.Component,
-    properties: {
-        NewerSprite: {
-            default: null,
-            type: cc.Sprite
-        },
-        AllObjNode: {
-            default: null,
-            type: cc.Node
-        },
-        NameBaseNode: {
-            default: null,
-            type: cc.Node
-        },
-        FoodBaseNode: {
-            default: null,
-            type: cc.Node
-        },
-        GameJoystick: {
-            default: null,
-            type: GameJoystick
-        },
-        Camera: {
-            default: null,
-            type: cc.Camera
-        },
-        BgSprite: {
-            default: null,
-            type: cc.Sprite
-        },
-        SpeedBtn: {
-            default: null,
-            type: cc.Button
-        },
-        TimerSprite: {
-            default: null,
-            type: cc.Node
-        },
-        TimerLabel: {
-            default: null,
-            type: cc.Label
-        },
-        KillLabel: {
-            default: null,
-            type: cc.Label
-        },
-        KillNameLabel: {
-            default: null,
-            type: cc.Label
-        },
-        BeKilledNameLabel: {
-            default: null,
-            type: cc.Label
-        },
-        KillCountLabel: {
-            default: null,
-            type: cc.Label
-        },
-        KillSprite: {
-            default: null,
-            type: cc.Sprite
-        },
-        LenLabel: {
-            default: null,
-            type: cc.Label
-        },
-        InfoPanel: {
-            default: null,
-            type: cc.Node
-        },
-        _SnakeList: [],
-        _MapSizeWidth: 0,
-        _MapSizeHeight: 0,
-        _Game: null,
-        _GameState: 0,
-        _IsSpeedDown: false,
-        _DataMgr: null,
-        _CurTime: 120,
-        _RankUpdateTimer: 0,
-        _RankInfoList: [],
-        _NameList: [],
-        _BodyList: [],
-        _HeadList: [],
-        _KillShowTimer: 0,
-        _SoundMgr: null,
-        _IsFirstPause: false
-    },
+const { ccclass, property } = cc._decorator;
 
-    onLoad: function () {
+@ccclass
+export default class extends cc.Component {
+    @property(cc.Camera)
+    public Camera: cc.Camera = null;
+
+    private NewerSprite: cc.Sprite = null;
+    private AllObjNode: cc.Node = null;
+    private NameBaseNode: cc.Node = null;
+    private FoodBaseNode: cc.Node = null;
+    private GameJoystick: GameJoystick = null;
+    private BgSprite: cc.Sprite = null;
+    private SpeedBtn: cc.Button = null;
+    private TimerSprite: cc.Node = null;
+    private TimerLabel: cc.Label = null;
+    private KillLabel: cc.Label = null;
+    private KillNameLabel: cc.Label = null;
+    private BeKilledNameLabel: cc.Label = null;
+    private KillCountLabel: cc.Label = null;
+    private KillSprite: cc.Sprite = null;
+    private LenLabel: cc.Label = null;
+    private InfoPanel: cc.Node = null;
+
+    private _SnakeList = [];
+    private _MapSizeWidth = 0;
+    private _MapSizeHeight = 0;
+    private _Game = null;
+    private _GameState = 0;
+    private _IsSpeedDown = false;
+    private _DataMgr = null;
+    private _CurTime = 120;
+    private _RankUpdateTimer = 0;
+    private _RankInfoList = [];
+    private _NameList = [];
+    private _BodyList = [];
+    private _HeadList = [];
+    private _KillShowTimer = 0;
+    private _SoundMgr = null;
+    private _IsFirstPause = false;
+
+    onLoad() {
+        this.NewerSprite = this.node.getChildByName('gonglve').getComponent(cc.Sprite);
+        this.AllObjNode = this.node.getChildByName('AllObj');
+        this.NameBaseNode = cc.find('AllObj/NameBaseNode', this.node);
+        this.FoodBaseNode = cc.find('AllObj/FoodBase', this.node);
+        this.GameJoystick = this.node.getChildByName('Joy').getComponent(GameJoystick);
+        this.BgSprite = this.node.getChildByName('bg').getComponent(cc.Sprite);
+        this.SpeedBtn = this.node.getChildByName('SpeedBtn').getComponent(cc.Button);
+        this.TimerSprite = this.node.getChildByName('timeBg');
+        this.TimerLabel = cc.find('timeBg/TimeLabel', this.node).getComponent(cc.Label);
+        this.KillLabel = cc.find('TopInfoNode/killLabel', this.node).getComponent(cc.Label);
+        this.KillNameLabel = cc.find('KillSprite/killNameLabel', this.node).getComponent(cc.Label);
+        this.BeKilledNameLabel = cc.find('KillSprite/beKilledNameLabel', this.node).getComponent(cc.Label);
+        this.KillCountLabel = cc.find('KillSprite/killCountLabel', this.node).getComponent(cc.Label);
+        this.KillSprite = this.node.getChildByName('KillSprite').getComponent(cc.Sprite);
+        this.LenLabel = cc.find('TopInfoNode/lenLabel', this.node).getComponent(cc.Label);
+        this.InfoPanel = this.node.getChildByName('infoBg')
+
+
         this._Game = GameGlobal.Game
         this._DataMgr = GameGlobal.DataManager
         this._MapSizeWidth = this.BgSprite.node.width
@@ -123,15 +93,16 @@ cc.Class({
             rankItem.LenLabel.string = ""
             this._RankInfoList.push(rankItem)
         }
-    },
+    }
 
-    onEnable: function () {
+    onEnable() {
         this.NewerSprite.node.active = false
         this._DataMgr._GameStartTime = Date.now()
         this._DataMgr._CurShareReliveCount = 0
         if (window.wx && wx.getStorageSync("isPlay") == null) {
             wx.setStorageSync("isPlay", true)
-            this._IsFirstPause = truethis.NewerSprite.node.active = true
+            this._IsFirstPause = true;
+            this.NewerSprite.node.active = true
         }
 
         this._SoundMgr = GameGlobal.SoundManager
@@ -157,9 +128,9 @@ cc.Class({
             if (0 == e) {
                 const selfSnake = new Snake()
                 i = GameGlobal.DataManager._CurMySKinIndex + 1;
-                selfSnake.init(i, [i, i], this.AllObjNode, cc.Vec2(0, 0), this.Camera,
+                selfSnake.init(i, [i, i], this.AllObjNode, cc.v3(0, 0), this.Camera,
                     true, this._MapSizeWidth, this._MapSizeHeight, e)
-                selfSnake.initMoveDir(cc.v2(1, 0));
+                selfSnake.initMoveDir(cc.v3(1, 0));
 
                 let nick = this._DataMgr._MyNickName;
                 if (nick == '') nick = "Me";
@@ -177,7 +148,7 @@ cc.Class({
                 snake.init(headType, bodyType, this.AllObjNode, birthplace[e - 1], this.Camera,
                     false, this._MapSizeWidth, this._MapSizeHeight, e);
 
-                snake.initMoveDir(cc.v2(1, 0).rotateSelf(3.14 * Math.random()));
+                snake.initMoveDir(cc.v3(1, 0).rotateSelf(3.14 * Math.random()));
                 snake.setName(this._NameList[e - 1], this.NameBaseNode)
                 snake.setMoveSpeed(300);
                 this._SnakeList.push(snake)
@@ -185,22 +156,22 @@ cc.Class({
         }
         for (let e = 0; e < 80; ++e) this.addFood();
         this.setGameState(gameState)
-    },
+    }
 
-    onDisable: function () {
+    onDisable() {
         cc.director.getCollisionManager().enabled = false;
         for (let e = 0; e < 10; ++e) this._SnakeList[e].deadReset();
         this._SnakeList = []
         this._Game.DelAllFood()
-    },
+    }
 
-    onDestroy: function () {
+    onDestroy() {
         for (let e = 0; e < 10; ++e) this._SnakeList[e].deadReset();
         this._SnakeList = []
         this._Game.DelAllFood()
-    },
+    }
 
-    start: function () {
+    start() {
         this.FoodBaseNode.zIndex = -1e3
         this.NameBaseNode.zIndex = 100
         this.GameJoystick.setCallback(this, this.joyCallback)
@@ -210,9 +181,9 @@ cc.Class({
         this.node.on("meKill", this.onSelfBeKilled, this)
         this.node.on("otherKill", this.onOtherBeKilled, this)
         this.node.on("meBound", this.onMeBound, this)
-    },
+    }
 
-    addFood: function () {
+    addFood() {
         const food = this._Game.GetFreeFood();
         food.parent = this.FoodBaseNode
         food.x = (2 * Math.random() - 1) * (this._MapSizeWidth / 2 - 200)
@@ -220,34 +191,33 @@ cc.Class({
         food.zIndex = -500
         food.group = "food"
         food.getComponent(Food).setType(Math.floor(5 * Math.random()) + 1)
-    },
+    }
 
-    checkAddFood: function () {
+    checkAddFood() {
         if (this.FoodBaseNode.childrenCount >= 150) return
         this.addFood()
-    },
+    }
 
-    reliveResetGame: function () {
+    reliveResetGame() {
         const selfSnake = this._SnakeList[0];
         if (selfSnake == null) return;
-        selfSnake.resetPos(cc.Vec2(0, 0))
-        selfSnake.initMoveDir(cc.v2(1, 0))
+        selfSnake.resetPos(cc.v3(0, 0))
+        selfSnake.initMoveDir(cc.v3(1, 0))
         selfSnake.setState(1)
-        selfSnake.changeSnakeSize()
         this.setGameState(gameState)
-    },
+    }
 
-    getMySnakeLen: function () {
+    getMySnakeLen() {
         const snake = this._SnakeList[0];
         return snake ? snake.getSnakeLength() : 0
-    },
+    }
 
-    getMySnakeKill: function () {
+    getMySnakeKill() {
         const snake = this._SnakeList[0];
         return snake ? snake._KillCount : 0
-    },
+    }
 
-    resetGameEnd: function () {
+    resetGameEnd() {
         this._CurTime = 120;
         for (let e = 0; e < 10; ++e) this._SnakeList[e].deadReset();
         this._SnakeList = [];
@@ -257,54 +227,52 @@ cc.Class({
             if (0 == e) {
                 const self = new Snake()
                 const skinType = GameGlobal.DataManager._CurMySKinIndex + 1;
-                self.init(skinType, [skinType, skinType], this.AllObjNode, cc.Vec2(0, 0), this.Camera,
+                self.init(skinType, [skinType, skinType], this.AllObjNode, cc.v3(0, 0), this.Camera,
                     true, this._MapSizeWidth, this._MapSizeHeight, e);
                 let nick = this._DataMgr._MyNickName;
                 if (nick == '') nick = "Me";
 
-                self.initMoveDir(cc.v2(1, 0))
+                self.initMoveDir(cc.v3(1, 0))
                 self.setName(nick, this.NameBaseNode)
                 self.setMoveSpeed(300)
-                self.changeSnakeSize()
                 this._SnakeList.push(self)
             } else {
                 const snake = new Snake()
                 snake.init(this._HeadList[e - 1], this._BodyList[e - 1], this.AllObjNode, birthplace[e - 1],
                     this.Camera, false, this._MapSizeWidth, this._MapSizeHeight, e);
-                snake.initMoveDir(cc.v2(1, 0).rotateSelf(3.14 * Math.random()))
+                snake.initMoveDir(cc.v3(1, 0).rotateSelf(3.14 * Math.random()))
                 snake.setName(this._NameList[e - 1], this.NameBaseNode)
                 snake.setMoveSpeed(300)
-                snake.changeSnakeSize()
                 this._SnakeList.push(snake)
             }
         }
 
         for (let e = 0; e < 80; ++e) this.addFood();
         this.setGameState(gameState)
-    },
+    }
 
-    joyCallback: function (x, y, dt, angle) {
+    joyCallback(x, y, dt, angle) {
         if (this._SnakeList.length <= 0) return
 
         this._SnakeList[0].setMoveDir(x, y, dt, angle)
-    },
+    }
 
-    onSpeedBtnDown: function (e) {
+    onSpeedBtnDown(e) {
         e.stopPropagation()
         this._IsSpeedDown = true
-    },
+    }
 
-    onSpeedBtnUp: function (e) {
+    onSpeedBtnUp(e) {
         e.stopPropagation()
         this._IsSpeedDown = false
-    },
+    }
 
-    onSelfBeKilled: function (e) {
+    onSelfBeKilled(e) {
         e.stopPropagation()
         this.setGameState(gameState3)
-    },
+    }
 
-    onOtherBeKilled: function (e) {
+    onOtherBeKilled(e) {
         e.stopPropagation();
         const snake = e.detail.killed
         const deadSnake = e.detail.beKilled;
@@ -323,36 +291,36 @@ cc.Class({
         const idx = this._SnakeList.indexOf(deadSnake);
         this._SnakeList.splice(idx, 1)
         this.onOtherRelive(deadSnake._HeadType, deadSnake._BodyTypeList, deadSnake._PlayerName)
-    },
+    }
 
-    onOtherRelive: function (headType, bodyList, name) {
+    onOtherRelive(headType, bodyList, name) {
         const snake = new Snake();
         const idx = Math.floor(birthplace.length * Math.random());
         snake.init(headType, bodyList, this.AllObjNode, birthplace[idx], this.Camera, false,
             this._MapSizeWidth, this._MapSizeHeight, this._SnakeList.length);
-        snake.initMoveDir(cc.v2(1, 0).rotateSelf(3.14 * Math.random()))
+        snake.initMoveDir(cc.v3(1, 0).rotateSelf(3.14 * Math.random()))
         snake.setName(name, this.NameBaseNode)
         snake.setMoveSpeed(300)
         this._SnakeList.push(snake)
         snake.setState(1)
-    },
+    }
 
-    onMeBound: function (e) {
+    onMeBound(e) {
         e.stopPropagation()
         this.setGameState(gameState3)
-    },
+    }
 
-    onSnakeHitFood: function (snake) {
+    onSnakeHitFood(snake) {
         if (snake === this._SnakeList[0]) this.updateSelfSnakeInfo()
-    },
+    }
 
-    onTouchNewer: function (e) {
+    onTouchNewer(e) {
         e.stopPropagation()
         this.NewerSprite.node.active = false
         this._IsFirstPause = false
-    },
+    }
 
-    setGameState: function (state) {
+    setGameState(state) {
         if (this._GameState != state) this._GameState = state;
 
         if (this._GameState == gameState) this.updateSelfSnakeInfo();
@@ -370,21 +338,21 @@ cc.Class({
             GameGlobal.UIManager.openUI(UIType.UIType_GameEnd)
             GameGlobal.Net.requestScoreGold(self.getSnakeLength())
         }
-    },
+    }
 
-    updateSelfSnakeInfo: function () {
+    updateSelfSnakeInfo() {
         const snake = this._SnakeList[0];
         if (snake == null) return;
 
         this.KillLabel.string = snake._KillCount
         this.LenLabel.string = snake.getSnakeLength()
-    },
+    }
 
-    onHideKillSprite: function () {
+    onHideKillSprite() {
         this.KillSprite.node.active = false
-    },
+    }
 
-    update: function (dt) {
+    update(dt) {
         if (this._IsFirstPause) return;
         this._KillShowTimer -= dt
         this._KillShowTimer < 0 && this.KillSprite.node.active && this.onHideKillSprite();
@@ -436,7 +404,7 @@ cc.Class({
             if (e == null) return -1;
             if (t == null) return 1;
             return t.getSnakeLength() - e.getSnakeLength()
-        }).forEach((snake,idx) => {
+        }).forEach((snake, idx) => {
             let color = cc.Color.WHITE;
             if (snake == this._SnakeList[0]) color = cc.Color.GREEN;
 
@@ -447,4 +415,4 @@ cc.Class({
             rankItem.IndexLabel.node.color = rankItem.NameLabel.node.color = rankItem.LenLabel.node.color = color
         });
     }
-})
+}

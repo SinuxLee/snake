@@ -1,120 +1,68 @@
 import { UIType } from './UIType';
 import SoundType from './SoundType';
+import SoundManager from './SoundManager';
 
-cc.Class({
-    extends: cc.Component,
-    properties: {
-        MyPhotoSprite: {
-            default: null,
-            type: cc.Sprite
-        },
-        SnakeShowNode: {
-            default: null,
-            type: cc.Node
-        },
-        MyNickLabel: {
-            default: null,
-            type: cc.Label
-        },
-        TimeModeBtn: {
-            default: null,
-            type: cc.Button
-        },
-        WuXianModeBtn: {
-            default: null,
-            type: cc.Button
-        },
-        TuanZhanModeBtn: {
-            default: null,
-            type: cc.Button
-        },
-        DuiZhanModeBtn: {
-            default: null,
-            type: cc.Button
-        },
-        LinkBtn: {
-            default: null,
-            type: cc.Button
-        },
-        ShareBtn: {
-            default: null,
-            type: cc.Button
-        },
-        HuoDongBtn: {
-            default: null,
-            type: cc.Button
-        },
-        RankBtn: {
-            default: null,
-            type: cc.Button
-        },
-        SettingBtn: {
-            default: null,
-            type: cc.Button
-        },
-        QianDaoBtn: {
-            default: null,
-            type: cc.Button
-        },
-        BaoXiangBtn: {
-            default: null,
-            type: cc.Button
-        },
-        ChengJiuBtn: {
-            default: null,
-            type: cc.Button
-        },
-        KeFuBtn: {
-            default: null,
-            type: cc.Button
-        },
-        SubMaskSprite: {
-            default: null,
-            type: cc.Sprite
-        },
-        SubContentSprite: {
-            default: null,
-            type: cc.Sprite
-        },
-        ShowNodeList: {
-            default: [],
-            type: [cc.Node]
-        },
-        RankCloseBtn: {
-            default: null,
-            type: cc.Button
-        },
-        GoldLabel: {
-            default: null,
-            type: cc.Label
-        },
-        DiamLabel: {
-            default: null,
-            type: cc.Label
-        },
-        VersionLabel: {
-            default: null,
-            type: cc.Label
-        },
-        _GameClubBtn: null,
-        _Texture: {
-            type: cc.Texture2D, // use 'type:' to define Texture2D object directly
-            default: null,     // object's default value is null
-        },
-        _SoundMgr: null,
-        _ShowSnake: null,
-        _CurShowLinkIndex: 0,
-        _QQAd: null,
-        _IsAdPause: false
-    },
+const { ccclass, property } = cc._decorator;
 
-    onLoad: function () {
+@ccclass
+export default class extends cc.Component {
+    private MyPhotoSprite: cc.Sprite = null;
+    private SnakeShowNode: cc.Node = null;
+    private MyNickLabel: cc.Label = null;
+    private TimeModeBtn: cc.Button = null;
+    private WuXianModeBtn: cc.Button = null;
+    private TuanZhanModeBtn: cc.Button = null;
+    private DuiZhanModeBtn: cc.Button = null;
+    private LinkBtn: cc.Button = null;
+    private ShareBtn: cc.Button = null;
+    private HuoDongBtn: cc.Button = null;
+    private RankBtn: cc.Button = null;
+    private SettingBtn: cc.Button = null;
+    private QianDaoBtn: cc.Button = null;
+    private BaoXiangBtn: cc.Button = null;
+    private ChengJiuBtn: cc.Button = null;
+    private KeFuBtn: cc.Button = null;
+    private SubMaskSprite: cc.Sprite = null;
+    private SubContentSprite: cc.Sprite = null;
+    private ShowNodeList: cc.Node[] = [];
+    private RankCloseBtn: cc.Button = null;
+    private GoldLabel: cc.Label = null;
+    private DiamLabel: cc.Label = null;
+    private VersionLabel: cc.Label = null;
+    private _Texture: cc.Texture2D = null;
+    private _SoundMgr:SoundManager = null;
+    private _ShowSnake = null;
+    private _CurShowLinkIndex = 0;
+    private _QQAd = null;
+    private _IsAdPause = false;
+
+    onLoad() {
+        this.MyPhotoSprite = cc.find('MyInfo/headMask/MyPicture', this.node).getComponent(cc.Sprite);
+        this.MyNickLabel = cc.find('MyInfo/headMask/MyNickName', this.node).getComponent(cc.Label);
+        this.TimeModeBtn = this.node.getChildByName('TimeModeBtn').getComponent(cc.Button);
+        this.WuXianModeBtn = this.node.getChildByName('WuXianModeBtn').getComponent(cc.Button);
+        this.TuanZhanModeBtn = this.node.getChildByName('tuanZhanBtn').getComponent(cc.Button);
+        this.DuiZhanModeBtn = this.node.getChildByName('duizhanButton').getComponent(cc.Button);
+        this.LinkBtn = cc.find('leftbottomNode/BtnLink', this.node).getComponent(cc.Button);
+        this.ShareBtn = cc.find('rightNode/shareButton', this.node).getComponent(cc.Button);
+        this.HuoDongBtn = cc.find('rightNode/huodongButton', this.node).getComponent(cc.Button);
+        this.RankBtn = cc.find('rightNode/rankButton', this.node).getComponent(cc.Button);
+        this.SettingBtn = cc.find('rightNode/setttingButton', this.node).getComponent(cc.Button);
+        this.QianDaoBtn = cc.find('bottomSprite/qiandaoButton', this.node).getComponent(cc.Button);
+        this.BaoXiangBtn = cc.find('bottomSprite/baoxiangButton', this.node).getComponent(cc.Button);
+        this.ChengJiuBtn = cc.find('bottomSprite/chengJiuButton', this.node).getComponent(cc.Button);
+        this.KeFuBtn = cc.find('bottomSprite/kefuButton', this.node).getComponent(cc.Button);
+        this.SubMaskSprite = this.node.getChildByName('subMaskSprite').getComponent(cc.Sprite);
+        this.SubContentSprite = this.node.getChildByName('SubSprite').getComponent(cc.Sprite);
+        this.GoldLabel = cc.find('TopNode/goldBg/goldNumLabel', this.node).getComponent(cc.Label);
+        this.DiamLabel = cc.find('TopNode/diamondBg/diadNumLabel', this.node).getComponent(cc.Label);
+        this.VersionLabel = this.node.getChildByName('versionLabel').getComponent(cc.Label);
+
         window.mainhall = this
         this._Texture = new cc.Texture2D();
-        this._GameClubBtn = null
-    },
+    }
 
-    onEnable: function () {
+    onEnable() {
         window.wx && wx.postMessage({ msgType: 4 })
         this.VersionLabel && (this.VersionLabel.string = GameGlobal.GameVersion)
         this.SubContentSprite.node.active = false
@@ -122,47 +70,46 @@ cc.Class({
         this._SoundMgr.stopAll()
         this._SoundMgr.playSound(SoundType.SoundType_Bg)
         this.SubMaskSprite.node.active = false
-        this.RankCloseBtn.node.active = false;
+        // this.RankCloseBtn.node.active = false;
         window.wx && wx.postMessage({ msgType: 2 })
         this.updateMyInfo()
-        if(cc.sys.platform === cc.sys.QQ_PLAY) {
+        if (cc.sys.platform === cc.sys.QQ_PLAY) {
             this._IsAdPause = false, this.refreshAd()
             this.schedule(this.refreshAd, 20)
         }
-    },
+    }
 
-    onDisable: function () {
-        if(window.wx && this._GameClubBtn) this._GameClubBtn.hide();
-        if(cc.sys.platform === cc.sys.QQ_PLAY) {
+    onDisable() {
+        if (cc.sys.platform === cc.sys.QQ_PLAY) {
             this._QQAd && this._QQAd.destory()
             this._QQAd = null
             this.unscheduleAllCallbacks()
         }
-    },
+    }
 
-    refreshAd: function () {
-        if (1 != this._IsAdPause && cc.sys.platform === cc.sys.QQ_PLAY) {
+    refreshAd() {
+        if (!this._IsAdPause && cc.sys.platform === cc.sys.QQ_PLAY) {
             this._QQAd && this._QQAd.destory();
             this._QQAd = null
             this._QQAd = BK.Advertisement.createBannerAd({ viewId: 1001 })
-            this._QQAd.onError((e) => {e.msg, e.code})
+            this._QQAd.onError((e) => { e.msg, e.code })
             this._QQAd.show()
         }
-    },
+    }
 
-    pauseAdShow: function () {
+    pauseAdShow() {
         if (cc.sys.platform === cc.sys.QQ_PLAY) {
             this._QQAd && this._QQAd.destory()
             this._QQAd = null
             this._IsAdPause = true
         }
-    },
+    }
 
-    resumeAdShow: function () {
+    resumeAdShow() {
         this._IsAdPause = false
-    },
+    }
 
-    start: function () {
+    start() {
         this.TimeModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onTimeModeBtn, this)
         this.WuXianModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onWuXianModeBtn, this)
         this.TuanZhanModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onTuanZhanBtn, this)
@@ -170,7 +117,7 @@ cc.Class({
         this.LinkBtn.node.on(cc.Node.EventType.TOUCH_END, this.onLinkBtn, this)
         this.SubMaskSprite.node.on(cc.Node.EventType.TOUCH_END, this.onRankMask, this)
         this.RankBtn.node.on(cc.Node.EventType.TOUCH_END, this.onRankBtn, this)
-        this.RankCloseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onRankCloseBtn, this)
+        // this.RankCloseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onRankCloseBtn, this)
         this.ShareBtn.node.on(cc.Node.EventType.TOUCH_END, this.onShareBtn, this)
         this.HuoDongBtn.node.on(cc.Node.EventType.TOUCH_END, this.onHuoDongBtn, this)
         this.SettingBtn.node.on(cc.Node.EventType.TOUCH_END, this.onSettingBtn, this)
@@ -200,13 +147,13 @@ cc.Class({
                 success: () => { },
                 fail: () => { }
             })
-            wx.postMessage({msgType: 2})
+            wx.postMessage({ msgType: 2 })
         }
 
         this.updateMyInfo()
-    },
+    }
 
-    updateMyInfo: function () {
+    updateMyInfo() {
         if (GameGlobal.DataManager._MyAvatarURL.length <= 0) return
 
         if (cc.sys.platform === cc.sys.WECHAT_GAME) {
@@ -227,9 +174,9 @@ cc.Class({
         }
 
         this.MyNickLabel.string = GameGlobal.DataManager._MyNickName
-    },
+    }
 
-    updateGoldNum: function () {
+    updateGoldNum() {
         let gold = GameGlobal.localStorage.getItem("tcs_gold");
         if (gold == null) {
             gold = 0
@@ -237,19 +184,19 @@ cc.Class({
         }
 
         this.GoldLabel.string = gold
-    },
+    }
 
-    adddemo: function () {
+    adddemo() {
         GameGlobal.DataManager.CurDiamond += 50
         GameGlobal.localStorage.setItem("tcs_diamond", GameGlobal.DataManager.CurDiamond)
         this.updateDiamondNum()
-    },
+    }
 
-    updateDiamondNum: function () {
+    updateDiamondNum() {
         this.DiamLabel.string = GameGlobal.DataManager.CurDiamond
-    },
+    }
 
-    updateLinkBtn: function () {
+    updateLinkBtn() {
         if (cc.sys.platform !== cc.sys.WECHAT_GAME) return
 
         if (GameGlobal.DataManager._LinkIconURL == null ||
@@ -260,110 +207,110 @@ cc.Class({
                 this.LinkBtn.getComponent(cc.Sprite).spriteFrame = new cc.SpriteFrame(asset)
             }
         })
-    },
+    }
 
-    onTimeModeBtn: function (e) {
+    onTimeModeBtn(e) {
         e.stopPropagation()
         GameGlobal.DataManager._CurSelectMode = 0
         GameGlobal.UIManager.closeUI(UIType.UIType_Hall)
         GameGlobal.UIManager.openUI(UIType.UIType_GameLoading)
-    },
+    }
 
-    onWuXianModeBtn: function (e) {
+    onWuXianModeBtn(e) {
         e.stopPropagation()
         GameGlobal.DataManager._CurSelectMode = 1
         GameGlobal.UIManager.closeUI(UIType.UIType_Hall)
         GameGlobal.UIManager.openUI(UIType.UIType_GameLoading)
-    },
+    }
 
-    onTuanZhanBtn: function (e) {
+    onTuanZhanBtn(e) {
         e.stopPropagation()
         GameGlobal.UIManager.showMessage("攻城狮玩命赶工中......")
-    },
+    }
 
-    onDuiZhanModeBtn: function (e) {
+    onDuiZhanModeBtn(e) {
         e.stopPropagation()
         GameGlobal.UIManager.showMessage("攻城狮玩命赶工中......")
-    },
+    }
 
-    onLinkBtn: function (e) {
+    onLinkBtn(e) {
         e.stopPropagation()
         window.wx && wx.navigateToMiniProgram({
             appId: GameGlobal.DataManager._LinkAppID,
             path: GameGlobal.DataManager._LinkPath,
             extraData: GameGlobal.DataManager._LinkExtra
         })
-    },
+    }
 
-    onRankBtn: function (e) {
+    onRankBtn(e) {
         e.stopPropagation()
         GameGlobal.UIManager.openUI(UIType.UIType_RankQQ)
-        if(cc.sys.platform === cc.sys.WECHAT_GAME) {
+        if (cc.sys.platform === cc.sys.WECHAT_GAME) {
             this.SubContentSprite.node.active = true
             this.SubMaskSprite.node.active = true
-            this.RankCloseBtn.node.active = true
-         }
-    },
+            // this.RankCloseBtn.node.active = true
+        }
+    }
 
-    onRankCloseBtn: function (e) {
+    onRankCloseBtn(e) {
         e.stopPropagation()
         this.SubContentSprite.node.active = false
         this.SubMaskSprite.node.active = false
-        this.RankCloseBtn.node.active = false
+        // this.RankCloseBtn.node.active = false
         window.wx && wx.postMessage({
             msgType: 7,
             isShow: false
         })
-    },
+    }
 
-    onRankMask: function (e) {
+    onRankMask(e) {
         e.stopPropagation()
-    },
+    }
 
-    onShareBtn: function (e) {
+    onShareBtn(e) {
         e.stopPropagation()
         GameGlobal.WeiXinPlatform.showShare()
-    },
+    }
 
-    onHuoDongBtn: function (e) {
+    onHuoDongBtn(e) {
         e.stopPropagation()
         GameGlobal.UIManager.openUI(UIType.UIType_Skin)
-    },
+    }
 
-    onSettingBtn: function (e) {
+    onSettingBtn(e) {
         e.stopPropagation()
         GameGlobal.UIManager.openUI(UIType.UIType_Setting)
-    },
+    }
 
-    onBaoXiangBtn: function (e) {
+    onBaoXiangBtn(e) {
         e.stopPropagation()
         GameGlobal.UIManager.showMessage("功能暂未开放")
-    },
+    }
 
-    onChengJiuBtn: function (e) {
+    onChengJiuBtn(e) {
         e.stopPropagation()
         GameGlobal.UIManager.showMessage("功能暂未开放")
-    },
+    }
 
-    onKeFuBtn: function (e) {
+    onKeFuBtn(e) {
         e.stopPropagation()
         GameGlobal.UIManager.openUI(UIType.UIType_InviteFriend)
-    },
+    }
 
-    onQianDaoBtn: function (e) {
+    onQianDaoBtn(e) {
         e && e.stopPropagation()
         GameGlobal.UIManager.openUI(UIType.UIType_QianDao)
-    },
+    }
 
-    _updateSubDomainCanvas: function () {
-        if(this._Texture && window.sharedCanvas && this.SubContentSprite.node.active) {
+    _updateSubDomainCanvas() {
+        if (this._Texture && window.sharedCanvas && this.SubContentSprite.node.active) {
             this._Texture.initWithElement(window.sharedCanvas)
             this._Texture.handleLoadedTexture()
             this.SubContentSprite.spriteFrame = new cc.SpriteFrame(this._Texture)
         }
-    },
-
-    update: function (dt) {
-        if(this._ShowSnake) this._ShowSnake.updateShow(dt);
     }
-})
+
+    update(dt) {
+        if (this._ShowSnake) this._ShowSnake.updateShow(dt);
+    }
+}

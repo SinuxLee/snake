@@ -23,7 +23,7 @@ export default class extends cc.Component {
     private _speed1 = 1;
     private _speed2 = 1;
     private _opacity = 0;
-    private _stickPos: cc.Vec2 = null;
+    private _stickPos: cc.Vec3 = null;
 
     onLoad() {
         this._joyCom = this.node.parent.getComponent(GameJoystick)
@@ -53,22 +53,22 @@ export default class extends cc.Component {
         this.callBackObj.joyCallback(x, y, dt, this._angle)
     }
 
-    getDistance(from: cc.Vec2, to: cc.Vec2) {
+    getDistance(from: cc.Vec3, to: cc.Vec3) {
         return Math.sqrt(Math.pow(from.x - to.x, 2) + Math.pow(from.y - to.y, 2))
     }
 
-    getRadian(pos: cc.Vec2) {
+    getRadian(pos: cc.Vec3) {
         this._radian = Math.PI / 180 * this.getAngle(pos)
         return this._radian
     }
 
-    getAngle(e: cc.Vec2) {
+    getAngle(e: cc.Vec3) {
         const pos = this.node.getPosition();
         this._angle = Math.atan2(e.y - pos.y, e.x - pos.x) * (180 / Math.PI);
         return this._angle
     }
 
-    setSpeed(e: cc.Vec2) {
+    setSpeed(e: cc.Vec3) {
         this.getDistance(e, this.node.getPosition()) < this._radius ? this._speed = this._speed1 : this._speed = this._speed2
     }
 
