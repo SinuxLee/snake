@@ -9,8 +9,8 @@ export default class Snake {
     private _SnakeHead: cc.Node = null;
     private _HeadBodyList: cc.Node[] = [];
     private _Game: Game = null;
-    private _LastMoveVec: cc.Vec3 = cc.v3(1, 0);
-    private _MoveVec: cc.Vec3 = cc.v3(1, 0);
+    private _LastMoveVec: cc.Vec2 = cc.v2(1, 0);
+    private _MoveVec: cc.Vec2 = cc.v2(1, 0);
     private _MoveSpeed: number = 0;
     private _BodyWidth: number = 0;
     private _GrowingWeight: number = 0;
@@ -21,25 +21,25 @@ export default class Snake {
     private _MapHeight: number = 0;
     private _KillCount: number = 0;
     private _PosUpdateTime: number = 0;
-    private _HeadPrePositon: cc.Vec3 = cc.v3(1, 0);
+    private _HeadPrePositon: cc.Vec2 = cc.v2(1, 0);
     private _CurAIType: number = 1;
     private _CurAITimer: number = 2;
     private _CurAIMoveCount: number = 0;
-    private _CurTargetDestDir: cc.Vec3 = cc.v3(1, 0);
-    private _CurTargetChangeDir: cc.Vec3 = cc.v3(0, 0);
+    private _CurTargetDestDir: cc.Vec2 = cc.v2(1, 0);
+    private _CurTargetChangeDir: cc.Vec2 = cc.v2(0, 0);
     private _CurAITurnSpeed: number = 3.14;
     public _State: number = 0;
     private _StateTimer: number = 3;
     private _AttachLabel: cc.Node = null;
     private _CurShowMoveDistance: number = 0;
-    private _CurShowMoveStartPos: cc.Vec3 = cc.v3(0, 0);
-    private _ShowMovePosList: cc.Vec3[] = [];
+    private _CurShowMoveStartPos: cc.Vec2 = cc.v2(0, 0);
+    private _ShowMovePosList: cc.Vec2[] = [];
     private _CurMoveIndex: number = 0;
-    private _MovePath: cc.Vec3[] = [];
+    private _MovePath: cc.Vec2[] = [];
     private _BodySpace: number = 30;
     private _GodSprite: cc.Node = null;
 
-    init(headType: number, bodyType: number[], parent: cc.Node, pos: cc.Vec3,
+    init(headType: number, bodyType: number[], parent: cc.Node, pos: cc.Vec2,
         camera: cc.Camera, self: boolean, width: number, height: number, idx: number) {
         this._SnakeIndex = idx
         this._State = 0
@@ -61,7 +61,7 @@ export default class Snake {
         head.setType(headType)
 
         camera && (this._SnakeHead.group = "head")
-        this._CurTargetChangeDir = cc.v3(.996, .0871);
+        this._CurTargetChangeDir = cc.v2(.996, .0871);
 
         for (let i = 0; i < 5; ++i) {
             const body = this._Game.GetFreeBody();
@@ -132,11 +132,11 @@ export default class Snake {
         this._SnakeHead = null
     }
 
-    resetPos(pos: cc.Vec3) {
+    resetPos(pos: cc.Vec2) {
         this._SnakeHead.position = pos
     }
 
-    initMoveDir(pos: cc.Vec3) {
+    initMoveDir(pos: cc.Vec2) {
         pos.normalizeSelf();
         const len = this._HeadBodyList.length;
 
@@ -154,7 +154,7 @@ export default class Snake {
         for (var s = 0; s < len * this._BodySpace; ++s) this._MovePath.push(headPos.add(pos.mul(15 - (s + 1))))
     }
 
-    initMoveDest(destList: cc.Vec3[]) {
+    initMoveDest(destList: cc.Vec2[]) {
         this._CurMoveIndex = 0
         this._CurShowMoveStartPos = this._SnakeHead.position;
 
@@ -258,7 +258,7 @@ export default class Snake {
         }
     }
 
-    changeAI(aiType: number, destPos: cc.Vec3 = cc.Vec3.ZERO) {
+    changeAI(aiType: number, destPos: cc.Vec2 = cc.Vec2.ZERO) {
         if (this._CurAIType == aiType && (6 == aiType || 7 == aiType)) return
         
         if (this._CurAIType = aiType, 0 == this._CurAIType) {
@@ -271,8 +271,8 @@ export default class Snake {
             this._CurAITurnSpeed = 2 + 1.14 * Math.random();
         } else if (6 == this._CurAIType) {
             this._CurAITimer = 2.5 + 1 * Math.random()
-            if (Math.abs(this._MoveVec.y) >= Math.abs(this._MoveVec.x)) this._CurTargetDestDir = cc.v3(-this._MoveVec.x, this._MoveVec.y)
-            else this._CurTargetDestDir = cc.v3(this._MoveVec.x, -this._MoveVec.y)
+            if (Math.abs(this._MoveVec.y) >= Math.abs(this._MoveVec.x)) this._CurTargetDestDir = cc.v2(-this._MoveVec.x, this._MoveVec.y)
+            else this._CurTargetDestDir = cc.v2(this._MoveVec.x, -this._MoveVec.y)
             this._CurTargetChangeDir = this.FixDir(this._CurTargetDestDir.sub(this._MoveVec)).normalize();
         } else if (7 == this._CurAIType) {
             this._CurAITimer = 3 + 2 * Math.random();
@@ -287,7 +287,7 @@ export default class Snake {
 
     }
 
-    FixDir(pos: cc.Vec3) {
+    FixDir(pos: cc.Vec2) {
         return 0 == pos.x && 0 == pos.y && (pos.x = .001), pos
     }
 
@@ -320,7 +320,7 @@ export default class Snake {
             if(this._SnakeHead.y > this._MapHeight / 2 - 200) this._SnakeHead.y = this._MapHeight / 2 - 200 - 10;
             else if(this._SnakeHead.y < -(this._MapHeight / 2 - 200)) this._SnakeHead.y = 10 - (this._MapHeight / 2 - 200);
             
-            this.changeAI(10, cc.v3(-this._MoveVec.x, -this._MoveVec.y))
+            this.changeAI(10, cc.v2(-this._MoveVec.x, -this._MoveVec.y))
         }
         
         this.aiUpdate(dt);

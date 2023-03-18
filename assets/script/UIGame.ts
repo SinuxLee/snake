@@ -4,10 +4,10 @@ import Food from './Food';
 import SoundType from './SoundType';
 import GameJoystick from './GameJoystick';
 
-const birthplace: cc.Vec3[] = [
-    cc.v3(-120, -120), cc.v3(600, 600), cc.v3(-500, -800), cc.v3(200, 800),
-    cc.v3(-800, 1200), cc.v3(500, -800), cc.v3(-300, 500), cc.v3(500, -400),
-    cc.v3(-200, 400)
+const birthplace: cc.Vec2[] = [
+    cc.v2(-120, -120), cc.v2(600, 600), cc.v2(-500, -800), cc.v2(200, 800),
+    cc.v2(-800, 1200), cc.v2(500, -800), cc.v2(-300, 500), cc.v2(500, -400),
+    cc.v2(-200, 400)
 ];
 const gameState = 2;
 const gameState3 = 3;
@@ -128,9 +128,9 @@ export default class extends cc.Component {
             if (0 == e) {
                 const selfSnake = new Snake()
                 i = GameGlobal.DataManager._CurMySKinIndex + 1;
-                selfSnake.init(i, [i, i], this.AllObjNode, cc.v3(0, 0), this.Camera,
+                selfSnake.init(i, [i, i], this.AllObjNode, cc.v2(0, 0), this.Camera,
                     true, this._MapSizeWidth, this._MapSizeHeight, e)
-                selfSnake.initMoveDir(cc.v3(1, 0));
+                selfSnake.initMoveDir(cc.v2(1, 0));
 
                 let nick = this._DataMgr._MyNickName;
                 if (nick == '') nick = "Me";
@@ -148,7 +148,7 @@ export default class extends cc.Component {
                 snake.init(headType, bodyType, this.AllObjNode, birthplace[e - 1], this.Camera,
                     false, this._MapSizeWidth, this._MapSizeHeight, e);
 
-                snake.initMoveDir(cc.v3(1, 0).rotateSelf(3.14 * Math.random()));
+                snake.initMoveDir(cc.v2(1, 0).rotateSelf(3.14 * Math.random()));
                 snake.setName(this._NameList[e - 1], this.NameBaseNode)
                 snake.setMoveSpeed(300);
                 this._SnakeList.push(snake)
@@ -201,8 +201,8 @@ export default class extends cc.Component {
     reliveResetGame() {
         const selfSnake = this._SnakeList[0];
         if (selfSnake == null) return;
-        selfSnake.resetPos(cc.v3(0, 0))
-        selfSnake.initMoveDir(cc.v3(1, 0))
+        selfSnake.resetPos(cc.v2(0, 0))
+        selfSnake.initMoveDir(cc.v2(1, 0))
         selfSnake.setState(1)
         this.setGameState(gameState)
     }
@@ -227,12 +227,12 @@ export default class extends cc.Component {
             if (0 == e) {
                 const self = new Snake()
                 const skinType = GameGlobal.DataManager._CurMySKinIndex + 1;
-                self.init(skinType, [skinType, skinType], this.AllObjNode, cc.v3(0, 0), this.Camera,
+                self.init(skinType, [skinType, skinType], this.AllObjNode, cc.v2(0, 0), this.Camera,
                     true, this._MapSizeWidth, this._MapSizeHeight, e);
                 let nick = this._DataMgr._MyNickName;
                 if (nick == '') nick = "Me";
 
-                self.initMoveDir(cc.v3(1, 0))
+                self.initMoveDir(cc.v2(1, 0))
                 self.setName(nick, this.NameBaseNode)
                 self.setMoveSpeed(300)
                 this._SnakeList.push(self)
@@ -240,7 +240,7 @@ export default class extends cc.Component {
                 const snake = new Snake()
                 snake.init(this._HeadList[e - 1], this._BodyList[e - 1], this.AllObjNode, birthplace[e - 1],
                     this.Camera, false, this._MapSizeWidth, this._MapSizeHeight, e);
-                snake.initMoveDir(cc.v3(1, 0).rotateSelf(3.14 * Math.random()))
+                snake.initMoveDir(cc.v2(1, 0).rotateSelf(3.14 * Math.random()))
                 snake.setName(this._NameList[e - 1], this.NameBaseNode)
                 snake.setMoveSpeed(300)
                 this._SnakeList.push(snake)
@@ -298,7 +298,7 @@ export default class extends cc.Component {
         const idx = Math.floor(birthplace.length * Math.random());
         snake.init(headType, bodyList, this.AllObjNode, birthplace[idx], this.Camera, false,
             this._MapSizeWidth, this._MapSizeHeight, this._SnakeList.length);
-        snake.initMoveDir(cc.v3(1, 0).rotateSelf(3.14 * Math.random()))
+        snake.initMoveDir(cc.v2(1, 0).rotateSelf(3.14 * Math.random()))
         snake.setName(name, this.NameBaseNode)
         snake.setMoveSpeed(300)
         this._SnakeList.push(snake)

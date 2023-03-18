@@ -10,15 +10,15 @@ export default class SnakeBody extends cc.Component {
     public static _atlasLen = -1;
     public _Snake: Snake = null;
 
-    private _lastMoveVec = cc.v3(1, 0);
-    private _moveVec = cc.v3(1, 0);
+    private _lastMoveVec = cc.v2(1, 0);
+    private _moveVec = cc.v2(1, 0);
     private _moveSpeed = 0;
     private _IsFirstUpdate = true;
-    private _CurStartPos = cc.v3(0, 0);
+    private _CurStartPos = cc.v2(0, 0);
     private _CurMoveDistance = 0;
     private _CurBodyIndex = -1;
-    private _MoveStartPos = cc.v3(0, 0);
-    private _lastPos = cc.v3(0, 0);
+    private _MoveStartPos = cc.v2(0, 0);
+    private _lastPos = cc.v2(0, 0);
 
     start() {
         // if (SnakeBody._atlasLen < 0) SnakeBody._atlasLen = this.Atlas.getSpriteFrames().length;
@@ -38,7 +38,7 @@ export default class SnakeBody extends cc.Component {
         this._Snake = snake
     }
 
-    setInitMoveDir(pos: cc.Vec3) {
+    setInitMoveDir(pos: cc.Vec2) {
         this._lastMoveVec = pos
         this._moveVec = pos
     }
@@ -67,7 +67,7 @@ export default class SnakeBody extends cc.Component {
         this.node.height = 30
     }
 
-    getBodyPrePos(bodyList: cc.Node[], moveVec: cc.Vec3, pos: cc.Vec3): cc.Vec3 {
+    getBodyPrePos(bodyList: cc.Node[], moveVec: cc.Vec2, pos: cc.Vec2): cc.Vec2 {
         if (this._CurBodyIndex == 0) return pos.add(moveVec.mul(this.node.width / 3));
 
         const node = bodyList[this._CurBodyIndex - 1];
@@ -75,7 +75,7 @@ export default class SnakeBody extends cc.Component {
         return body._lastPos.add(body._lastMoveVec.mul(-this.node.width / 2))
     }
 
-    updateBody(dt: number, bodyList: cc.Node[], moveVec: cc.Vec3, headPos: cc.Vec3) {
+    updateBody(dt: number, bodyList: cc.Node[], moveVec: cc.Vec2, headPos: cc.Vec2) {
         this._lastMoveVec = this._moveVec;
         this._lastPos = this.node.position;
         const bodyPos = this.getBodyPrePos(bodyList, moveVec, headPos);

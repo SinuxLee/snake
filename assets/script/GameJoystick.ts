@@ -26,8 +26,8 @@ export default class extends cc.Component {
     @property({ type: cc.Node, displayName: "操控的目标" })
     public sprite: cc.Node = null;
 
-    private _stickPos: cc.Vec3 = null; // 摇杆当前位置
-    private _touchLocation: cc.Vec3 = null; // 摇杆当前位置
+    private _stickPos: cc.Vec2 = null; // 摇杆当前位置
+    private _touchLocation: cc.Vec2 = null; // 摇杆当前位置
 
     onLoad() {
         this.createStickSprite()
