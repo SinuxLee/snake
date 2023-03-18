@@ -1,6 +1,10 @@
-import { UIType } from './UIType';
-import SoundType from './SoundType';
-import SoundManager from './SoundManager';
+import { UIType } from './UIManager';
+import {default as SoundManager,SoundType} from './SoundManager';
+import DataManager from './DataManager';
+import Net from './Net';
+import WeiXinPlatform from './WeiXinPlatform';
+import App from './App';
+import UIManager from './UIManager';
 
 const { ccclass, property } = cc._decorator;
 
@@ -64,11 +68,11 @@ export default class extends cc.Component {
 
     onEnable() {
         window.wx && wx.postMessage({ msgType: 4 })
-        this.VersionLabel && (this.VersionLabel.string = GameGlobal.GameVersion)
+        this.VersionLabel.string = App.inst.GameVersion
         this.SubContentSprite.node.active = false
-        this._SoundMgr = GameGlobal.SoundManager
+        this._SoundMgr = SoundManager.inst;
         this._SoundMgr.stopAll()
-        this._SoundMgr.playSound(SoundType.SoundType_Bg)
+        this._SoundMgr.playSound(SoundType.Bg)
         this.SubMaskSprite.node.active = false
         // this.RankCloseBtn.node.active = false;
         window.wx && wx.postMessage({ msgType: 2 })
@@ -126,8 +130,8 @@ export default class extends cc.Component {
         this.KeFuBtn.node.on(cc.Node.EventType.TOUCH_END, this.onKeFuBtn, this)
         this.QianDaoBtn.node.on(cc.Node.EventType.TOUCH_END, this.onQianDaoBtn, this);
 
-        const mgr = GameGlobal.DataManager;
-        GameGlobal.Net.request("entry/wxapp/SysInfo", { m: GameGlobal.Net.COMMON_M }, null, (i, n) => {
+        const mgr = DataManager.inst;
+        Net.inst.request("entry/wxapp/SysInfo", { m: Net.inst.COMMON_M }, null, (i, n) => {
             const info = i.sysInfo
             if (info == null) return
 
@@ -154,17 +158,17 @@ export default class extends cc.Component {
     }
 
     updateMyInfo() {
-        if (GameGlobal.DataManager._MyAvatarURL.length <= 0) return
+        if (DataManager.inst._MyAvatarURL.length <= 0) return
 
         if (cc.sys.platform === cc.sys.WECHAT_GAME) {
-            cc.loader.load({ url: GameGlobal.DataManager._MyAvatarURL, type: "png" }, (t, asset) => {
+            cc.loader.load({ url: DataManager.inst._MyAvatarURL, type: "png" }, (t, asset) => {
                 if (asset instanceof cc.Texture2D) {
                     this.MyPhotoSprite.spriteFrame = new cc.SpriteFrame(asset)
                 }
             })
         } else if (cc.sys.platform === cc.sys.QQ_PLAY) {
             const image = new Image();
-            image.src = GameGlobal.DataManager._MyAvatarURL
+            image.src = DataManager.inst._MyAvatarURL
             image.onload = () => {
                 const texture = new cc.Texture2D();
                 texture.initWithElement(image)
@@ -173,36 +177,36 @@ export default class extends cc.Component {
             }
         }
 
-        this.MyNickLabel.string = GameGlobal.DataManager._MyNickName
+        this.MyNickLabel.string = DataManager.inst._MyNickName
     }
 
     updateGoldNum() {
-        let gold = GameGlobal.localStorage.getItem("tcs_gold");
+        let gold = App.inst.localStorage.getItem("tcs_gold");
         if (gold == null) {
             gold = 0
-            GameGlobal.localStorage.setItem("tcs_gold", 0)
+            App.inst.localStorage.setItem("tcs_gold", 0)
         }
 
         this.GoldLabel.string = gold
     }
 
     adddemo() {
-        GameGlobal.DataManager.CurDiamond += 50
-        GameGlobal.localStorage.setItem("tcs_diamond", GameGlobal.DataManager.CurDiamond)
+        DataManager.inst.CurDiamond += 50
+        App.inst.localStorage.setItem("tcs_diamond", DataManager.inst.CurDiamond)
         this.updateDiamondNum()
     }
 
     updateDiamondNum() {
-        this.DiamLabel.string = GameGlobal.DataManager.CurDiamond
+        this.DiamLabel.string = DataManager.inst.CurDiamond.toString();
     }
 
     updateLinkBtn() {
         if (cc.sys.platform !== cc.sys.WECHAT_GAME) return
 
-        if (GameGlobal.DataManager._LinkIconURL == null ||
-            GameGlobal.DataManager._LinkIconURL.length > 0) return
+        if (DataManager.inst._LinkIconURL == null ||
+            DataManager.inst._LinkIconURL.length > 0) return
 
-        cc.loader.load({ url: GameGlobal.DataManager._LinkIconURL, type: "png" }, (t, asset) => {
+        cc.loader.load({ url: DataManager.inst._LinkIconURL, type: "png" }, (t, asset) => {
             if (asset instanceof cc.Texture2D) {
                 this.LinkBtn.getComponent(cc.Sprite).spriteFrame = new cc.SpriteFrame(asset)
             }
@@ -211,40 +215,40 @@ export default class extends cc.Component {
 
     onTimeModeBtn(e) {
         e.stopPropagation()
-        GameGlobal.DataManager._CurSelectMode = 0
-        GameGlobal.UIManager.closeUI(UIType.UIType_Hall)
-        GameGlobal.UIManager.openUI(UIType.UIType_GameLoading)
+        DataManager.inst._CurSelectMode = 0
+        UIManager.inst.closeUI(UIType.UIType_Hall)
+        UIManager.inst.openUI(UIType.UIType_GameLoading)
     }
 
     onWuXianModeBtn(e) {
         e.stopPropagation()
-        GameGlobal.DataManager._CurSelectMode = 1
-        GameGlobal.UIManager.closeUI(UIType.UIType_Hall)
-        GameGlobal.UIManager.openUI(UIType.UIType_GameLoading)
+        DataManager.inst._CurSelectMode = 1
+        UIManager.inst.closeUI(UIType.UIType_Hall)
+        UIManager.inst.openUI(UIType.UIType_GameLoading)
     }
 
     onTuanZhanBtn(e) {
         e.stopPropagation()
-        GameGlobal.UIManager.showMessage("攻城狮玩命赶工中......")
+        UIManager.inst.showMessage("攻城狮玩命赶工中......")
     }
 
     onDuiZhanModeBtn(e) {
         e.stopPropagation()
-        GameGlobal.UIManager.showMessage("攻城狮玩命赶工中......")
+        UIManager.inst.showMessage("攻城狮玩命赶工中......")
     }
 
     onLinkBtn(e) {
         e.stopPropagation()
         window.wx && wx.navigateToMiniProgram({
-            appId: GameGlobal.DataManager._LinkAppID,
-            path: GameGlobal.DataManager._LinkPath,
-            extraData: GameGlobal.DataManager._LinkExtra
+            appId: DataManager.inst._LinkAppID,
+            path: DataManager.inst._LinkPath,
+            extraData: DataManager.inst._LinkExtra
         })
     }
 
     onRankBtn(e) {
         e.stopPropagation()
-        GameGlobal.UIManager.openUI(UIType.UIType_RankQQ)
+        UIManager.inst.openUI(UIType.UIType_RankQQ)
         if (cc.sys.platform === cc.sys.WECHAT_GAME) {
             this.SubContentSprite.node.active = true
             this.SubMaskSprite.node.active = true
@@ -269,37 +273,37 @@ export default class extends cc.Component {
 
     onShareBtn(e) {
         e.stopPropagation()
-        GameGlobal.WeiXinPlatform.showShare()
+        WeiXinPlatform.inst.showShare()
     }
 
     onHuoDongBtn(e) {
         e.stopPropagation()
-        GameGlobal.UIManager.openUI(UIType.UIType_Skin)
+        UIManager.inst.openUI(UIType.UIType_Skin)
     }
 
     onSettingBtn(e) {
         e.stopPropagation()
-        GameGlobal.UIManager.openUI(UIType.UIType_Setting)
+        UIManager.inst.openUI(UIType.UIType_Setting)
     }
 
     onBaoXiangBtn(e) {
         e.stopPropagation()
-        GameGlobal.UIManager.showMessage("功能暂未开放")
+        UIManager.inst.showMessage("功能暂未开放")
     }
 
     onChengJiuBtn(e) {
         e.stopPropagation()
-        GameGlobal.UIManager.showMessage("功能暂未开放")
+        UIManager.inst.showMessage("功能暂未开放")
     }
 
     onKeFuBtn(e) {
         e.stopPropagation()
-        GameGlobal.UIManager.openUI(UIType.UIType_InviteFriend)
+        UIManager.inst.openUI(UIType.UIType_InviteFriend)
     }
 
     onQianDaoBtn(e) {
         e && e.stopPropagation()
-        GameGlobal.UIManager.openUI(UIType.UIType_QianDao)
+        UIManager.inst.openUI(UIType.UIType_QianDao)
     }
 
     _updateSubDomainCanvas() {

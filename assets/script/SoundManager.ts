@@ -1,21 +1,45 @@
-import SoundType from './SoundType';
+export class SoundType {
+    public static Bg = {
+        ID: 0,
+        IsLoop: true
+    }
 
-const { ccclass, property } = cc._decorator;
+    public static GameBg = {
+        ID: 1,
+        IsLoop: true
+    }
 
-@ccclass
-export default class extends cc.Component {
-    @property([cc.AudioClip])
-    public SoundList: cc.AudioClip[] = []
+    public static GetGold = {
+        ID: 2,
+        IsLoop: false
+    }
 
-    private _EnableMusic = true;
-    private _OldVolume = 1;
+    public static Fall: {
+        ID: 3,
+        IsLoop: false
+    }
+}
+
+export default class SoundManager {
+    private SoundList: cc.AudioClip[] = [];
+    public _OldVolume = 1;
     private _BgVolume = 1;
-    private _OldSoundVolume = 1;
+    public _OldSoundVolume = 1;
     private _SoundVolume = 1;
     private _CurPlayMusic = -1;
 
-    start() {
-        this.playSound(SoundType.SoundType_Bg)
+    private static _inst: SoundManager = null;
+    public static get inst() {
+        if (this._inst == null) this._inst = new SoundManager();
+        return this._inst;
+    }
+
+    private constructor() {
+        cc.resources.load('audio/gameBg', (err: Error, asset: cc.AudioClip) => {
+            if (err) return cc.error(err)
+            this.SoundList.push(asset, asset);
+            this.playSound(SoundType.Bg)
+        })
     }
 
     playSound(soundType: { ID: number, IsLoop: boolean }) {

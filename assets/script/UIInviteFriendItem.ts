@@ -1,3 +1,7 @@
+import DataManager from "./DataManager";
+import Net from "./Net";
+import WeiXinPlatform from "./WeiXinPlatform";
+import UIManager from "./UIManager";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -26,12 +30,12 @@ export default class extends cc.Component {
         this.TakeBtn.interactable = false
         this.GoldSprite.node.active = true
         this.HeadSprite.node.active = false;
-        const mgr = GameGlobal.DataManager;
+        const mgr = DataManager.inst;
         this.IndexLabel.string = (mgr._ShareReward * Math.pow(2, this._Index)).toString();
     }
 
     refreshUI () {
-        const mgr = GameGlobal.DataManager;
+        const mgr = DataManager.inst;
         this.IndexLabel.string = (mgr._ShareReward * Math.pow(2, this._Index)).toString();
         if (this._Index >= mgr._FriendDataList.length) return
 
@@ -54,9 +58,9 @@ export default class extends cc.Component {
         const btn = event.target.getComponent(cc.Button);
         if (btn == null || btn.interactable == false) return
 
-        const wx = GameGlobal.WeiXinPlatform;
-        const net = GameGlobal.Net;
-        const mgr = GameGlobal.DataManager;
+        const wx = WeiXinPlatform.inst;
+        const net = Net.inst;
+        const mgr = DataManager.inst;
         if (this._Index >= mgr._FriendDataList.length) return
 
         const item = mgr._FriendDataList[this._Index];
@@ -66,10 +70,10 @@ export default class extends cc.Component {
             reward: item.Reward
         }
         net.request("entry/wxapp/InviteReward", {m: net.COMMON_M}, data, (e, t) => {
-            e.diamond && GameGlobal.DataManager.setDiamond(e.diamond)
-            GameGlobal.UIManager.showMessage("领取成功")
-            GameGlobal.UIManager.RefreshCoin()
-            GameGlobal.Net.requestFriendList()
+            e.diamond && DataManager.inst.setDiamond(e.diamond)
+            UIManager.inst.showMessage("领取成功")
+            UIManager.inst.RefreshCoin()
+            Net.inst.requestFriendList()
         })
     }
 }

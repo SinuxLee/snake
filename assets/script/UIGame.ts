@@ -1,8 +1,15 @@
-import { UIType } from './UIType';
+import { UIType, } from './UIManager';
 import Snake from './Snake';
 import Food from './Food';
-import SoundType from './SoundType';
+import {SoundType} from './SoundManager';
 import GameJoystick from './GameJoystick';
+import DataManager from './DataManager';
+import Net from './Net';
+import WeiXinPlatform from './WeiXinPlatform';
+import SoundManager from './SoundManager';
+import Game from './Game';
+import UIManager from './UIManager';
+import App from './App';
 
 const birthplace: cc.Vec2[] = [
     cc.v2(-120, -120), cc.v2(600, 600), cc.v2(-500, -800), cc.v2(200, 800),
@@ -77,9 +84,8 @@ export default class extends cc.Component {
         this.LenLabel = cc.find('TopInfoNode/lenLabel', this.node).getComponent(cc.Label);
         this.InfoPanel = this.node.getChildByName('infoBg')
 
-
-        this._Game = GameGlobal.Game
-        this._DataMgr = GameGlobal.DataManager
+        this._Game = Game.inst;
+        this._DataMgr = DataManager.inst;
         this._MapSizeWidth = this.BgSprite.node.width
         this._MapSizeHeight = this.BgSprite.node.height;
         for (let e = 0; e < 10; ++e) {
@@ -105,9 +111,9 @@ export default class extends cc.Component {
             this.NewerSprite.node.active = true
         }
 
-        this._SoundMgr = GameGlobal.SoundManager
+        this._SoundMgr = SoundManager.inst;
         this._SoundMgr.stopAll()
-        this._SoundMgr.playSound(SoundType.SoundType_GameBg)
+        this._SoundMgr.playSound(SoundType.GameBg)
         this.KillSprite.node.active = false
         cc.director.getCollisionManager().enabled = true
         this._KillShowTimer = 0
@@ -120,14 +126,14 @@ export default class extends cc.Component {
             this.TimerSprite.active = false
         }
         this._NameList = []
-        GameGlobal.getRandomNameList(9, this._NameList)
+        App.inst.getRandomNameList(9, this._NameList)
         this._BodyList = [];
         this._HeadList = [];
 
         for (let e = 0; e < 10; ++e) {
             if (0 == e) {
                 const selfSnake = new Snake()
-                i = GameGlobal.DataManager._CurMySKinIndex + 1;
+                const i = DataManager.inst._CurMySKinIndex + 1;
                 selfSnake.init(i, [i, i], this.AllObjNode, cc.v2(0, 0), this.Camera,
                     true, this._MapSizeWidth, this._MapSizeHeight, e)
                 selfSnake.initMoveDir(cc.v2(1, 0));
@@ -226,7 +232,7 @@ export default class extends cc.Component {
         for (let e = 0; e < 10; ++e) {
             if (0 == e) {
                 const self = new Snake()
-                const skinType = GameGlobal.DataManager._CurMySKinIndex + 1;
+                const skinType = DataManager.inst._CurMySKinIndex + 1;
                 self.init(skinType, [skinType, skinType], this.AllObjNode, cc.v2(0, 0), this.Camera,
                     true, this._MapSizeWidth, this._MapSizeHeight, e);
                 let nick = this._DataMgr._MyNickName;
@@ -327,16 +333,16 @@ export default class extends cc.Component {
         else if (this._GameState == gameState3) {
             const self = this._SnakeList[0];
             this._DataMgr.CurScore = self.getSnakeLength();
-            GameGlobal.WeiXinPlatform.postScoreToPlatform(this._DataMgr.getCurScore(), this._DataMgr._GameStartTime)
-            GameGlobal.Net.requestScore(self.getSnakeLength())
-            GameGlobal.UIManager.openUI(UIType.UIType_GameOver)
+            WeiXinPlatform.inst.postScoreToPlatform(this._DataMgr.getCurScore(), this._DataMgr._GameStartTime)
+            Net.inst.requestScore(self.getSnakeLength())
+            UIManager.inst.openUI(UIType.UIType_GameOver)
         } else if (this._GameState == gameState4) {
             const self = this._SnakeList[0];
             this._DataMgr.CurScore = self.getSnakeLength();
-            GameGlobal.WeiXinPlatform.postScoreToPlatform(this._DataMgr.getCurScore(), this._DataMgr._GameStartTime)
-            GameGlobal.Net.requestScore(self.getSnakeLength())
-            GameGlobal.UIManager.openUI(UIType.UIType_GameEnd)
-            GameGlobal.Net.requestScoreGold(self.getSnakeLength())
+            WeiXinPlatform.inst.postScoreToPlatform(this._DataMgr.getCurScore(), this._DataMgr._GameStartTime)
+            Net.inst.requestScore(self.getSnakeLength())
+            UIManager.inst.openUI(UIType.UIType_GameEnd)
+            Net.inst.requestScoreGold(self.getSnakeLength())
         }
     }
 

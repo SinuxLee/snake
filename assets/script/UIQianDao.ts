@@ -1,5 +1,8 @@
-import { UIType } from './UIType';
+import { UIType } from './UIManager';
 import UIQianDaoItem from './UIQianDaoItem';
+import DataManager from './DataManager';
+import Net from './Net';
+import UIManager from './UIManager';
 
 const { ccclass, property } = cc._decorator;
 
@@ -23,7 +26,7 @@ export default class extends cc.Component {
     }
 
     onEnable() {
-        const mgr = GameGlobal.DataManager
+        const mgr = DataManager.inst
         for (let t = 0; t < this.QianDaoItem.length; ++t) {
             if (t < mgr._SignInitList.length) {
                 const item = mgr._SignInitList[t];
@@ -36,7 +39,7 @@ export default class extends cc.Component {
     }
 
     refreshUI() {
-        const mgr = GameGlobal.DataManager;
+        const mgr = DataManager.inst;
         for (let t = 0; t < this.QianDaoItem.length - 1; ++t) {
             if (t + 1 < mgr._SignInitList.length) {
                 const item = mgr._SignInitList[t];
@@ -52,7 +55,7 @@ export default class extends cc.Component {
 
     onClose(event: cc.Event.EventTouch) {
         event.stopPropagation()
-        GameGlobal.UIManager.closeUI(UIType.UIType_QianDao)
+        UIManager.inst.closeUI(UIType.UIType_QianDao)
     }
 
     onBlock(event: cc.Event.EventTouch) {
@@ -63,6 +66,6 @@ export default class extends cc.Component {
         event.stopPropagation();
         const btn = event.target.getComponent(cc.Button);
         if (btn && 0 == btn.interactable) return;
-        GameGlobal.Net.requestSignReward(GameGlobal.DataManager._MyQianDaoCount)
+        Net.inst.requestSignReward(DataManager.inst._MyQianDaoCount)
     }
 }

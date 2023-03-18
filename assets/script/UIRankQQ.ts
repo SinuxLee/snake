@@ -1,5 +1,6 @@
-import { UIType } from './UIType';
+import { UIType } from './UIManager';
 import UIRankItem from './UIRankItem';
+import UIManager from './UIManager';
 
 const { ccclass, property } = cc._decorator;
 
@@ -37,6 +38,6 @@ export default class extends cc.Component {
 
     onClose (event: cc.Event.EventTouch) {
         event.stopPropagation()
-        GameGlobal.UIManager.closeUI(UIType.UIType_RankQQ)
+        UIManager.inst.closeUI(UIType.UIType_RankQQ)
     }
 }

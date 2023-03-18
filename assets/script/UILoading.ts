@@ -1,4 +1,6 @@
-import { UIType } from './UIType';
+import { UIType } from './UIManager';
+import DataManager from './DataManager';
+import UIManager from './UIManager';
 
 const { ccclass, property } = cc._decorator;
 
@@ -25,7 +27,7 @@ export default class extends cc.Component {
                 }
 
                 this._MatchAd = wx.createBannerAd({
-                    adUnitId: GameGlobal.DataManager.BannerAdid1,
+                    adUnitId: DataManager.inst.BannerAdid1,
                     style: {
                         left: 0,
                         top: 0,
@@ -66,8 +68,8 @@ export default class extends cc.Component {
         if(this.LoadingProgress.progress >= 1) {
             this.LoadingProgress.progress = 1
             this._needUpdate = false
-            GameGlobal.UIManager.closeUI(UIType.UIType_GameLoading)
-            GameGlobal.UIManager.openUI(UIType.UIType_Game)
+            UIManager.inst.closeUI(UIType.UIType_GameLoading)
+            UIManager.inst.openUI(UIType.UIType_Game)
         }
 
         if(this.GuangSprite) {

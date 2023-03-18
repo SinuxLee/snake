@@ -1,16 +1,38 @@
-import { UIType } from './UIType';
-
 const { ccclass, property } = cc._decorator;
 
+export enum UIType {
+    UIType_Hall = 0,
+    UIType_Game = 1,
+    UIType_GameOver = 2,
+    UIType_GameLoading = 3,
+    UIType_GameEnd = 4,
+    UIType_HallInvite = 5,
+    UIType_ShowMessage = 6,
+    UIType_KeFu = 7,
+    UIType_InviteFriend = 8,
+    UIType_QianDao = 9,      // 签到
+    UIType_Skin = 10,
+    UIType_Setting = 11,
+    UIType_ZSAd = 12,
+    UIType_RankQQ = 13
+}
+
 @ccclass
-export default class extends cc.Component {
+export default class UIManager extends cc.Component {
     @property(cc.Camera)
     public camera: cc.Camera = null;
+
+    private static _inst: UIManager = null;
+    public static get inst(){
+        return this._inst;
+    }
 
     private UIList: cc.Node[] = [];
     private BgMaskSprite: cc.Sprite = null;
 
     onLoad() {
+        UIManager._inst = this;
+        
         this.BgMaskSprite = this.node.getChildByName('bgMask').getComponent(cc.Sprite);
 
         const hall = this.node.getChildByName('UIHall');

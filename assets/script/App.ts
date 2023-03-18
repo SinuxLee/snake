@@ -1,44 +1,16 @@
-import DataManager from './DataManager'
-import SoundManager from './SoundManager'
-import Game from './Game'
-import Net from './Net'
-import WeiXinPlatform from './WeiXinPlatform'
-
-const { ccclass, property } = cc._decorator;
-@ccclass
-export default class extends cc.Component {
-    @property(cc.Component)
-    public DataManager: DataManager = null;
-
-    @property(cc.Component)
-    public SoundManager: SoundManager = null;
-
-    @property(cc.Component)
-    public UIManager = null;
-
-    @property(cc.Component)
-    public Game: Game = null;
-
-    @property(cc.Component)
-    public Net: Net = null;
-
-    @property(cc.Component)
-    public WeiXinPlatform: WeiXinPlatform = null;
-
+export default class App{
     private NameList: string[] = [];
     private IsSingleMode = true;
-    private localStorage = cc.sys.localStorage;
-    private GameVersion = "1.0.0";
+    public localStorage = cc.sys.localStorage;
+    public GameVersion = "1.0.0";
 
-    onLoad() {
-        window.GameGlobal = this;
+    private static _inst: App = null;
+    public static get inst() {
+        if(this._inst == null) this._inst = new App()
+        return this._inst;
+    }
 
-        this.DataManager = cc.find("DataManager").getComponent(DataManager)
-        this.SoundManager = cc.find("SoundManager").getComponent(SoundManager)
-        this.UIManager = cc.find("Canvas/UIManager").getComponent("UIManager")
-        this.Game = cc.find("Game").getComponent(Game)
-        this.Net = cc.find("Net").getComponent(Net)
-        this.WeiXinPlatform = cc.find("WeiXinPlatform").getComponent(WeiXinPlatform)
+    private constructor() {
         this.NameList = [
             "大道至简", "知名投资人", "刘经理", "独自等待", "厌世症", "刘晓霞", "人心可畏", "知心人", "济水上苑物业小王",
             "可喜可乐", "冯静", "以心换心", "大海", "渣中王?", "一干为尽", "中兴产品部", "就是任性", "渣渣辉", "无敌的寂寞",

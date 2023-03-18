@@ -44,7 +44,7 @@ export default class Snake {
         this._SnakeIndex = idx
         this._State = 0
         this._KillCount = 0
-        this._Game = GameGlobal.Game
+        this._Game = Game.inst;
         this._Camera = camera
         this._PlayerSelf = self
         this._MapWidth = width
@@ -53,7 +53,7 @@ export default class Snake {
         this._BodyTypeList = bodyType
         this._SnakeHead = this._Game.GetFreeHead()
         this._SnakeHead.parent = parent
-        this._SnakeHead.position = pos
+        this._SnakeHead.setPosition(pos);
         this._SnakeHead.zIndex = 1;
 
         const head = this._SnakeHead.getComponent(SnakeHead);
@@ -81,7 +81,7 @@ export default class Snake {
 
         if (idx >= 10) return
 
-        this._GodSprite = GameGlobal.Game.GetFreeGodSprite()
+        this._GodSprite = Game.inst.GetFreeGodSprite()
         this._GodSprite.parent = parent
         this._GodSprite.active = false
         this._GodSprite.group = "food"

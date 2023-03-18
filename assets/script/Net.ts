@@ -1,23 +1,22 @@
-import { SignInitData, FriendInviteData, SkinData } from './DataManager'
-
+import { SignInitData, FriendInviteData, SkinData, default as DataManager } from './DataManager'
+import WeiXinPlatform from './WeiXinPlatform';
 import siteinfo from './siteinfo';
-import { UIType } from './UIType';
+import App from './App';
+import UIManager from './UIManager';
 
 const skinPrice = [0, 5e3, 8e3, 12e3, 100, 300, 600, 1e3, 2e3, 3e3, 4e3, 5e3, 6e3, 7e3, 8e3, 9e3, 1e4];
 const skinType = [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
-const { ccclass, property } = cc._decorator;
+export default class Net{
+    public COMMON_M = "aishan_txtcs";
 
-@ccclass
-export default class extends cc.Component {
-    private _DataManager = null;
-    private COMMON_M = "aishan_txtcs";
-
-    onLoad() {
-        this._DataManager = cc.find("DataManager").getComponent("DataManager")
+    private static _inst: Net = null;
+    public static get inst(){
+        if(this._inst == null) this._inst = new Net();
+        return this._inst;
     }
 
-    onEnable() {
+    constructor() {
         this.requestUserInfo()
     }
 
@@ -117,7 +116,7 @@ export default class extends cc.Component {
                     "content-type": "application/x-www-form-urlencoded"
                 },
                 success: function (e) {
-                    0 != e.data.errno && e.data.message && GameGlobal.UIManager.showMessage(e.data.message), callback(e.data.data, e.data.errno)
+                    0 != e.data.errno && e.data.message && UIManager.inst.showMessage(e.data.message), callback(e.data.data, e.data.errno)
                 },
                 fail: function (e) {
                 }
@@ -133,7 +132,7 @@ export default class extends cc.Component {
     sendTakeMsg() { }
     requestSign(session: string) {
         this.request("entry/wxapp/Sign", {m: this.COMMON_M}, {session3rd: session}, (e, t) =>{
-            const mgr = GameGlobal.DataManager;
+            const mgr = DataManager.inst;
             mgr._MyQianDaoTake = (0 === e.sign_status)
             if (e.sign_list== null) return
 
@@ -148,42 +147,34 @@ export default class extends cc.Component {
                 signData.signStatus = signList[r].sign_status
                 mgr._SignInitList.push(signData)
             }
-
-            if (0 == mgr._MyQianDaoTake) GameGlobal.UIManager.openUI(UIType.UIType_QianDao);
-            else {
-                const uiSign = GameGlobal.UIManager.getUI(UIType.UIType_QianDao);
-                uiSign && uiSign.refreshUI()
-            }
         })
     }
 
-    requestSignReward(openId: string) {
+    requestSignReward(count: number) {
         const data = {
-            session3rd: GameGlobal.WeiXinPlatform._SessionID,
-            id: openId
+            session3rd: WeiXinPlatform.inst._SessionID,
+            id: count
         }
         this.request("entry/wxapp/SignReward", {m: this.COMMON_M}, data, function (e, i) {
-            GameGlobal.UIManager.showMessage("领取成功")
-            GameGlobal.DataManager.setCurGold(e.gold)
-            GameGlobal.DataManager.setDiamond(e.diamond)
-            GameGlobal.DataManager._MyQianDaoTake = true
-            GameGlobal.UIManager.RefreshCoin();
-            const uiSign = GameGlobal.UIManager.getUI(UIType.UIType_QianDao);
-            uiSign && uiSign.refreshUI()
-            this.requestSign(GameGlobal.WeiXinPlatform._SessionID)
+            UIManager.inst.showMessage("领取成功")
+            DataManager.inst.setCurGold(e.gold)
+            DataManager.inst.setDiamond(e.diamond)
+            DataManager.inst._MyQianDaoTake = true
+            UIManager.inst.RefreshCoin();
+            this.requestSign(WeiXinPlatform.inst._SessionID)
         })
     }
 
     requestUserInfo() {
-        const gold = GameGlobal.localStorage.getItem("tcs_gold");
-        const mgr = GameGlobal.DataManager;
+        const gold = App.inst.localStorage.getItem("tcs_gold");
+        const mgr = DataManager.inst;
         gold && mgr.setCurGold(parseInt(gold));
 
-        const diamond = GameGlobal.localStorage.getItem("tcs_diamond");
+        const diamond = App.inst.localStorage.getItem("tcs_diamond");
         diamond && mgr.setDiamond(parseInt(diamond))
-        GameGlobal.UIManager.RefreshCoin();
+        UIManager.inst.RefreshCoin();
 
-        const skinIdx = GameGlobal.localStorage.getItem("tcs_skinIndex");
+        const skinIdx = App.inst.localStorage.getItem("tcs_skinIndex");
         if(skinIdx) mgr._CurMySKinIndex = parseInt(skinIdx)
         mgr._SKinDataArray = [];
 
@@ -202,7 +193,7 @@ export default class extends cc.Component {
             skinData.IsUse = true
         }
 
-        let skinJSON = GameGlobal.localStorage.getItem("tcs_skinlist");
+        let skinJSON = App.inst.localStorage.getItem("tcs_skinlist");
         if(!skinJSON) skinJSON = skinJSON = '{"skin_list":[1]}';
         const skinList = JSON.parse(skinJSON).skin_list;
 
@@ -216,7 +207,7 @@ export default class extends cc.Component {
     }
 
     requestInviteCome(openId: string) {
-        const session = GameGlobal.WeiXinPlatform._SessionID;
+        const session = WeiXinPlatform.inst._SessionID;
         if(!session) return
 
         const data = {session3rd: session,srcOpenID: openId}
@@ -226,7 +217,7 @@ export default class extends cc.Component {
     }
 
     requestInviteReward(openId: string) {
-        const session = GameGlobal.WeiXinPlatform._SessionID;
+        const session = WeiXinPlatform.inst._SessionID;
         if(!session) return
         const data = {
             session3rd: session,
@@ -238,10 +229,10 @@ export default class extends cc.Component {
     }
 
     requestFriendList() {
-        const wxp = GameGlobal.WeiXinPlatform;
+        const wxp = WeiXinPlatform.inst;
         if (wxp._SessionID && !(wxp._SessionID.length <= 0)) {
             this.request("entry/wxapp/InviteFriend", {m: this.COMMON_M}, {session3rd: wxp._SessionID}, (e, t) => {
-                const mgr = GameGlobal.DataManager;
+                const mgr = DataManager.inst;
                 mgr._FriendDataList = [];
                 for (let n = 0; n < e.length; ++n) {
                     const r = e[n],data = new FriendInviteData();
@@ -252,15 +243,14 @@ export default class extends cc.Component {
                     data.OpenID = r.openId
                     mgr._FriendDataList.push(data)
                 }
-                GameGlobal.UIManager.getUI(UIType.UIType_InviteFriend).refreshList()
             })
         }
     }
 
     requestScore(e) {
-        const wxp = GameGlobal.WeiXinPlatform;
+        const wxp = WeiXinPlatform.inst;
         if (wxp._SessionID && !(wxp._SessionID.length <= 0)) {
-            const mgr = GameGlobal.DataManager;
+            const mgr = DataManager.inst;
             if (!(Number(mgr._CurRecord) >= Number(e))) {
                 mgr._CurRecord = Number(e);
                 this.request("entry/wxapp/Record", {m: this.COMMON_M}, {
@@ -273,11 +263,10 @@ export default class extends cc.Component {
 
     requestScoreGold(len: number) {
         const score = Math.ceil(len / 1e3);
-        GameGlobal.UIManager.getUI(UIType.UIType_GameEnd).refreshRewardGold(score);
 
-        let totalGold = parseInt(GameGlobal.localStorage.getItem("tcs_gold"));
+        let totalGold = parseInt(App.inst.localStorage.getItem("tcs_gold"));
         totalGold += score;
-        GameGlobal.localStorage.setItem("tcs_gold", JSON.stringify(totalGold))
+        App.inst.localStorage.setItem("tcs_gold", JSON.stringify(totalGold))
         this.requestUserInfo()
     }
 

@@ -1,21 +1,9 @@
-const { ccclass, property } = cc._decorator;
-
-@ccclass
-export default class Game extends cc.Component {
-    @property(cc.Prefab)
-    public SnakeHeadPrefab = null;
-
-    @property(cc.Prefab)
-    public SnakeBodyPrefab = null;
-
-    @property(cc.Prefab)
-    public SnakeFoodPrefab = null;
-
-    @property(cc.Prefab)
-    public SnakeNamePrefab = null;
-
-    @property(cc.Prefab)
-    public GodSpritePrefab = null;
+export default class Game {
+    private SnakeHeadPrefab = null;
+    private SnakeBodyPrefab = null;
+    private SnakeFoodPrefab = null;
+    private SnakeNamePrefab = null;
+    private GodSpritePrefab = null;
 
     private _SnakeHeadUseList: cc.Node[] = [];
     private _SnakeHeadFreeList: cc.Node[] = [];
@@ -32,28 +20,58 @@ export default class Game extends cc.Component {
     private _SnakeGodSpriteList: cc.Node[] = [];
     private _SnakeGoldUseList: cc.Node[] = [];
 
-    onLoad() {
-        cc.game.setFrameRate(60)
-
-        for (let i = 0; i < 10; i++) {
-            this._SnakeHeadFreeList.push(cc.instantiate(this.SnakeHeadPrefab));
-            this._SnakeNameFreeList.push(cc.instantiate(this.SnakeNamePrefab));
-            this._SnakeGodSpriteList.push(cc.instantiate(this.GodSpritePrefab));
-        }
-
-        for (let i = 0; i < 300; i++) {
-            this._SnakeBodyFreeList.push(cc.instantiate(this.SnakeBodyPrefab));
-            this._SnakeFoodFreeList.push(cc.instantiate(this.SnakeFoodPrefab));
-        }
+    private static _inst: Game = null;
+    public static get inst() {
+        if (this._inst == null) this._inst = new Game();
+        return this._inst;
     }
 
-    start() {
+    private constructor() {
+        this.loadPrefab();
+
         if (!window.wx) return
         const cvs = wx.getOpenDataContext().canvas;
 
         if (!cvs) return
         cvs.width = 2 * cc.game.canvas.width
         cvs.height = 2 * cc.game.canvas.height
+    }
+
+    async loadPrefab() {
+        Promise.all([
+            this.loadRes('prefab/Food'),
+            this.loadRes('prefab/GodSprite'),
+            this.loadRes('prefab/NameNode'),
+            this.loadRes('prefab/SnakeBody'),
+            this.loadRes('prefab/SnakeHead')
+        ]).then((prefabs: cc.Prefab[]) => {
+            this.SnakeFoodPrefab = prefabs[0];
+            this.GodSpritePrefab = prefabs[1];
+            this.SnakeNamePrefab = prefabs[2];
+            this.SnakeBodyPrefab = prefabs[3];
+            this.SnakeHeadPrefab = prefabs[4];
+            
+            for (let i = 0; i < 10; i++) {
+                this._SnakeHeadFreeList.push(cc.instantiate(this.SnakeHeadPrefab));
+                this._SnakeNameFreeList.push(cc.instantiate(this.SnakeNamePrefab));
+                this._SnakeGodSpriteList.push(cc.instantiate(this.GodSpritePrefab));
+            }
+    
+            for (let i = 0; i < 300; i++) {
+                this._SnakeBodyFreeList.push(cc.instantiate(this.SnakeBodyPrefab));
+                this._SnakeFoodFreeList.push(cc.instantiate(this.SnakeFoodPrefab));
+            }
+        }).catch(cc.error)
+
+    }
+
+    async loadRes(path: string): Promise<cc.Prefab> {
+        return new Promise((resolve, reject) => {
+            cc.resources.load(path, (err: Error, asset: cc.Prefab) => {
+                if (err) reject(err);
+                else resolve(asset)
+            })
+        })
     }
 
     GetFreeHead() {
@@ -102,7 +120,7 @@ export default class Game extends cc.Component {
             this._SnakeFoodFreeList.push(this._SnakeFoodUseList[idx])
             this._SnakeFoodUseList[idx].parent = null;
         }
-        
+
         this._SnakeFoodUseList.splice(0)
     }
 

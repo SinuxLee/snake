@@ -1,4 +1,6 @@
-import { UIType } from './UIType';
+import { UIType } from './UIManager';
+import SoundManager from './SoundManager';
+import UIManager from './UIManager';
 
 const { ccclass, property } = cc._decorator;
 
@@ -19,8 +21,8 @@ export default class extends cc.Component {
     }
 
     onEnable() {
-        this._bgMusicVolSlider.progress = GameGlobal.SoundManager._OldVolume;
-        this._soundVolSlider.progress = GameGlobal.SoundManager._OldSoundVolume;
+        this._bgMusicVolSlider.progress = SoundManager.inst._OldVolume;
+        this._soundVolSlider.progress = SoundManager.inst._OldSoundVolume;
     }
 
     start() {
@@ -34,25 +36,25 @@ export default class extends cc.Component {
     }
 
     onClose(event: cc.Event.EventTouch) {
-        GameGlobal.UIManager.closeUI(UIType.UIType_Setting)
+        UIManager.inst.closeUI(UIType.UIType_Setting)
     }
 
     onBlock(event: cc.Event.EventTouch) {
     }
 
     onBgMusicCheck() {
-        GameGlobal.SoundManager.enableBgMusic(this._bgMusicCheck.isChecked)
+        SoundManager.inst.enableBgMusic(this._bgMusicCheck.isChecked)
     }
 
     onSoundCheck() {
-        GameGlobal.SoundManager.enableSound(this._soundCheck.isChecked)
+        SoundManager.inst.enableSound(this._soundCheck.isChecked)
     }
 
     onMusicSlider() {
-        GameGlobal.SoundManager.setMusicVolume(this._bgMusicVolSlider.progress)
+        SoundManager.inst.setMusicVolume(this._bgMusicVolSlider.progress)
     }
 
     onSoundSlider() {
-        GameGlobal.SoundManager.setSoundVolume(this._soundVolSlider.progress)
+        SoundManager.inst.setSoundVolume(this._soundVolSlider.progress)
     }
 }

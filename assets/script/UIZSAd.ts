@@ -1,4 +1,5 @@
 import UIZSAdItem from './UIZSAdItem';
+import Net from './Net';
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -28,7 +29,7 @@ export default class extends cc.Component {
         actSeq = cc.sequence(rotate1, rotate2);
         this.AdItemRight.node.runAction(actSeq.repeatForever())
 
-        GameGlobal.Net.requestZSAd(() =>{
+        Net.inst.requestZSAd(() =>{
             for (let t = 0; t < this.AdItemArray.length; ++t) {
                 this.AdItemArray[t].initAd(t)
             }

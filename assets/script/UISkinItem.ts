@@ -1,4 +1,6 @@
-import { UIType } from './UIType';
+import { UIType } from './UIManager';
+import {RewardType} from './DataManager';
+import UIManager from './UIManager';
 
 const { ccclass, property } = cc._decorator;
 
@@ -43,11 +45,11 @@ export default class extends cc.Component {
 
     setCostType(type: number) {
         let frame = ""
-        if (type == GameRewardType.RT_GOLD) {
+        if (type == RewardType.RT_GOLD) {
             frame = "jinbi";
-        } else if (type == GameRewardType.RT_DIAMOND) {
+        } else if (type == RewardType.RT_DIAMOND) {
             frame = "zuan";
-        } else if (type == GameRewardType.RT_FLOWER) {
+        } else if (type == RewardType.RT_FLOWER) {
             frame = "hua";
         }
 
@@ -70,7 +72,7 @@ export default class extends cc.Component {
     onSkinClick(event: cc.Event.EventTouch) {
         event.stopPropagation();
         const tag = event.target.taggame;
-        const skin = GameGlobal.UIManager.getUI(UIType.UIType_Skin);
+        const skin = UIManager.inst.getUI(UIType.UIType_Skin);
         if (skin) skin.setCurSelectSkin(tag)
     }
 }

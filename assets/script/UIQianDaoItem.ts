@@ -1,3 +1,4 @@
+import {RewardType} from './DataManager'
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -20,13 +21,13 @@ export default class extends cc.Component {
     setParam (day: number, type: number, count: number) {
         let itemName = "";
         let frame = "";
-        if (type == GameRewardType.RT_GOLD) {
+        if (type == RewardType.RT_GOLD) {
             frame = "jinbi";
             itemName = "金币"
-        } else if (type == GameRewardType.RT_DIAMOND) {
+        } else if (type == RewardType.RT_DIAMOND) {
             frame = "zuan";
             itemName = "钻石"
-        } else if (type == GameRewardType.RT_FLOWER) {
+        } else if (type == RewardType.RT_FLOWER) {
             frame = "hua";
             itemName = "花"
         }

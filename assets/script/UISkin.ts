@@ -1,5 +1,9 @@
-import { UIType } from './UIType';
+import { UIType } from './UIManager';
 import UISkinItem from './UISkinItem';
+import {RewardType, default as DataManager} from './DataManager';
+import Net from './Net';
+import UIManager from './UIManager';
+import App from './App';
 
 const { ccclass, property } = cc._decorator;
 
@@ -59,7 +63,7 @@ export default class extends cc.Component {
     }
 
     updateSkin() {
-        const mgr = GameGlobal.DataManager;
+        const mgr = DataManager.inst;
         this._SkinSpritePrefabCache.forEach((cache,idx)=>{
             const skin = mgr._SKinDataArray[idx]
             if (skin == null) return;
@@ -75,31 +79,31 @@ export default class extends cc.Component {
 
     onUseBtn(event: cc.Event.EventTouch) {
         event.stopPropagation();
-        const mgr = GameGlobal.DataManager;
+        const mgr = DataManager.inst;
         if (this._CurSlectSkinIndex >= mgr._SKinDataArray.length) return
 
         const skin = mgr._SKinDataArray[this._CurSlectSkinIndex]
         if (!skin.IsOwn) return
 
-        GameGlobal.localStorage.setItem("tcs_skinIndex", skin.ID - 1)
-        GameGlobal.Net.requestUserInfo()
-        GameGlobal.DataManager._CurSelectMode = 0
-        GameGlobal.UIManager.closeUI(UIType.UIType_Skin)
-        GameGlobal.UIManager.openUI(UIType.UIType_GameLoading)
+        App.inst.localStorage.setItem("tcs_skinIndex", skin.ID - 1)
+        Net.inst.requestUserInfo()
+        DataManager.inst._CurSelectMode = 0
+        UIManager.inst.closeUI(UIType.UIType_Skin)
+        UIManager.inst.openUI(UIType.UIType_GameLoading)
     }
 
     onBuyBtn(event: cc.Event.EventTouch) {
         event.stopPropagation();
-        const mgr = GameGlobal.DataManager;
+        const mgr = DataManager.inst;
         if (this._CurSlectSkinIndex >= mgr._SKinDataArray.length) return
 
         let item = mgr._SKinDataArray[this._CurSlectSkinIndex]
-        if (item.Type == GameRewardType.RT_GOLD) {
-            if (item.Price > mgr.CurGold) return GameGlobal.UIManager.showMessage("金币不足，无法购买");
-            GameGlobal.localStorage.setItem("tcs_gold", mgr.CurGold - item.Price)
-        } else if (item.Type == GameRewardType.RT_DIAMOND) {
-            if (item.Price > mgr.CurDiamond) return GameGlobal.UIManager.showMessage("钻石不足，无法购买");
-            GameGlobal.localStorage.setItem("tcs_diamond", mgr.CurDiamond - item.Price)
+        if (item.Type == RewardType.RT_GOLD) {
+            if (item.Price > mgr.CurGold) return UIManager.inst.showMessage("金币不足，无法购买");
+            App.inst.localStorage.setItem("tcs_gold", mgr.CurGold - item.Price)
+        } else if (item.Type == RewardType.RT_DIAMOND) {
+            if (item.Price > mgr.CurDiamond) return UIManager.inst.showMessage("钻石不足，无法购买");
+            App.inst.localStorage.setItem("tcs_diamond", mgr.CurDiamond - item.Price)
         }
 
         const skinList = []
@@ -111,8 +115,8 @@ export default class extends cc.Component {
         skinList.push(this._CurSlectSkinIndex + 1);
 
         const data = JSON.stringify({ skin_list: skinList });
-        GameGlobal.localStorage.setItem("tcs_skinlist", data);
-        GameGlobal.Net.requestUserInfo();
+        App.inst.localStorage.setItem("tcs_skinlist", data);
+        Net.inst.requestUserInfo();
     }
 
     setCurSelectSkin(idx: number) {
@@ -128,7 +132,7 @@ export default class extends cc.Component {
         frame = this.BodyAtlas.getSpriteFrame(`body_${idx + 1}`)
         this.PreviewBodyList.forEach(body => body.spriteFrame = frame);
 
-        const mgr = GameGlobal.DataManager;
+        const mgr = DataManager.inst;
         if (idx >= mgr._SKinDataArray.length) return
 
         const skin = mgr._SKinDataArray[idx];
@@ -148,6 +152,6 @@ export default class extends cc.Component {
 
     onCloseBtn(event: cc.Event.EventTouch) {
         event.stopPropagation()
-        GameGlobal.UIManager.closeUI(UIType.UIType_Skin)
+        UIManager.inst.closeUI(UIType.UIType_Skin)
     }
 }

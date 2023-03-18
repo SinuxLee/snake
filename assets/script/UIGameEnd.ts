@@ -1,4 +1,6 @@
-import { UIType } from './UIType';
+import { UIType } from './UIManager';
+import WeiXinPlatform from './WeiXinPlatform';
+import UIManager from './UIManager';
 
 const { ccclass, property } = cc._decorator;
 
@@ -34,7 +36,7 @@ export default class extends cc.Component {
         this._btnBack.node.active = false
         this._btnAgain.node.active = false;
 
-        const gameUI = GameGlobal.UIManager.getUI(UIType.UIType_Game);
+        const gameUI = UIManager.inst.getUI(UIType.UIType_Game);
         this._labelRewardGold.string = ""
         this._labelLen.string = gameUI.getMySnakeLen().toString()
         this._labelKill.string = gameUI.getMySnakeKill().toString()
@@ -45,7 +47,7 @@ export default class extends cc.Component {
     }
 
     onBack() {
-        const mgr = GameGlobal.UIManager;
+        const mgr = UIManager.inst;
         mgr.closeUI(UIType.UIType_GameEnd)
         mgr.closeUI(UIType.UIType_Game)
         mgr.openUI(UIType.UIType_Hall)
@@ -53,12 +55,12 @@ export default class extends cc.Component {
     }
 
     onAgain() {
-        const mgr = GameGlobal.UIManager;
+        const mgr = UIManager.inst;
         mgr.closeUI(UIType.UIType_GameEnd)
         mgr.getUI(UIType.UIType_Game).resetGameEnd()
     }
 
     onShareBtn() {
-        GameGlobal.WeiXinPlatform.showShare()
+        WeiXinPlatform.inst.showShare()
     }
 }

@@ -1,6 +1,3 @@
-import { UIType } from './UIType';
-const { ccclass, property } = cc._decorator;
-
 export class SignInitData{
     public signDay = 0;
     public signReward = 0;
@@ -24,84 +21,67 @@ export class SkinData{
     public IsUse = false;
 }
 
-enum RewardType{
+export enum RewardType{
     RT_GOLD = 0,
     RT_DIAMOND = 1,
     RT_FLOWER = 2
 }
 
-// TODO: 改为 enum
-window.GameRewardType = {
-    RT_GOLD: 0,
-    RT_DIAMOND: 1,
-    RT_FLOWER: 2
-}
-
-@ccclass
-export default class extends cc.Component {
-    @property(cc.Integer)
+export default class DataManager{
     public CurScore = 0;
-
-    @property(cc.Integer)
     public CurGold = 0;
-
-    @property(cc.Integer)
     public CurFlower = 0;
-
-    @property(cc.Integer)
     public CurDiamond = 0;
-
-    @property(cc.Boolean)
     public IsShareRelive = false;
 
-    private VideoAdid = "adunit-bf61185a259df4c2"
+    public VideoAdid = "adunit-bf61185a259df4c2"
     private BannerAdid1 = "adunit-84752a29a640a476"
     private BannerAdid2 = "adunit-cb8e21a61e779439"
     private AppID = "wxf6746ff760dc4257"
     private _ShareReliveCount = 0
-    private _MyAvatarURL = ""
-    private _MyNickName = ""
+    public _MyAvatarURL = ""
+    public _MyNickName = ""
     private _Province = 0
     private _AllLinks = []
-    private _CurSelectMode = 0
-    private _FriendDataList = []
-    private _MyQianDaoCount = 0
-    private _MyQianDaoTake = false
-    private _SignInitList = []
+    public _CurSelectMode = 0
+    public _FriendDataList = []
+    public _MyQianDaoCount = 0
+    public _MyQianDaoTake = false
+    public _SignInitList = []
     private _FuHuoCostGold = 0
-    private _LinkIconURL = ""
-    private _LinkAppID = ""
-    private _LinkPath = ""
-    private _LinkExtra = ""
+    public _LinkIconURL = ""
+    public _LinkAppID = ""
+    public _LinkPath = ""
+    public _LinkExtra = ""
     private _ShareTitle = ""
     private _ShareImageUrl = ""
     private _ShareContent = ""
-    private _ShareReward = 5
+    public _ShareReward = 5
     private _IsShareRelive = true
-    private _CurShareReliveCount = 0
-    private _CurZSAdData = null
-    private _SKinDataArray = []
-    private _CurMySKinIndex = 0
-    private _CurRecord = 0
+    public _CurShareReliveCount = 0
+    public _CurZSAdData = null
+    public _SKinDataArray = []
+    public _CurMySKinIndex = 0
+    public _CurRecord = 0
     private _GameStartTime = 0
 
-    onEnable() {
+    private static _inst: DataManager = null;
+    public static get inst(){
+        if(this._inst == null) this._inst = new DataManager();
+        return this._inst;
+    }
+
+    constructor() {
         if (window.wx == null) return
 
         wx.getStorage({
             key: "wxData",
             success: (t) => {
                 this._MyAvatarURL = t.data.avaUrl
-                this._MyNickName = t.data.nick
-                GameGlobal.UIManager.getUI(UIType.UIType_Hall).updateMyInfo()
+                this._MyNickName = t.data.nick;
             },
-            fail: () => {
-            }
+            fail: () => {}
         })
-    }
-
-    start() {
-        this._CurSelectMode = 0
     }
 
     getCurScore() {

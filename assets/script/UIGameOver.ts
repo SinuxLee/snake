@@ -1,4 +1,8 @@
-import { UIType } from './UIType';
+import { UIType } from './UIManager';
+import DataManager from './DataManager';
+import Net from './Net';
+import WeiXinPlatform from './WeiXinPlatform';
+import UIManager from './UIManager';
 
 const { ccclass, property } = cc._decorator;
 
@@ -39,12 +43,12 @@ export default class extends cc.Component {
         this.schedule(this.onTimer, 1)
         if (this._CurVideoAd == null && window.wx) {
             this._CurVideoAd = wx.createRewardedVideoAd({
-                adUnitId: GameGlobal.DataManager.VideoAdid
+                adUnitId: DataManager.inst.VideoAdid
             })
         }
         this.AgainBtn.node.active = false
         this.BackBtn.node.active = false;
-        const mgr = GameGlobal.DataManager;
+        const mgr = DataManager.inst;
         if (mgr._CurShareReliveCount >= mgr._ShareReliveCount) {
             this.VideoReliveBtn.node.active = true
             this.ReliveBtn.node.active = false
@@ -70,22 +74,16 @@ export default class extends cc.Component {
 
     onRelive(e) {
         e.stopPropagation();
-        var t = GameGlobal.DataManager.getCurGold(),
-            i = GameGlobal.DataManager.getFuHuoGold();
-        if (Number(t) < Number(i)) GameGlobal.UIManager.showMessage("金币不足，无法复活");
+        var t = DataManager.inst.getCurGold(),
+            i = DataManager.inst.getFuHuoGold();
+        if (Number(t) < Number(i)) UIManager.inst.showMessage("金币不足，无法复活");
         else {
-            var r = GameGlobal.WeiXinPlatform;
-            if (r._SessionID && !(r._SessionID.length <= 0)) {
-                var a = GameGlobal.Net;
-                a.request("entry/wxapp/Revive", {
-                    m: a.COMMON_M
-                }, {
-                    session3rd: r._SessionID
-                }, function (e, t) {
-                    var i = GameGlobal.UIManager;
-                    i.closeUI(UIType.UIType_GameOver)
-                    i.getUI(UIType.UIType_Game).reliveResetGame()
-                    a.requestUserInfo()
+            if (WeiXinPlatform.inst._SessionID && !(WeiXinPlatform.inst._SessionID.length <= 0)) {
+                Net.inst.request("entry/wxapp/Revive", {m: Net.inst.COMMON_M}, {
+                    session3rd: WeiXinPlatform.inst._SessionID}, (e, t) =>{
+                    UIManager.inst.closeUI(UIType.UIType_GameOver)
+                    UIManager.inst.getUI(UIType.UIType_Game).reliveResetGame()
+                    Net.inst.requestUserInfo()
                 })
             }
         }
@@ -93,10 +91,10 @@ export default class extends cc.Component {
 
     onShareRelieve() {
         this._IsPause = true;
-        GameGlobal.WeiXinPlatform.showShare((e) => {
+        WeiXinPlatform.inst.showShare(() => {
             this._ShareCount++;
             this._IsPause = false;
-            const mgr = GameGlobal.UIManager;
+            const mgr = UIManager.inst;
             mgr.closeUI(UIType.UIType_GameOver)
             mgr.getUI(UIType.UIType_Game).reliveResetGame()
             window.wx && wx.triggerGC()
@@ -121,9 +119,8 @@ export default class extends cc.Component {
 
                 this._CurVideoAd.onClose((e) => {
                     if (e && e.isEnded || void 0 === e) {
-                        var i = GameGlobal.UIManager;
-                        i.closeUI(UIType.UIType_GameOver)
-                        i.getUI(UIType.UIType_Game).reliveResetGame()
+                        UIManager.inst.closeUI(UIType.UIType_GameOver)
+                        UIManager.inst.getUI(UIType.UIType_Game).reliveResetGame()
                     }
                     this._IsPause = false
                 })
@@ -141,9 +138,8 @@ export default class extends cc.Component {
             this._CurVideoAd.onPlayFinish(() => {
                 BK.Script.log(1, 1, "onPlayFinish")
                 this._IsPause = false;
-                var e = GameGlobal.UIManager;
-                e.closeUI(UIType.UIType_GameOver)
-                e.getUI(UIType.UIType_Game).reliveResetGame()
+                UIManager.inst.closeUI(UIType.UIType_GameOver)
+                UIManager.inst.getUI(UIType.UIType_Game).reliveResetGame()
             })
 
             this._CurVideoAd.onError((e) => {
@@ -160,9 +156,8 @@ export default class extends cc.Component {
 
     onBack(event: cc.Event.EventTouch) {
         event.stopPropagation();
-        const mgr = GameGlobal.UIManager;
-        mgr.closeUI(UIType.UIType_GameOver)
-        mgr.getUI(UIType.UIType_Game).setGameState(4)
+        UIManager.inst.closeUI(UIType.UIType_GameOver)
+        UIManager.inst.getUI(UIType.UIType_Game).setGameState(4)
     }
 
     onAgain(event: cc.Event.EventTouch) {
@@ -176,9 +171,8 @@ export default class extends cc.Component {
 
         if (this._CurTimeCount <= 0) {
             this.unscheduleAllCallbacks();
-            const mgr = GameGlobal.UIManager;
-            mgr.closeUI(UIType.UIType_GameOver)
-            mgr.getUI(UIType.UIType_Game).setGameState(4)
+            UIManager.inst.closeUI(UIType.UIType_GameOver)
+            UIManager.inst.getUI(UIType.UIType_Game).setGameState(4)
         }
     }
 

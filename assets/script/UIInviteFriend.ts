@@ -1,5 +1,8 @@
-import { UIType } from './UIType';
+import { UIType } from './UIManager';
 import UIInviteFriendItem from './UIInviteFriendItem';
+import Net from './Net';
+import WeiXinPlatform from './WeiXinPlatform';
+import UIManager from './UIManager';
 
 const { ccclass, property } = cc._decorator;
 
@@ -20,7 +23,7 @@ export default class extends cc.Component {
 
     onEnable() {
         this.FriendCtrlArray.forEach(item => item.resetShow());
-        GameGlobal.Net.requestFriendList()
+        Net.inst.requestFriendList()
     }
 
     start() {
@@ -35,16 +38,15 @@ export default class extends cc.Component {
 
     onFriendInvite(event: cc.Event.EventTouch) {
         event.stopPropagation();
-        const wx = GameGlobal.WeiXinPlatform;
-
+        const wx = WeiXinPlatform.inst;
         if (wx._WXOpenID && wx._WXOpenID.length > 0) {
-            GameGlobal.WeiXinPlatform.showShare(() => { }, () => { })
+            WeiXinPlatform.inst.showShare();
         }
     }
 
     onClose(event: cc.Event.EventTouch) {
         event.stopPropagation()
-        GameGlobal.UIManager.closeUI(UIType.UIType_InviteFriend)
+        UIManager.inst.closeUI(UIType.UIType_InviteFriend)
     }
 
     onBlock(event: cc.Event.EventTouch) {

@@ -1,3 +1,6 @@
+import DataManager from "./DataManager";
+import Net from "./Net";
+
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -14,7 +17,7 @@ export default class extends cc.Component {
     initAd(idx: number) {
         this._Index = idx;
         this._IsBorderAd = false;
-        const adData = GameGlobal.DataManager._CurZSAdData
+        const adData = DataManager.inst._CurZSAdData
         if (this._Index >= adData.app_link_list.length) return
 
         this.node.active = true
@@ -33,7 +36,7 @@ export default class extends cc.Component {
     initBorderAd(e) {
         this._IsBorderAd = true;
         this._Index = e;
-        const adData = GameGlobal.DataManager._CurZSAdData;
+        const adData = DataManager.inst._CurZSAdData;
         if (this._Index >= adData.app_cb_list.length) return
 
         this.node.active = true
@@ -53,20 +56,20 @@ export default class extends cc.Component {
         event.stopPropagation()
         if (window.wx == null) return;
 
-        const adData = GameGlobal.DataManager._CurZSAdData;
+        const adData = DataManager.inst._CurZSAdData;
         if (false == this._IsBorderAd) {
             if (this._Index < adData.app_link_list.length) {
                 const item = adData.app_link_list[this._Index]
                 if (item.appid && item.link_path) {
                     wx.navigateToMiniProgram({ appId: adData.appid, path: adData.link_path })
-                    GameGlobal.Net.requestZSAdCollect(adData.app_id)
+                    Net.inst.requestZSAdCollect(adData.app_id)
                 }
             }
         } else if (this._Index < adData.app_cb_list.length) {
             const item = adData.app_cb_list[this._Index]
             if (item.appid && item.link_path) {
                 wx.navigateToMiniProgram({ appId: adData.appid, path: adData.link_path })
-                GameGlobal.Net.requestZSAdCollect(adData.app_id)
+                Net.inst.requestZSAdCollect(adData.app_id)
             }
         }
     }

@@ -1,20 +1,28 @@
-import { UIType } from './UIType';
+import { UIType } from './UIManager';
+import DataManager from './DataManager';
+import Net from './Net';
+import UIManager from './UIManager';
+import App from './App';
 
-const { ccclass, property } = cc._decorator;
-@ccclass
-export default class extends cc.Component {
+export default class WeiXinPlatform{
     private _WXOpenID = "";
-    private _SessionID = "";
+    public _SessionID = "";
     private _CurQuery = "";
     private _ShareCount = 0;
     private _ShareGroupArray = [];
     private _LastShareDate = 0;
 
+    private static _inst: WeiXinPlatform = null;
+    public static get inst(){
+        if(this._inst == null) this._inst = new WeiXinPlatform();
+        return this._inst;
+    }
+
     getWXOpenID() {
         return this._WXOpenID
     }
 
-    start() {
+    private constructor() {
         if (cc.sys.platform === cc.sys.WECHAT_GAME) {
             if (window.wx == null) return;
             wx.onShow(this.onWeiXinShow);
@@ -24,15 +32,15 @@ export default class extends cc.Component {
             this.wxLogin()
         } else if (cc.sys.platform === cc.sys.QQ_PLAY) {
             this._WXOpenID = GameStatusInfo.openId;
-            var i = GameGlobal.DataManager;
+            var mgr = DataManager.inst;
             BK.MQQ.Account.getNick(GameStatusInfo.openId, function (e, t) {
-                BK.Script.log(0, 0, "Nick :" + t), i._MyNickName = t
+                BK.Script.log(0, 0, "Nick :" + t), mgr._MyNickName = t
             }), BK.MQQ.Account.getHeadEx(GameStatusInfo.openId, function (e, t) {
-                i._MyAvatarURL = t;
-                GameGlobal.UIManager.getUI(UIType.UIType_Hall).updateMyInfo()
+                mgr._MyAvatarURL = t;
+                UIManager.inst.getUI(UIType.UIType_Hall).updateMyInfo()
             });
-            t = GameGlobal.localStorage.getItem("s3id");
-            t ? (this._SessionID = t, GameGlobal.Net.requestUserInfo(), GameGlobal.Net.requestSign(this._SessionID), this.checkQQIsInviteReq()) : (this.qqLogin())
+            t = App.inst.localStorage.getItem("s3id");
+            t ? (this._SessionID = t, Net.inst.requestUserInfo(), Net.inst.requestSign(this._SessionID), this.checkQQIsInviteReq()) : (this.qqLogin())
         }
     }
 
@@ -43,13 +51,13 @@ export default class extends cc.Component {
         if (nickName) {
             window.playname = nickName
             window.playimg = cc.sys.localStorage.getItem("usernickimg")
-            GameGlobal.DataManager._MyNickName = nickName
-            GameGlobal.DataManager._MyAvatarURL = window.playimg
+            DataManager.inst._MyNickName = nickName
+            DataManager.inst._MyAvatarURL = window.playimg
             window.mainhall.updateMyInfo()
             return;
         }
 
-        GameGlobal.UIManager.showMask(true);
+        UIManager.inst.showMask(true);
         const width = wx.getSystemInfoSync().windowWidth;
         const height = wx.getSystemInfoSync().windowHeight;
         const wxButton = wx.createUserInfoButton({
@@ -72,7 +80,7 @@ export default class extends cc.Component {
         window.wxbutton = wxButton
         wxButton.onTap(() => {
             wxButton.hide()
-            GameGlobal.UIManager.showMask(false);
+            UIManager.inst.showMask(false);
             wx.login({
                 success: (rsp) => {
                     var t = [];
@@ -90,8 +98,8 @@ export default class extends cc.Component {
                             cc.sys.localStorage.setItem("usernickname", info.nickName)
                             cc.sys.localStorage.setItem("usernickuserid", window.userid)
                             cc.sys.localStorage.setItem("usernickimg", window.playimg)
-                            GameGlobal.DataManager._MyNickName = window.playname
-                            GameGlobal.DataManager._MyAvatarURL = window.playimg
+                            DataManager.inst._MyNickName = window.playname
+                            DataManager.inst._MyAvatarURL = window.playimg
                             window.mainhall.updateMyInfo()
                         },
                         fail: () => {
@@ -114,15 +122,15 @@ export default class extends cc.Component {
         BK.QQ.fetchOpenKey((t, i, n) => {
             if (0 == t) {
                 var r = n.openKey;
-                GameGlobal.Net.request("entry/wxapp/login", { m: GameGlobal.Net.COMMON_M }, {
+                Net.inst.request("entry/wxapp/login", { m: Net.inst.COMMON_M }, {
                     openkey: r,
                     openid: GameStatusInfo.openId
                 }, (t) => {
-                    t && (GameGlobal.localStorage.setItem("s3id", t.session3rd),
+                    t && (App.inst.localStorage.setItem("s3id", t.session3rd),
                         this._SessionID = t.session3rd,
-                        GameGlobal.Net.requestZSShare(),
-                        GameGlobal.Net.requestUserInfo(),
-                        GameGlobal.Net.requestSign(this._SessionID),
+                        Net.inst.requestZSShare(),
+                        Net.inst.requestUserInfo(),
+                        Net.inst.requestSign(this._SessionID),
                         this.checkQQIsInviteReq())
                 })
             }
@@ -137,8 +145,8 @@ export default class extends cc.Component {
                 wx.getUserInfo({
                     withCredentials: true,
                     success: (r) => {
-                        GameGlobal.Net.request("entry/wxapp/login", {
-                            m: GameGlobal.Net.COMMON_M
+                        Net.inst.request("entry/wxapp/login", {
+                            m: Net.inst.COMMON_M
                         }, {
                             code: i.code,
                             encryptedData: r.encryptedData,
@@ -149,7 +157,7 @@ export default class extends cc.Component {
                             wx.setStorageSync("s3id", i.session3rd)
                             this._WXOpenID = r
                             this._SessionID = i.session3rd;
-                            var a = GameGlobal.DataManager;
+                            var a = DataManager.inst;
                             a._MyAvatarURL = i.userInfo.avatarUrl
                             a._MyNickName = i.userInfo.nickName
                             a._Province = i.userInfo.province
@@ -161,8 +169,8 @@ export default class extends cc.Component {
                                     avaUrl: a._MyAvatarURL
                                 }
                             })
-                            GameGlobal.UIManager.getUI(UIType.UIType_Hall).updateMyInfo()
-                            GameGlobal.Net.requestUserInfo()
+                            UIManager.inst.getUI(UIType.UIType_Hall).updateMyInfo()
+                            Net.inst.requestUserInfo()
                         })
                     },
                     fail: () => {
@@ -187,7 +195,7 @@ export default class extends cc.Component {
     onWXShare() {
         if (window.wx == null || this._WXOpenID == null) return;
         const param = "srcOpenID=" + this._WXOpenID;
-        const mgr = GameGlobal.DataManager;
+        const mgr = DataManager.inst;
         wx.onShareAppMessage( () =>{
             return {
                 title: mgr.getShareTitle(),
@@ -198,7 +206,7 @@ export default class extends cc.Component {
     }
 
     checkInviteAndRequest(e) {
-        e && e.srcOpenID && GameGlobal.Net.requestInviteCome(e.srcOpenID)
+        e && e.srcOpenID && Net.inst.requestInviteCome(e.srcOpenID)
     }
 
     checkQQIsInviteReq() {
@@ -206,17 +214,16 @@ export default class extends cc.Component {
             var e = GameStatusInfo.gameParam.split("=");
             if (e && e.length >= 2) {
                 var t = e[1];
-                t && GameGlobal.Net.requestInviteCome(t)
+                t && Net.inst.requestInviteCome(t)
             }
         }
     }
 
     onWeiXinShow(e) {
-        var t = GameGlobal.WeiXinPlatform;
-        e.query && t.checkInviteAndRequest(e.query)
+        e.query && WeiXinPlatform.inst.checkInviteAndRequest(e.query)
     }
 
-    showShare(e, t) {
+    showShare() {
         cc.sys.platform === cc.sys.WECHAT_GAME && wx.shareAppMessage({
             title: "",
             imageUrl: "",

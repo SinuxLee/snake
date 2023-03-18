@@ -1,4 +1,6 @@
-import { UIType } from './UIType';
+import { UIType } from './UIManager';
+import DataManager from './DataManager';
+import UIManager from './UIManager';
 
 const { ccclass, property } = cc._decorator;
 
@@ -36,7 +38,7 @@ export default class extends cc.Component {
         event.stopPropagation();
         if (window.wx == null) return
 
-        const mgr = GameGlobal.DataManager;
+        const mgr = DataManager.inst;
         wx.shareAppMessage({
             title: mgr.getShareTitle(),
             imageUrl: mgr.getShareImage(),
@@ -76,6 +78,6 @@ export default class extends cc.Component {
 
     onCloseBtn (event: cc.Event.EventTouch) {
         event.stopPropagation()
-        GameGlobal.UIManager.closeUI(UIType.UIType_HallInvite)
+        UIManager.inst.closeUI(UIType.UIType_HallInvite)
     }
 }
