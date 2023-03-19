@@ -1,8 +1,8 @@
 import SnakeBody from './SnakeBody'
 import Food from './Food'
-import Game from './Game'
-import Snake from './Snake'
-import { UIType } from './UIType'
+import Game from './logic/Game'
+import Snake from './logic/Snake'
+import { UIType, default as UIManager } from './ui/UIManager'
 
 const { ccclass, property } = cc._decorator;
 
@@ -18,7 +18,7 @@ export default class SnakeHead extends cc.Component {
 
     onLoad() {
         if(SnakeHead._atlasLen < 0) SnakeHead._atlasLen = this.Atlas.getSpriteFrames.length;
-        this._Game = GameGlobal.Game
+        this._Game = Game.inst
     }
 
     setType(type: number) {
@@ -62,7 +62,7 @@ export default class SnakeHead extends cc.Component {
                     const weight = other.node.getComponent(Food).getAddWeight();
                     this._Snake.addWeight(weight)
                 }
-                const gameUI = GameGlobal.UIManager.getUI(UIType.UIType_Game);
+                const gameUI = UIManager.inst.getUI(UIType.UIType_Game);
                 gameUI && (gameUI.onSnakeHitFood(this._Snake), gameUI.checkAddFood())
             }
         } else if (1e3 == tag) {
