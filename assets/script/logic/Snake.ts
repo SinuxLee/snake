@@ -205,20 +205,28 @@ export default class Snake {
 
             const len = this._HeadBodyList.length;
             freeBody.parent = this._SnakeHead.parent;
+            freeBody.zIndex = -len;
+            freeBody.group = "body";
+
+            const newType = Math.floor(len / 3) % 2;
             const body = freeBody.getComponent(SnakeBody);
             body.reset()
             body.setSnake(this)
             body.setBodyIndex(len)
             body.setMoveSpeed(this._MoveSpeed)
-            freeBody.zIndex = -len, freeBody.group = "body";
+            body.setType(this._BodyTypeList[newType]);
 
-            var s = Math.floor(len / 3) % 2;
-            body.setType(this._BodyTypeList[s]);
-            var c = this._HeadBodyList[len - 1],
-                f = this._HeadBodyList[len - 2],
-                h = c.position.sub(f.position);
-            c && f && (freeBody.position = c.position.add(h)), this._HeadBodyList.push(freeBody);
-            for (var d = 0; d < this._BodySpace; ++d) this._MovePath.push(c.position.add(h.normalize().mul(d + 1)))
+            const lastBody = this._HeadBodyList[len - 1];
+            const secondLastBody = this._HeadBodyList[len - 2];
+            const deltaPos = lastBody.position.sub(secondLastBody.position);
+
+            freeBody.position = lastBody.position.add(deltaPos);
+            this._HeadBodyList.push(freeBody);
+
+            for (var d = 0; d < this._BodySpace; ++d) {
+                const movePath = lastBody.getPosition().add(deltaPos.normalize().mul(d + 1))
+                this._MovePath.push(movePath)
+            }
         }
     }
 
@@ -261,7 +269,8 @@ export default class Snake {
     changeAI(aiType: number, destPos: cc.Vec2 = cc.Vec2.ZERO) {
         if (this._CurAIType == aiType && (6 == aiType || 7 == aiType)) return
 
-        if (this._CurAIType = aiType, 0 == this._CurAIType) {
+        this._CurAIType = aiType;
+        if (0 == this._CurAIType) {
             this._CurAITimer = 2.5 + 2 * Math.random();
         } else if (1 == this._CurAIType) {
             this._CurAITimer = 3 + 2 * Math.random()
@@ -284,7 +293,6 @@ export default class Snake {
             this._CurTargetChangeDir = this.FixDir(this._CurTargetDestDir.sub(this._MoveVec)).normalize()
             this._CurAITimer = 3 + 2 * Math.random()
         }
-
     }
 
     FixDir(pos: cc.Vec2) {
@@ -292,18 +300,25 @@ export default class Snake {
     }
 
     updateGodSpritePos() {
-        let headX = this._SnakeHead.x;
-        let headY = this._SnakeHead.y;
+        const { x, y } = this._SnakeHead;
+        let minX = x, maxX = x;
+        let minY = y, maxY = y;
         const len = this._HeadBodyList.length
         for (let a = 0; a < len; ++a) {
             const node = this._HeadBodyList[a];
-            if (node.x != headX) headX = node.x;
-            if (node.y != headY) headY = node.y;
+            if (node.x < minX) minX = node.x;
+            if (node.x > maxX) maxX = node.x;
+            if (node.y < minY) minY = node.y;
+            if (node.y > maxY) maxY = node.y;
         }
 
-        this._GodSprite.x = headX
-        this._GodSprite.y = headY;
-        this._GodSprite.width = this._GodSprite.height = 100;
+        const deltaX = maxX - minX;
+        const deltaY = maxY - minY;
+        this._GodSprite.x = deltaX / 2 + minX;
+        this._GodSprite.y = deltaY / 2 + minY;
+
+        const size = Math.max(Math.abs(deltaX), Math.abs(deltaY)) + 100;
+        this._GodSprite.width = this._GodSprite.height = size;
     }
 
     update(dt: number) {
