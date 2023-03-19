@@ -1,6 +1,5 @@
 export default class App{
     private NameList: string[] = [];
-    private IsSingleMode = true;
     public localStorage = cc.sys.localStorage;
     public GameVersion = "1.0.0";
 
@@ -67,12 +66,14 @@ export default class App{
         ]
     }
 
-    getRandomNameList(num: number, t: string[]) {
+    // 分段，每段取一个，这样不会出现重复的
+    getRandomNameList(num: number, names: string[]) {
         const len = this.NameList.length;
-        const n = Math.floor(len / num)
+        const rangeSize = Math.floor(len / num) // 分段
+        
         for (let r = 0; r < num; ++r) {
-            const idx = Math.floor(n * r + Math.random() * n);
-            if (idx >= 0 && idx < len) t.push(this.NameList[idx])
+            const idx = Math.floor(rangeSize * r + Math.random() * rangeSize);
+            if (idx >= 0 && idx < len) names.push(this.NameList[idx])
         }
     }
 }

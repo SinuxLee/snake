@@ -1,4 +1,4 @@
-import Snake from "./logic/Snake";
+import Snake from "../logic/Snake";
 
 const { ccclass, property } = cc._decorator;
 
@@ -43,8 +43,6 @@ export default class SnakeBody extends cc.Component {
         this._moveVec = pos
     }
 
-    setMoveDir() { }
-
     getMoveDir() {
         return this._moveVec
     }
@@ -77,11 +75,11 @@ export default class SnakeBody extends cc.Component {
 
     updateBody(dt: number, bodyList: cc.Node[], moveVec: cc.Vec2, headPos: cc.Vec2) {
         this._lastMoveVec = this._moveVec;
-        this._lastPos = this.node.position;
+        this._lastPos = this.node.getPosition();
         const bodyPos = this.getBodyPrePos(bodyList, moveVec, headPos);
         this._IsFirstUpdate = false;
 
-        let newPos = bodyPos.sub(this.node.position);
+        let newPos = bodyPos.sub(this.node.getPosition());
         let vecLen = newPos.mag();
         if (vecLen < 1) {
             newPos = this._moveVec

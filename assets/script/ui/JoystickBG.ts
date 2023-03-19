@@ -1,5 +1,4 @@
-import JoystickCommon from './JoystickCommon';
-import GameJoystick from './GameJoystick';
+import GameJoystick, { TouchType,DirectionType } from './GameJoystick';
 
 const radian = Math.PI / 180;
 const { ccclass, property } = cc._decorator;
@@ -22,13 +21,11 @@ export default class extends cc.Component {
     private _joyCom: GameJoystick = null;
     private _speed1 = 1;
     private _speed2 = 1;
-    private _opacity = 0;
-    private _stickPos: cc.Vec2 = null;
 
     onLoad() {
         this._joyCom = this.node.parent.getComponent(GameJoystick)
         this._playerNode = this._joyCom.sprite
-        this._joyCom.touchType == JoystickCommon.TouchType.DEFAULT && this.initTouchEvent()
+        this._joyCom.touchType == TouchType.DEFAULT && this.initTouchEvent()
     }
 
     private initTouchEvent() {
@@ -40,7 +37,7 @@ export default class extends cc.Component {
 
     update(dt: number) {
         switch (this._joyCom.directionType) {
-            case JoystickCommon.DirectionType.ALL:
+            case DirectionType.ALL:
                 this.allDirectionsMove(dt)
         }
     }
@@ -78,7 +75,6 @@ export default class extends cc.Component {
         const halfWidth = this.node.width / 2;
         if (distance >= halfWidth) return;
 
-        this._stickPos = pos;
         const newPos = this.node.getPosition().add(pos);
         this.dot.setPosition(newPos)
     }

@@ -1,8 +1,8 @@
 import SnakeBody from './SnakeBody'
 import Food from './Food'
-import Game from './logic/Game'
-import Snake from './logic/Snake'
-import { UIType, default as UIManager } from './ui/UIManager'
+import Game from '../logic/Game'
+import Snake from '../logic/Snake'
+import { UIType, default as UIManager } from '../ui/UIManager'
 
 const { ccclass, property } = cc._decorator;
 

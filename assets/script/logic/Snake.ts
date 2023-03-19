@@ -1,5 +1,5 @@
-import SnakeBody from '../SnakeBody';
-import SnakeHead from '../SnakeHead';
+import SnakeBody from '../ui/SnakeBody';
+import SnakeHead from '../ui/SnakeHead';
 import Game from './Game';
 
 export default class Snake {
@@ -87,11 +87,11 @@ export default class Snake {
         this._GodSprite.group = "food"
     }
 
-    setName(name: string, t) {
+    setName(name: string, node: cc.Node) {
         this._PlayerName = name
         this._AttachLabel = this._Game.GetFreeNameLabel()
         this._AttachLabel.getComponent(cc.Label).string = name
-        this._AttachLabel.parent = t
+        this._AttachLabel.parent = node
         this._AttachLabel.position = this._SnakeHead.position
         this._Camera && (this._AttachLabel.group = "cameragr")
     }
@@ -133,7 +133,7 @@ export default class Snake {
     }
 
     resetPos(pos: cc.Vec2) {
-        this._SnakeHead.position = pos
+        this._SnakeHead.setPosition(pos);
     }
 
     initMoveDir(pos: cc.Vec2) {
@@ -150,13 +150,13 @@ export default class Snake {
         this._SnakeHead.angle = -angle - 90;
 
         this._MovePath.splice(0)
-        const headPos = this._SnakeHead.position;
+        const headPos = this._SnakeHead.getPosition();
         for (var s = 0; s < len * this._BodySpace; ++s) this._MovePath.push(headPos.add(pos.mul(15 - (s + 1))))
     }
 
     initMoveDest(destList: cc.Vec2[]) {
         this._CurMoveIndex = 0
-        this._CurShowMoveStartPos = this._SnakeHead.position;
+        this._CurShowMoveStartPos = this._SnakeHead.getPosition();
 
         const pos = destList[0].sub(this._CurShowMoveStartPos);
         this._CurShowMoveDistance = pos.mag()
@@ -174,7 +174,7 @@ export default class Snake {
         this._HeadBodyList.forEach(node => node.getComponent(SnakeBody).setMoveSpeed(speed))
     }
 
-    setMoveDir(x: number, y: number, dt: number, angle: number) {
+    setMoveDir(x: number, y: number, angle: number) {
         if (x == 0 && y == 0) return
         this._MoveVec.x = x
         this._MoveVec.y = y
@@ -260,7 +260,7 @@ export default class Snake {
 
     changeAI(aiType: number, destPos: cc.Vec2 = cc.Vec2.ZERO) {
         if (this._CurAIType == aiType && (6 == aiType || 7 == aiType)) return
-        
+
         if (this._CurAIType = aiType, 0 == this._CurAIType) {
             this._CurAITimer = 2.5 + 2 * Math.random();
         } else if (1 == this._CurAIType) {
@@ -276,7 +276,7 @@ export default class Snake {
             this._CurTargetChangeDir = this.FixDir(this._CurTargetDestDir.sub(this._MoveVec)).normalize();
         } else if (7 == this._CurAIType) {
             this._CurAITimer = 3 + 2 * Math.random();
-            const pos = destPos.sub(this._SnakeHead.position);
+            const pos = destPos.sub(this._SnakeHead.getPosition());
             this.setOtherMoveDir(pos.x, pos.y)
         } else if (10 == this._CurAIType) {
             this._CurAITimer = 3 + 2 * Math.random()
@@ -297,8 +297,8 @@ export default class Snake {
         const len = this._HeadBodyList.length
         for (let a = 0; a < len; ++a) {
             const node = this._HeadBodyList[a];
-            if(node.x != headX) headX = node.x;
-            if(node.y != headY) headY = node.y;
+            if (node.x != headX) headX = node.x;
+            if (node.y != headY) headY = node.y;
         }
 
         this._GodSprite.x = headX
@@ -313,20 +313,20 @@ export default class Snake {
                 var t = new cc.Event.EventCustom("meBound", true);
                 return this._SnakeHead.dispatchEvent(t), false
             }
-        } else if(Math.abs(this._SnakeHead.x) > this._MapWidth / 2 - 200 || Math.abs(this._SnakeHead.y) > this._MapHeight / 2 - 200) {
-            if(this._SnakeHead.x > this._MapWidth / 2 - 200) this._SnakeHead.x = this._MapWidth / 2 - 200 - 10;
-            else if(this._SnakeHead.x < -(this._MapWidth / 2 - 200)) this._SnakeHead.x = 10 - (this._MapWidth / 2 - 200);
+        } else if (Math.abs(this._SnakeHead.x) > this._MapWidth / 2 - 200 || Math.abs(this._SnakeHead.y) > this._MapHeight / 2 - 200) {
+            if (this._SnakeHead.x > this._MapWidth / 2 - 200) this._SnakeHead.x = this._MapWidth / 2 - 200 - 10;
+            else if (this._SnakeHead.x < -(this._MapWidth / 2 - 200)) this._SnakeHead.x = 10 - (this._MapWidth / 2 - 200);
 
-            if(this._SnakeHead.y > this._MapHeight / 2 - 200) this._SnakeHead.y = this._MapHeight / 2 - 200 - 10;
-            else if(this._SnakeHead.y < -(this._MapHeight / 2 - 200)) this._SnakeHead.y = 10 - (this._MapHeight / 2 - 200);
-            
+            if (this._SnakeHead.y > this._MapHeight / 2 - 200) this._SnakeHead.y = this._MapHeight / 2 - 200 - 10;
+            else if (this._SnakeHead.y < -(this._MapHeight / 2 - 200)) this._SnakeHead.y = 10 - (this._MapHeight / 2 - 200);
+
             this.changeAI(10, cc.v2(-this._MoveVec.x, -this._MoveVec.y))
         }
-        
+
         this.aiUpdate(dt);
         this._PosUpdateTime -= dt;
         this._LastMoveVec = this._MoveVec
-        this._HeadPrePositon = this._SnakeHead.position;
+        this._HeadPrePositon = this._SnakeHead.getPosition();
 
         var i, n = this._MoveSpeed * dt,
             r = this._SnakeHead.position,
@@ -340,12 +340,12 @@ export default class Snake {
             var h = this._HeadBodyList[f].getComponent(SnakeBody);
             (f + 1) * this._BodySpace < this._MovePath.length && (h.node.position = this._MovePath[(f + 1) * this._BodySpace]), this._MovePath.length > c * (1 + this._BodySpace) && this._MovePath.pop()
         }
-        
+
         this._StateTimer -= dt
-        if(this._State ==1) {
+        if (this._State == 1) {
             this.updateGodSpritePos()
             this._GodSprite.active = true;
-            if(this._StateTimer < 0) {
+            if (this._StateTimer < 0) {
                 this._StateTimer = 0
                 this.setState(0)
             }

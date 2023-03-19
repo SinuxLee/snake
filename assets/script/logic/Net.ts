@@ -129,7 +129,6 @@ export default class Net{
         }
     }
 
-    sendTakeMsg() { }
     requestSign(session: string) {
         this.request("entry/wxapp/Sign", {m: this.COMMON_M}, {session3rd: session}, (e, t) =>{
             const mgr = DataManager.inst;
@@ -268,18 +267,5 @@ export default class Net{
         totalGold += score;
         App.inst.localStorage.setItem("tcs_gold", JSON.stringify(totalGold))
         this.requestUserInfo()
-    }
-
-    requestZSShare() {
-
-    }
-    requestZSAd(e) {
-
-    }
-    requestZSAdCollect(e) {
-
-    }
-    requestZSTest() {
-
     }
 }

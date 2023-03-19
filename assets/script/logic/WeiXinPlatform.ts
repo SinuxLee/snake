@@ -126,7 +126,6 @@ export default class WeiXinPlatform{
                 }, (t) => {
                     t && (App.inst.localStorage.setItem("s3id", t.session3rd),
                         this._SessionID = t.session3rd,
-                        Net.inst.requestZSShare(),
                         Net.inst.requestUserInfo(),
                         Net.inst.requestSign(this._SessionID),
                         this.checkQQIsInviteReq())

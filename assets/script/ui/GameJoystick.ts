@@ -1,7 +1,17 @@
-import JoystickCommon from './JoystickCommon';
 import JoystickBG from './JoystickBG';
 
 const { ccclass, property } = cc._decorator;
+
+export enum TouchType {
+    DEFAULT = 0,
+    FOLLOW = 1,
+}
+
+export enum DirectionType{
+    ALL = 0,
+    FOUR = 4,
+    EIGHT = 8
+}
 
 @ccclass
 export default class extends cc.Component {
@@ -17,11 +27,11 @@ export default class extends cc.Component {
     @property({ type: cc.Integer, displayName: "摇杆Y位置" })
     public stickY: number = 0;
 
-    @property({ type: JoystickCommon.TouchType, displayName: "触摸类型" })
-    public touchType: number = JoystickCommon.TouchType.DEFAULT
+    @property({ type: cc.Enum(TouchType), displayName: "触摸类型" })
+    public touchType: TouchType = TouchType.DEFAULT
 
-    @property({ type: JoystickCommon.DirectionType, displayName: "方向类型" })
-    public directionType: number = JoystickCommon.DirectionType.ALL
+    @property({ type: cc.Enum(DirectionType), displayName: "方向类型" })
+    public directionType: DirectionType = DirectionType.ALL
 
     @property({ type: cc.Node, displayName: "操控的目标" })
     public sprite: cc.Node = null;
@@ -31,7 +41,7 @@ export default class extends cc.Component {
 
     onLoad() {
         this.createStickSprite()
-        if (this.touchType == JoystickCommon.TouchType.FOLLOW) this.initTouchEvent();
+        if (this.touchType == TouchType.FOLLOW) this.initTouchEvent();
     }
 
     private createStickSprite() {

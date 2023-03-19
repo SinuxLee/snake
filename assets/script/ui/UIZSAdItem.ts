@@ -1,5 +1,4 @@
 import DataManager from "../logic/DataManager";
-import Net from "../logic/Net";
 
 const { ccclass, property } = cc._decorator;
 
@@ -62,14 +61,12 @@ export default class extends cc.Component {
                 const item = adData.app_link_list[this._Index]
                 if (item.appid && item.link_path) {
                     wx.navigateToMiniProgram({ appId: adData.appid, path: adData.link_path })
-                    Net.inst.requestZSAdCollect(adData.app_id)
                 }
             }
         } else if (this._Index < adData.app_cb_list.length) {
             const item = adData.app_cb_list[this._Index]
             if (item.appid && item.link_path) {
                 wx.navigateToMiniProgram({ appId: adData.appid, path: adData.link_path })
-                Net.inst.requestZSAdCollect(adData.app_id)
             }
         }
     }

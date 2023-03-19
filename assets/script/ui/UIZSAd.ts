@@ -1,5 +1,4 @@
 import UIZSAdItem from './UIZSAdItem';
-import Net from '../logic/Net';
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -28,14 +27,6 @@ export default class extends cc.Component {
         rotate2 = cc.rotateBy(.8, -90)
         actSeq = cc.sequence(rotate1, rotate2);
         this.AdItemRight.node.runAction(actSeq.repeatForever())
-
-        Net.inst.requestZSAd(() =>{
-            for (let t = 0; t < this.AdItemArray.length; ++t) {
-                this.AdItemArray[t].initAd(t)
-            }
-            this.AdItemLeft.initBorderAd(0)
-            this.AdItemRight.initBorderAd(1)
-        })
     }
 
     onDisable () {

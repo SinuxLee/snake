@@ -57,10 +57,6 @@ export default class SoundManager {
         cc.audioEngine.setVolume(this._CurPlayMusic, this._BgVolume)
     }
 
-    stopSound(e) {
-        e.ID >= this.SoundList.length && cc.log("stopSound resIndex invalid ")
-    }
-
     stopAll() {
         this._CurPlayMusic = -1;
         cc.audioEngine.stopAll()

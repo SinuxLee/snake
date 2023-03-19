@@ -1,8 +1,8 @@
 import { UIType, } from './UIManager';
 import Snake from '../logic/Snake';
-import Food from '../Food';
-import {SoundType} from '../audio/SoundManager';
-import GameJoystick from '../GameJoystick';
+import Food from './Food';
+import { SoundType } from '../audio/SoundManager';
+import GameJoystick from './GameJoystick';
 import DataManager from '../logic/DataManager';
 import Net from '../logic/Net';
 import WeiXinPlatform from '../logic/WeiXinPlatform';
@@ -49,7 +49,7 @@ export default class extends cc.Component {
     private LenLabel: cc.Label = null;
     private InfoPanel: cc.Node = null;
 
-    private _SnakeList = [];
+    private _SnakeList: Snake[] = [];
     private _MapSizeWidth = 0;
     private _MapSizeHeight = 0;
     private _Game = null;
@@ -257,10 +257,9 @@ export default class extends cc.Component {
         this.setGameState(gameState)
     }
 
-    joyCallback(x, y, dt, angle) {
+    joyCallback(x: number, y: number, angle: number) {
         if (this._SnakeList.length <= 0) return
-
-        this._SnakeList[0].setMoveDir(x, y, dt, angle)
+        this._SnakeList[0].setMoveDir(x, y, angle)
     }
 
     onSpeedBtnDown(e) {

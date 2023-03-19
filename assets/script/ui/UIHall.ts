@@ -1,5 +1,5 @@
 import { UIType } from './UIManager';
-import {default as SoundManager,SoundType} from '../audio/SoundManager';
+import { default as SoundManager, SoundType } from '../audio/SoundManager';
 import DataManager from '../logic/DataManager';
 import Net from '../logic/Net';
 import WeiXinPlatform from '../logic/WeiXinPlatform';
@@ -35,7 +35,7 @@ export default class extends cc.Component {
     private VersionLabel: cc.Label = null;
     private addDiamond: cc.Button = null;
     private _Texture: cc.Texture2D = null;
-    private _SoundMgr:SoundManager = null;
+    private _SoundMgr: SoundManager = null;
     private _ShowSnake = null;
     private _CurShowLinkIndex = 0;
     private _QQAd = null;
@@ -316,7 +316,7 @@ export default class extends cc.Component {
         }
     }
 
-    update(dt) {
+    update(dt: number) {
         if (this._ShowSnake) this._ShowSnake.updateShow(dt);
     }
 }
