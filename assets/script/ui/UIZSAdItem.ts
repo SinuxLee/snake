@@ -1,5 +1,5 @@
-import DataManager from "./DataManager";
-import Net from "./Net";
+import DataManager from "../logic/DataManager";
+import Net from "../logic/Net";
 
 const { ccclass, property } = cc._decorator;
 

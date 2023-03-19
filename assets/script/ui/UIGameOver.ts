@@ -1,7 +1,7 @@
 import { UIType } from './UIManager';
-import DataManager from './DataManager';
-import Net from './Net';
-import WeiXinPlatform from './WeiXinPlatform';
+import DataManager from '../logic/DataManager';
+import Net from '../logic/Net';
+import WeiXinPlatform from '../logic/WeiXinPlatform';
 import UIManager from './UIManager';
 
 const { ccclass, property } = cc._decorator;

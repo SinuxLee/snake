@@ -1,4 +1,4 @@
-import Snake from "./Snake";
+import Snake from "./logic/Snake";
 
 const { ccclass, property } = cc._decorator;
 

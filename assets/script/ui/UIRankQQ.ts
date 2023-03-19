@@ -1,6 +1,5 @@
-import { UIType } from './UIManager';
+import { UIType,default as UIManager } from './UIManager';
 import UIRankItem from './UIRankItem';
-import UIManager from './UIManager';
 
 const { ccclass, property } = cc._decorator;
 

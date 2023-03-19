@@ -1,5 +1,5 @@
 import { UIType } from './UIManager';
-import SoundManager from './SoundManager';
+import SoundManager from '../audio/SoundManager';
 import UIManager from './UIManager';
 
 const { ccclass, property } = cc._decorator;

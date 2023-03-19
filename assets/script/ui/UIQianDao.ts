@@ -1,7 +1,7 @@
 import { UIType } from './UIManager';
 import UIQianDaoItem from './UIQianDaoItem';
-import DataManager from './DataManager';
-import Net from './Net';
+import DataManager from '../logic/DataManager';
+import Net from '../logic/Net';
 import UIManager from './UIManager';
 
 const { ccclass, property } = cc._decorator;

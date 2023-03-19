@@ -1,4 +1,4 @@
-import {RewardType} from './DataManager'
+import {RewardType} from '../logic/DataManager'
 const { ccclass, property } = cc._decorator;
 
 @ccclass

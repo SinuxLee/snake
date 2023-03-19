@@ -1,9 +1,9 @@
 import { UIType } from './UIManager';
 import UISkinItem from './UISkinItem';
-import {RewardType, default as DataManager} from './DataManager';
-import Net from './Net';
+import {RewardType, default as DataManager} from '../logic/DataManager';
+import Net from '../logic/Net';
 import UIManager from './UIManager';
-import App from './App';
+import App from '../logic/App';
 
 const { ccclass, property } = cc._decorator;
 

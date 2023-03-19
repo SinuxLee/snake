@@ -1,5 +1,5 @@
 import { UIType } from './UIManager';
-import {RewardType} from './DataManager';
+import {RewardType} from '../logic/DataManager';
 import UIManager from './UIManager';
 
 const { ccclass, property } = cc._decorator;

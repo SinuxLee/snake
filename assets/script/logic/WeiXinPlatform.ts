@@ -1,7 +1,7 @@
-import { UIType } from './UIManager';
+import { UIType } from '../ui/UIManager';
 import DataManager from './DataManager';
 import Net from './Net';
-import UIManager from './UIManager';
+import UIManager from '../ui/UIManager';
 import App from './App';
 
 export default class WeiXinPlatform{
@@ -53,7 +53,6 @@ export default class WeiXinPlatform{
             window.playimg = cc.sys.localStorage.getItem("usernickimg")
             DataManager.inst._MyNickName = nickName
             DataManager.inst._MyAvatarURL = window.playimg
-            window.mainhall.updateMyInfo()
             return;
         }
 
@@ -100,7 +99,6 @@ export default class WeiXinPlatform{
                             cc.sys.localStorage.setItem("usernickimg", window.playimg)
                             DataManager.inst._MyNickName = window.playname
                             DataManager.inst._MyAvatarURL = window.playimg
-                            window.mainhall.updateMyInfo()
                         },
                         fail: () => {
                             window.wxbutton.hide()

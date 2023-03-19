@@ -1,5 +1,5 @@
-import App from "./App";
-import Game from "./Game";
+import App from "./logic/App";
+import Game from "./logic/Game";
 
 const {ccclass, property} = cc._decorator;
 

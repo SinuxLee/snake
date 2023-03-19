@@ -1,9 +1,9 @@
 import { UIType } from './UIManager';
-import {default as SoundManager,SoundType} from './SoundManager';
-import DataManager from './DataManager';
-import Net from './Net';
-import WeiXinPlatform from './WeiXinPlatform';
-import App from './App';
+import {default as SoundManager,SoundType} from '../audio/SoundManager';
+import DataManager from '../logic/DataManager';
+import Net from '../logic/Net';
+import WeiXinPlatform from '../logic/WeiXinPlatform';
+import App from '../logic/App';
 import UIManager from './UIManager';
 
 const { ccclass, property } = cc._decorator;
@@ -33,6 +33,7 @@ export default class extends cc.Component {
     private GoldLabel: cc.Label = null;
     private DiamLabel: cc.Label = null;
     private VersionLabel: cc.Label = null;
+    private addDiamond: cc.Button = null;
     private _Texture: cc.Texture2D = null;
     private _SoundMgr:SoundManager = null;
     private _ShowSnake = null;
@@ -61,9 +62,54 @@ export default class extends cc.Component {
         this.GoldLabel = cc.find('TopNode/goldBg/goldNumLabel', this.node).getComponent(cc.Label);
         this.DiamLabel = cc.find('TopNode/diamondBg/diadNumLabel', this.node).getComponent(cc.Label);
         this.VersionLabel = this.node.getChildByName('versionLabel').getComponent(cc.Label);
+        this.addDiamond = cc.find('TopNode/diamondBg/addDiamond', this.node).getComponent(cc.Button);
 
-        window.mainhall = this
         this._Texture = new cc.Texture2D();
+    }
+
+    start() {
+        this.TimeModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onTimeModeBtn, this)
+        this.WuXianModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onWuXianModeBtn, this)
+        this.TuanZhanModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onTuanZhanBtn, this)
+        this.DuiZhanModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onDuiZhanModeBtn, this)
+        this.LinkBtn.node.on(cc.Node.EventType.TOUCH_END, this.onLinkBtn, this)
+        this.SubMaskSprite.node.on(cc.Node.EventType.TOUCH_END, this.onRankMask, this)
+        this.RankBtn.node.on(cc.Node.EventType.TOUCH_END, this.onRankBtn, this)
+        // this.RankCloseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onRankCloseBtn, this)
+        this.ShareBtn.node.on(cc.Node.EventType.TOUCH_END, this.onShareBtn, this)
+        this.HuoDongBtn.node.on(cc.Node.EventType.TOUCH_END, this.onHuoDongBtn, this)
+        this.SettingBtn.node.on(cc.Node.EventType.TOUCH_END, this.onSettingBtn, this)
+        this.BaoXiangBtn.node.on(cc.Node.EventType.TOUCH_END, this.onBaoXiangBtn, this)
+        this.ChengJiuBtn.node.on(cc.Node.EventType.TOUCH_END, this.onChengJiuBtn, this)
+        this.KeFuBtn.node.on(cc.Node.EventType.TOUCH_END, this.onKeFuBtn, this)
+        this.QianDaoBtn.node.on(cc.Node.EventType.TOUCH_END, this.onQianDaoBtn, this);
+        this.addDiamond.node.on(cc.Node.EventType.TOUCH_END, this.adddemo, this)
+
+        const mgr = DataManager.inst;
+        Net.inst.request("entry/wxapp/SysInfo", { m: Net.inst.COMMON_M }, null, (i, n) => {
+            const info = i.sysInfo
+            if (info == null) return
+
+            mgr._FuHuoCostGold = info.revive
+            mgr._LinkIconURL = info.jump_img
+            mgr._LinkAppID = info.appid
+            mgr._LinkPath = info.path
+            mgr._LinkExtra = info.extra
+            mgr._ShareReward = info.reward
+            mgr._ShareReliveCount = info.revive_type
+            this.updateLinkBtn()
+        })
+
+        if (cc.sys.platform === cc.sys.WECHAT_GAME && window.wx) {
+            wx.showShareMenu({
+                withShareTicket: true,
+                success: () => { },
+                fail: () => { }
+            })
+            wx.postMessage({ msgType: 2 })
+        }
+
+        this.updateMyInfo()
     }
 
     onEnable() {
@@ -111,50 +157,6 @@ export default class extends cc.Component {
 
     resumeAdShow() {
         this._IsAdPause = false
-    }
-
-    start() {
-        this.TimeModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onTimeModeBtn, this)
-        this.WuXianModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onWuXianModeBtn, this)
-        this.TuanZhanModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onTuanZhanBtn, this)
-        this.DuiZhanModeBtn.node.on(cc.Node.EventType.TOUCH_END, this.onDuiZhanModeBtn, this)
-        this.LinkBtn.node.on(cc.Node.EventType.TOUCH_END, this.onLinkBtn, this)
-        this.SubMaskSprite.node.on(cc.Node.EventType.TOUCH_END, this.onRankMask, this)
-        this.RankBtn.node.on(cc.Node.EventType.TOUCH_END, this.onRankBtn, this)
-        // this.RankCloseBtn.node.on(cc.Node.EventType.TOUCH_END, this.onRankCloseBtn, this)
-        this.ShareBtn.node.on(cc.Node.EventType.TOUCH_END, this.onShareBtn, this)
-        this.HuoDongBtn.node.on(cc.Node.EventType.TOUCH_END, this.onHuoDongBtn, this)
-        this.SettingBtn.node.on(cc.Node.EventType.TOUCH_END, this.onSettingBtn, this)
-        this.BaoXiangBtn.node.on(cc.Node.EventType.TOUCH_END, this.onBaoXiangBtn, this)
-        this.ChengJiuBtn.node.on(cc.Node.EventType.TOUCH_END, this.onChengJiuBtn, this)
-        this.KeFuBtn.node.on(cc.Node.EventType.TOUCH_END, this.onKeFuBtn, this)
-        this.QianDaoBtn.node.on(cc.Node.EventType.TOUCH_END, this.onQianDaoBtn, this);
-
-        const mgr = DataManager.inst;
-        Net.inst.request("entry/wxapp/SysInfo", { m: Net.inst.COMMON_M }, null, (i, n) => {
-            const info = i.sysInfo
-            if (info == null) return
-
-            mgr._FuHuoCostGold = iinfo.revive
-            mgr._LinkIconURL = info.jump_img
-            mgr._LinkAppID = info.appid
-            mgr._LinkPath = info.path
-            mgr._LinkExtra = info.extra
-            mgr._ShareReward = info.reward
-            mgr._ShareReliveCount = info.revive_type
-            this.updateLinkBtn()
-        })
-
-        if (cc.sys.platform === cc.sys.WECHAT_GAME && window.wx) {
-            wx.showShareMenu({
-                withShareTicket: true,
-                success: () => { },
-                fail: () => { }
-            })
-            wx.postMessage({ msgType: 2 })
-        }
-
-        this.updateMyInfo()
     }
 
     updateMyInfo() {

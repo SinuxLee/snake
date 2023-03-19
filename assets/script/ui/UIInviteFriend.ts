@@ -1,7 +1,7 @@
 import { UIType } from './UIManager';
 import UIInviteFriendItem from './UIInviteFriendItem';
-import Net from './Net';
-import WeiXinPlatform from './WeiXinPlatform';
+import Net from '../logic/Net';
+import WeiXinPlatform from '../logic/WeiXinPlatform';
 import UIManager from './UIManager';
 
 const { ccclass, property } = cc._decorator;

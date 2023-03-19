@@ -1,15 +1,15 @@
 import { UIType, } from './UIManager';
-import Snake from './Snake';
-import Food from './Food';
-import {SoundType} from './SoundManager';
-import GameJoystick from './GameJoystick';
-import DataManager from './DataManager';
-import Net from './Net';
-import WeiXinPlatform from './WeiXinPlatform';
-import SoundManager from './SoundManager';
-import Game from './Game';
+import Snake from '../logic/Snake';
+import Food from '../Food';
+import {SoundType} from '../audio/SoundManager';
+import GameJoystick from '../GameJoystick';
+import DataManager from '../logic/DataManager';
+import Net from '../logic/Net';
+import WeiXinPlatform from '../logic/WeiXinPlatform';
+import SoundManager from '../audio/SoundManager';
+import Game from '../logic/Game';
 import UIManager from './UIManager';
-import App from './App';
+import App from '../logic/App';
 
 const birthplace: cc.Vec2[] = [
     cc.v2(-120, -120), cc.v2(600, 600), cc.v2(-500, -800), cc.v2(200, 800),

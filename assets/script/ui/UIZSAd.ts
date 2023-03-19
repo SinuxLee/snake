@@ -1,5 +1,5 @@
 import UIZSAdItem from './UIZSAdItem';
-import Net from './Net';
+import Net from '../logic/Net';
 const { ccclass, property } = cc._decorator;
 
 @ccclass

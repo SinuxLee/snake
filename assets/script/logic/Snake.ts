@@ -1,5 +1,5 @@
-import SnakeBody from './SnakeBody';
-import SnakeHead from './SnakeHead';
+import SnakeBody from '../SnakeBody';
+import SnakeHead from '../SnakeHead';
 import Game from './Game';
 
 export default class Snake {

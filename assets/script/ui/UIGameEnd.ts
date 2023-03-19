@@ -1,5 +1,5 @@
 import { UIType } from './UIManager';
-import WeiXinPlatform from './WeiXinPlatform';
+import WeiXinPlatform from '../logic/WeiXinPlatform';
 import UIManager from './UIManager';
 
 const { ccclass, property } = cc._decorator;

@@ -38,7 +38,7 @@ export default class DataManager{
     private BannerAdid1 = "adunit-84752a29a640a476"
     private BannerAdid2 = "adunit-cb8e21a61e779439"
     private AppID = "wxf6746ff760dc4257"
-    private _ShareReliveCount = 0
+    public _ShareReliveCount = 0
     public _MyAvatarURL = ""
     public _MyNickName = ""
     private _Province = 0
@@ -48,7 +48,7 @@ export default class DataManager{
     public _MyQianDaoCount = 0
     public _MyQianDaoTake = false
     public _SignInitList = []
-    private _FuHuoCostGold = 0
+    public _FuHuoCostGold = 0
     public _LinkIconURL = ""
     public _LinkAppID = ""
     public _LinkPath = ""
